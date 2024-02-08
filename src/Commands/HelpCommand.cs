@@ -51,7 +51,7 @@ namespace Xperience.Xman.Commands
                 AnsiConsole.WriteLine($" v{v.Major}.{v.Minor}.{v.Build}");
             }
 
-            AnsiConsole.MarkupInterpolated($" [{Constants.EMPHASIS_COLOR}]https://github.com/kentico-ericd/xperience-manager[/]\n");
+            AnsiConsole.MarkupInterpolated($" [{Constants.EMPHASIS_COLOR}]https://github.com/kentico/xperience-manager[/]\n");
 
             var table = new Table()
                 .AddColumn("Command")

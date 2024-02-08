@@ -18,10 +18,10 @@ namespace Xperience.Xman.Commands
         private readonly IScriptBuilder scriptBuilder;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "ci" };
+        public override IEnumerable<string> Keywords => ["ci"];
 
 
-        public override IEnumerable<string> Parameters => new string[] { STORE, RESTORE };
+        public override IEnumerable<string> Parameters => [STORE, RESTORE];
 
 
         public override string Description => "Stores or restores CI data";
@@ -70,14 +70,14 @@ namespace Xperience.Xman.Commands
             if (action?.Equals(STORE, StringComparison.OrdinalIgnoreCase) ?? false)
             {
                 await AnsiConsole.Progress()
-                    .Columns(new ProgressColumn[]
-                    {
+                    .Columns(
+                    [
                         new SpinnerColumn(),
                         new ElapsedTimeColumn(),
                         new TaskDescriptionColumn(),
                         new ProgressBarColumn(),
                         new PercentageColumn()
-                    })
+                    ])
                     .StartAsync(async ctx =>
                     {
                         var task = ctx.AddTask($"[{Constants.EMPHASIS_COLOR}]Running the CI store script[/]");
@@ -87,12 +87,12 @@ namespace Xperience.Xman.Commands
             else if (action?.Equals(RESTORE, StringComparison.OrdinalIgnoreCase) ?? false)
             {
                 await AnsiConsole.Progress()
-                    .Columns(new ProgressColumn[]
-                    {
+                    .Columns(
+                    [
                         new SpinnerColumn(),
                         new ElapsedTimeColumn(),
                         new TaskDescriptionColumn()
-                    })
+                    ])
                     .StartAsync(async ctx =>
                     {
                         var task = ctx.AddTask($"[{Constants.EMPHASIS_COLOR}]Running the CI restore script[/]");

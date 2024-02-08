@@ -16,10 +16,10 @@ namespace Xperience.Xman.Commands
         private readonly IWizard<NewProfileOptions> wizard;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "p", "profile" };
+        public override IEnumerable<string> Keywords => ["p", "profile"];
 
 
-        public override IEnumerable<string> Parameters => new string[] { ADD, DELETE, SWITCH };
+        public override IEnumerable<string> Parameters => [ADD, DELETE, SWITCH];
 
 
         public override string Description => "Manage and switch installation profiles";

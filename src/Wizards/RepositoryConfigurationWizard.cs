@@ -12,12 +12,12 @@ namespace Xperience.Xman.Wizards
     {
         private bool changeIncluded;
         private bool changeExcluded;
-        private readonly IEnumerable<string> restoreModes = new string[]
-        {
+        private readonly IEnumerable<string> restoreModes =
+        [
             "Create",
             "CreateUpdate",
             "Full"
-        };
+        ];
 
 
         public override Task InitSteps()

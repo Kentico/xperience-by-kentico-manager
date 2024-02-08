@@ -21,7 +21,7 @@ namespace Xperience.Xman.Commands
         private readonly IWizard<InstallOptions> wizard;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "i", "install" };
+        public override IEnumerable<string> Keywords => ["i", "install"];
 
 
         public override IEnumerable<string> Parameters => Enumerable.Empty<string>();

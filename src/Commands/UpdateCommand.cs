@@ -16,18 +16,18 @@ namespace Xperience.Xman.Commands
         private readonly IShellRunner shellRunner;
         private readonly IScriptBuilder scriptBuilder;
         private readonly IWizard<UpdateOptions> wizard;
-        private readonly IEnumerable<string> packageNames = new string[]
-        {
+        private readonly IEnumerable<string> packageNames =
+        [
             "kentico.xperience.admin",
             "kentico.xperience.azurestorage",
             "kentico.xperience.cloud",
             "kentico.xperience.graphql",
             "kentico.xperience.imageprocessing",
             "kentico.xperience.webapp"
-        };
+        ];
 
 
-        public override IEnumerable<string> Keywords => new string[] { "u", "update" };
+        public override IEnumerable<string> Keywords => ["u", "update"];
 
 
         public override IEnumerable<string> Parameters => Enumerable.Empty<string>();

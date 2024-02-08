@@ -17,7 +17,7 @@ namespace Xperience.Xman.Commands
         private readonly IWizard<MacroOptions> wizard;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "m", "macros" };
+        public override IEnumerable<string> Keywords => ["m", "macros"];
 
 
         public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
@@ -59,12 +59,12 @@ namespace Xperience.Xman.Commands
             AnsiConsole.WriteLine();
 
             await AnsiConsole.Progress()
-                .Columns(new ProgressColumn[]
-                {
+                .Columns(
+                [
                     new SpinnerColumn(),
                     new ElapsedTimeColumn(),
                     new TaskDescriptionColumn()
-                })
+                ])
                 .StartAsync(async ctx =>
                 {
                     var task = ctx.AddTask($"[{Constants.EMPHASIS_COLOR}]Re-signing macros...[/]");

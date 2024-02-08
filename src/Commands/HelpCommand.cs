@@ -15,8 +15,8 @@ namespace Xperience.Xman.Commands
         /// <summary>
         /// Workaround for circular dependency when commands are injected into this command.
         /// </summary>
-        private readonly IEnumerable<ICommand> commands = new ICommand[]
-        {
+        private readonly IEnumerable<ICommand> commands =
+        [
             new ProfileCommand(),
             new InstallCommand(),
             new UpdateCommand(),
@@ -26,10 +26,10 @@ namespace Xperience.Xman.Commands
             new BuildCommand(),
             new SettingsCommand(),
             new CodeGenerateCommand()
-        };
+        ];
 
 
-        public override IEnumerable<string> Keywords => new string[] { "?", "help" };
+        public override IEnumerable<string> Keywords => ["?", "help"];
 
 
         public override IEnumerable<string> Parameters => Enumerable.Empty<string>();

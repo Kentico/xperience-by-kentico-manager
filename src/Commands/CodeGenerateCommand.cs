@@ -17,7 +17,7 @@ namespace Xperience.Xman.Commands
         private readonly IWizard<CodeGenerateOptions> wizard;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "g", "generate" };
+        public override IEnumerable<string> Keywords => ["g", "generate"];
 
 
         public override IEnumerable<string> Parameters => Enumerable.Empty<string>();

@@ -1,11 +1,11 @@
 [![Nuget](https://img.shields.io/nuget/v/Xperience.Xman)](https://www.nuget.org/packages/Xperience.Xman#versions-body-tab)
-[![build](https://github.com/kentico-ericd/xperience-manager/actions/workflows/build.yml/badge.svg)](https://github.com/kentico-ericd/xperience-manager/actions/workflows/build.yml)
+[![build](https://github.com/kentico/xperience-manager/actions/workflows/build.yml/badge.svg)](https://github.com/kentico/xperience-manager/actions/workflows/build.yml)
 
 # Xperience Manager (xman)
 
 This tool simplifies the process of installing and managing Xperience by Kentico instances by providing step-by-step wizards with default options provided.
 
-<img src="https://raw.githubusercontent.com/kentico-ericd/xperience-manager/master/img/screenshot.png" width="350" />
+<img src="https://raw.githubusercontent.com/kentico/xperience-manager/master/img/screenshot.png" width="350" />
 
 ## Installing the tool
 
@@ -82,7 +82,7 @@ To __switch__ profiles, run the `profile` command from the directory containing 
 xman profile
 ```
 
-<img src="https://raw.githubusercontent.com/kentico-ericd/xperience-manager/master/img/profiles.png" width="350" />
+<img src="https://raw.githubusercontent.com/kentico/xperience-manager/master/img/profiles.png" width="350" />
 
 You can __add__ or __delete__ profiles using the corresponding commands. This can be useful to register Xperience by Kentico installations that weren't installed using the tool.
 
@@ -121,7 +121,7 @@ This tool can assist with changing the _CMSConnectionString_, supported [configu
    xman settings
    ```
 
-<img src="https://raw.githubusercontent.com/kentico-ericd/xperience-manager/master/img/settings.png" width="350" />
+<img src="https://raw.githubusercontent.com/kentico/xperience-manager/master/img/settings.png" width="350" />
 
 ### Re-signing macros
 

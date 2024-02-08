@@ -33,7 +33,7 @@ The `xman.json` file contains information about the tool, your default options, 
 
 ```json
 {
-  "Version": "3.1.0.0",
+  "Version": "3.4.1.0",
   "Profiles": [
     {
       "ProjectName": "28dev",
@@ -48,8 +48,7 @@ The `xman.json` file contains information about the tool, your default options, 
     "InstallRootPath": "C:\\inetpub\\wwwroot",
     "UseCloud": false,
     "DatabaseName": "xperience",
-    "ServerName": "my-server",
-    "AdminPassword": "mypassword"
+    "ServerName": "my-server"
   },
   "CDRootPath": "C:\\inetpub\\wwwroot\\ContinuousDeployment"
 }
@@ -94,6 +93,8 @@ xman p delete
 ### Installing a new project
 
 When installing a new project, a new folder will be created in the `InstallRootPath` of the [configuration file](#configuration-file), or in a custom directory that you specify in the installation wizard. After installation, a new [profile](#managing-profiles) is created for the instance.
+
+The installation wizard will automatically generate an administrator password for you, but you can enter your own password during installation if needed.
 
 1. Run the `install` command from the directory containing the [configuration file](#configuration-file) which will begin the installation wizard:
 

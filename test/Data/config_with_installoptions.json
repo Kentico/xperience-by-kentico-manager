@@ -1,7 +1,7 @@
 ﻿{
+  "Version": "3.4.1.0",
   "CurrentProfile": null,
   "DefaultInstallOptions": {
-    "AdminPassword": "mypass",
     "DatabaseName": "mydb",
     "ProjectName": "myproject",
     "ServerName": "myserver",
@@ -10,5 +10,5 @@
     "Version": null
   },
   "Profiles": [],
-  "Version": "2.0.2.0"
+  "CDRootPath": "c:\\ContinuousDeployment"
 }

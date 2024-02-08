@@ -1,0 +1,23 @@
+﻿{
+  "CurrentProfile": null,
+  "DefaultInstallOptions": {
+    "AdminPassword": null,
+    "DatabaseName": null,
+    "ProjectName": null,
+    "ServerName": null,
+    "Template": null,
+    "UseCloud": false,
+    "Version": null
+  },
+  "Profiles": [
+    {
+      "ProjectName": "1",
+      "WorkingDirectory": "C:\\1"
+    },
+    {
+      "ProjectName": "2",
+      "WorkingDirectory": "C:\\2"
+    }
+  ],
+  "Version": "2.0.2.0"
+}

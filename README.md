@@ -12,7 +12,7 @@ This tool simplifies the process of installing and managing Xperience by Kentico
 Run the following command from a command prompt such as Powershell:
 
 ```bash
-dotnet tool install Xperience.Xman -g
+dotnet tool install Kentico.Xperience.Manager -g
 ```
 
 ## Updating the tool
@@ -20,7 +20,7 @@ dotnet tool install Xperience.Xman -g
 Run the following command from a command prompt such as Powershell:
 
 ```bash
-dotnet tool update xperience.xman -g
+dotnet tool update Kentico.Xperience.Manager -g
 ```
 
 ## Getting started

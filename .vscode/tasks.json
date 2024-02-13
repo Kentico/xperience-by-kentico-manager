@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Xperience.Xman.csproj"
+                "${workspaceFolder}/src/Kentico.Xperience.Manager.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

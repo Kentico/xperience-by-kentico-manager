@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/src/bin/Debug/net7.0/xperience.xman.dll",
+            "program": "${workspaceFolder}/src/bin/Debug/net7.0/Kentico.Xperience.Manager.dll",
             "args": ["i"],
             "cwd": "${workspaceFolder}",
             "console": "externalTerminal",

@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Identity;
-
 using Newtonsoft.Json;
 
 using Xperience.Xman.Commands;
@@ -66,16 +64,12 @@ namespace Xperience.Xman.Options
         /// </summary>
         private static string GenerateRandomPassword()
         {
-            var opts = new PasswordOptions()
-            {
-                RequiredLength = 10,
-                RequiredUniqueChars = 4,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireNonAlphanumeric = true,
-                RequireUppercase = true
-            };
-
+            int requiredLength = 10;
+            int requiredUniqueChars = 4;
+            bool requireDigit = true;
+            bool requireLowercase = true;
+            bool requireNonAlphanumeric = true;
+            bool requireUppercase = true;
             string[] randomChars = [
                 "ABCDEFGHJKLMNOPQRSTUVWXYZ",
                 "abcdefghijkmnopqrstuvwxyz",
@@ -86,32 +80,32 @@ namespace Xperience.Xman.Options
             var rand = new Random(Environment.TickCount);
             var chars = new List<char>();
 
-            if (opts.RequireUppercase)
+            if (requireUppercase)
             {
                 chars.Insert(rand.Next(0, chars.Count),
                     randomChars[0][rand.Next(0, randomChars[0].Length)]);
             }
 
-            if (opts.RequireLowercase)
+            if (requireLowercase)
             {
                 chars.Insert(rand.Next(0, chars.Count),
                     randomChars[1][rand.Next(0, randomChars[1].Length)]);
             }
 
-            if (opts.RequireDigit)
+            if (requireDigit)
             {
                 chars.Insert(rand.Next(0, chars.Count),
                     randomChars[2][rand.Next(0, randomChars[2].Length)]);
             }
 
-            if (opts.RequireNonAlphanumeric)
+            if (requireNonAlphanumeric)
             {
                 chars.Insert(rand.Next(0, chars.Count),
                     randomChars[3][rand.Next(0, randomChars[3].Length)]);
             }
 
-            for (int i = chars.Count; i < opts.RequiredLength
-                || chars.Distinct().Count() < opts.RequiredUniqueChars; i++)
+            for (int i = chars.Count; i < requiredLength
+                || chars.Distinct().Count() < requiredUniqueChars; i++)
             {
                 string rcs = randomChars[rand.Next(0, randomChars.Length)];
                 chars.Insert(rand.Next(0, chars.Count),

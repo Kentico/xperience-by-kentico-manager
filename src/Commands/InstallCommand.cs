@@ -74,6 +74,10 @@ namespace Xperience.Xman.Commands
             {
                 await CreateDatabase(options);
                 await configManager.AddProfile(newInstallationProfile);
+
+                // Select new profile
+                AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Setting profile to '{newInstallationProfile.ProjectName}'...[/]");
+                await configManager.SetCurrentProfile(newInstallationProfile);
             }
         }
 

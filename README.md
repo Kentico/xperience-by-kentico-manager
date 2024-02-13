@@ -1,4 +1,4 @@
-[![Nuget](https://img.shields.io/nuget/v/Xperience.Xman)](https://www.nuget.org/packages/Xperience.Xman#versions-body-tab)
+[![Nuget](https://img.shields.io/nuget/v/Kentico.Xperience.Manager)](https://www.nuget.org/packages/Kentico.Xperience.Manager#versions-body-tab)
 [![build](https://github.com/kentico/xperience-manager/actions/workflows/build.yml/badge.svg)](https://github.com/kentico/xperience-manager/actions/workflows/build.yml)
 
 # Xperience Manager (xman)

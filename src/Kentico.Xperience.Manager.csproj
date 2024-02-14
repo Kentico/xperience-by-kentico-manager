@@ -23,6 +23,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<AssemblyToSign Include="$(IntermediateOutputPath)$(TargetFileName)" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Autofac" Version="7.1.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="nuget.protocol" Version="6.8.0" />

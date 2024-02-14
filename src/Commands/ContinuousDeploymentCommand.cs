@@ -24,10 +24,10 @@ namespace Xperience.Xman.Commands
         private readonly IWizard<RepositoryConfiguration> wizard;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "cd" };
+        public override IEnumerable<string> Keywords => ["cd"];
 
 
-        public override IEnumerable<string> Parameters => new string[] { STORE, RESTORE, CONFIG };
+        public override IEnumerable<string> Parameters => [STORE, RESTORE, CONFIG];
 
 
         public override string Description => "Stores or restores CD data, or edits the config file";
@@ -84,14 +84,14 @@ namespace Xperience.Xman.Commands
             else if (action?.Equals(STORE, StringComparison.OrdinalIgnoreCase) ?? false)
             {
                 await AnsiConsole.Progress()
-                    .Columns(new ProgressColumn[]
-                    {
+                    .Columns(
+                    [
                         new SpinnerColumn(),
                         new ElapsedTimeColumn(),
                         new TaskDescriptionColumn(),
                         new ProgressBarColumn(),
                         new PercentageColumn()
-                    })
+                    ])
                     .StartAsync(async ctx =>
                     {
                         var task = ctx.AddTask($"[{Constants.EMPHASIS_COLOR}]Running the CD store script[/]");
@@ -107,12 +107,12 @@ namespace Xperience.Xman.Commands
                 }
 
                 await AnsiConsole.Progress()
-                    .Columns(new ProgressColumn[]
-                    {
+                    .Columns(
+                    [
                         new SpinnerColumn(),
                         new ElapsedTimeColumn(),
                         new TaskDescriptionColumn()
-                    })
+                    ])
                     .StartAsync(async ctx =>
                     {
                         var task = ctx.AddTask($"[{Constants.EMPHASIS_COLOR}]Running the CD restore script[/]");

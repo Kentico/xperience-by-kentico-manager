@@ -9,7 +9,7 @@ namespace Xperience.Xman.Wizards
     /// </summary>
     public abstract class AbstractWizard<TOptions> : IWizard<TOptions> where TOptions : IWizardOptions, new()
     {
-        public StepList Steps { get; } = new();
+        public StepList Steps { get; } = [];
 
 
         public TOptions Options { get; set; } = new();

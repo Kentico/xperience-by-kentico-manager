@@ -11,11 +11,11 @@ namespace Xperience.Xman.Wizards
     /// </summary>
     public class InstallWizard : AbstractWizard<InstallOptions>
     {
-        private readonly IEnumerable<string> templates = new string[] {
+        private readonly IEnumerable<string> templates = [
             Constants.TEMPLATE_SAMPLE,
             Constants.TEMPLATE_BLANK,
             Constants.TEMPLATE_ADMIN
-        };
+        ];
 
 
         public override async Task InitSteps()

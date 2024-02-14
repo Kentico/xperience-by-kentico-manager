@@ -21,7 +21,7 @@ namespace Xperience.Xman.Commands
         private readonly IWizard<InstallOptions> wizard;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "i", "install" };
+        public override IEnumerable<string> Keywords => ["i", "install"];
 
 
         public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
@@ -74,6 +74,10 @@ namespace Xperience.Xman.Commands
             {
                 await CreateDatabase(options);
                 await configManager.AddProfile(newInstallationProfile);
+
+                // Select new profile
+                AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Setting profile to '{newInstallationProfile.ProjectName}'...[/]");
+                await configManager.SetCurrentProfile(newInstallationProfile);
             }
         }
 

@@ -11,7 +11,7 @@ namespace Xperience.Xman.Commands
     /// </summary>
     public abstract class AbstractCommand : ICommand
     {
-        public List<string> Errors { get; } = new();
+        public List<string> Errors { get; } = [];
 
 
         public bool StopProcessing { get; set; }

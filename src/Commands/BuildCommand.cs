@@ -14,7 +14,7 @@ namespace Xperience.Xman.Commands
         private readonly IScriptBuilder scriptBuilder;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "b", "build" };
+        public override IEnumerable<string> Keywords => ["b", "build"];
 
 
         public override IEnumerable<string> Parameters => Enumerable.Empty<string>();

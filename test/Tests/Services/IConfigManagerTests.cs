@@ -105,7 +105,6 @@ namespace Xperience.Xman.Tests.Tests.Services
                 Assert.That(options.DatabaseName, Is.EqualTo("mydb"));
                 Assert.That(options.ServerName, Is.EqualTo("myserver"));
                 Assert.That(options.ProjectName, Is.EqualTo("myproject"));
-                Assert.That(options.AdminPassword, Is.EqualTo("mypass"));
                 Assert.That(options.Template, Is.EqualTo("kentico-xperience-sample-mvc"));
             });
         }

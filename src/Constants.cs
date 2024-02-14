@@ -20,8 +20,8 @@ namespace Xperience.Xman
         public const string TEMPLATE_BLANK = "kentico-xperience-mvc";
         public const string TEMPLATE_ADMIN = "kentico-xperience-admin-sample";
 
-        public static IEnumerable<ConfigurationKey> ConfigurationKeys => new ConfigurationKey[]
-        {
+        public static IEnumerable<ConfigurationKey> ConfigurationKeys =>
+        [
             new("CMSForbiddenURLValues",
                 "Specifies characters that are forbidden in page URLs",
                 typeof(string),
@@ -57,6 +57,6 @@ namespace Xperience.Xman
                 "Sets the scheme (protocol) used when resolving relative URLs within email content",
                 typeof(string),
                 "https")
-        };
+        ];
     }
 }

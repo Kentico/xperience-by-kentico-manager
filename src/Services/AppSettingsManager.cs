@@ -90,6 +90,7 @@ namespace Xperience.Xman.Services
             }
 
             string text = await File.ReadAllTextAsync(settingsPath);
+
             return JsonConvert.DeserializeObject<JObject>(text) ?? throw new InvalidOperationException("Failed to deserialize appsettings.json");
         }
 

@@ -16,7 +16,7 @@ namespace Xperience.Xman.Configuration
         /// <summary>
         /// The registered profiles found in the configuration file.
         /// </summary>
-        public List<ToolProfile> Profiles { get; set; } = new();
+        public List<ToolProfile> Profiles { get; set; } = [];
 
 
         /// <summary>

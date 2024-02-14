@@ -20,7 +20,7 @@ namespace Xperience.Xman.Commands
         private readonly IAppSettingsManager appSettingsManager;
 
 
-        public override IEnumerable<string> Keywords => new string[] { "s", "settings" };
+        public override IEnumerable<string> Keywords => ["s", "settings"];
 
 
         public override IEnumerable<string> Parameters => Enumerable.Empty<string>();

@@ -10,13 +10,13 @@ namespace Xperience.Xman.Wizards
     /// </summary>
     public class CodeGenerateWizard : AbstractWizard<CodeGenerateOptions>
     {
-        private readonly IEnumerable<string> types = new string[]
-        {
+        private readonly IEnumerable<string> types =
+        [
             CodeGenerateOptions.TYPE_PAGE_CONTENT_TYPES,
             CodeGenerateOptions.TYPE_REUSABLE_CONTENT_TYPES,
             CodeGenerateOptions.TYPE_REUSABLE_FIELD_SCHEMAS,
             CodeGenerateOptions.TYPE_CLASSES
-        };
+        ];
 
 
         public override Task InitSteps()

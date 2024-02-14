@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 using Xperience.Xman.Options;
 
@@ -19,11 +18,11 @@ namespace Xperience.Xman.Services
 
         public void WriteConfig(RepositoryConfiguration config, string path)
         {
-            var namespaces = new XmlSerializerNamespaces(new XmlQualifiedName[]
-            {
+            var namespaces = new XmlSerializerNamespaces(
+            [
                 new("xsd", "http://www.w3.org/2001/XMLSchema"),
                 new("xsi", "http://www.w3.org/2001/XMLSchema-instance")
-            });
+            ]);
             var serializer = new XmlSerializer(typeof(RepositoryConfiguration));
             using var writer = new StreamWriter(path);
             serializer.Serialize(writer, config, namespaces);

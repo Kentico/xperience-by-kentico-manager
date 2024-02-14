@@ -69,7 +69,7 @@ namespace Xperience.Xman.Commands
             AnsiConsole.WriteLine();
             if (v is not null)
             {
-                var latestVersion = await NuGetVersionHelper.GetLatestVersion("xperience.xman", v);
+                var latestVersion = await NuGetVersionHelper.GetLatestVersion("Kentico.Xperience.Manager", v);
                 if (latestVersion is not null)
                 {
                     AnsiConsole.MarkupInterpolated($" New version [{Constants.SUCCESS_COLOR}]{latestVersion}[/] available!\n\n");

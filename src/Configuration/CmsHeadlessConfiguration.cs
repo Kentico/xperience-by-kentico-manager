@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Xperience.Xman.Configuration
+namespace Xperience.Manager.Configuration
 {
     /// <summary>
     /// Represents the headless options specified in the appsettings.json. See

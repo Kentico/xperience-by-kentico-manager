@@ -3,9 +3,9 @@
 using System.Diagnostics;
 using System.Text;
 
-using Xperience.Xman.Services;
+using Xperience.Manager.Services;
 
-namespace Xperience.Xman.Tests.Tests.Services
+namespace Xperience.Manager.Tests.Services
 {
     /// <summary>
     /// Tests for <see cref="IShellRunner"/>.

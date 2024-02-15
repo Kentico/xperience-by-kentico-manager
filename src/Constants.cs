@@ -1,6 +1,6 @@
-﻿using Xperience.Xman.Configuration;
+﻿using Xperience.Manager.Configuration;
 
-namespace Xperience.Xman
+namespace Xperience.Manager
 {
     public static class Constants
     {

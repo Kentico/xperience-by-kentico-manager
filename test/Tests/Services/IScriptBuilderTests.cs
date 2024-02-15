@@ -1,9 +1,9 @@
 using NUnit.Framework;
 
-using Xperience.Xman.Options;
-using Xperience.Xman.Services;
+using Xperience.Manager.Options;
+using Xperience.Manager.Services;
 
-namespace Xperience.Xman.Tests.Tests.Services
+namespace Xperience.Manager.Tests.Services
 {
     /// <summary>
     /// Tests for <see cref="IScriptBuilder"/>.

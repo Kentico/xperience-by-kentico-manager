@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Xperience.Xman.Services
+namespace Xperience.Manager.Services
 {
     public class ShellOptions
     {

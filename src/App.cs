@@ -2,10 +2,10 @@ using Newtonsoft.Json;
 
 using Spectre.Console;
 
-using Xperience.Xman.Repositories;
-using Xperience.Xman.Services;
+using Xperience.Manager.Repositories;
+using Xperience.Manager.Services;
 
-namespace Xperience.Xman
+namespace Xperience.Manager
 {
     /// <summary>
     /// The main entry point for the console application which supports Dependency Injection.

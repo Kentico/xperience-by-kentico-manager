@@ -1,6 +1,6 @@
-﻿using Xperience.Xman.Commands;
+﻿using Xperience.Manager.Commands;
 
-namespace Xperience.Xman.Options
+namespace Xperience.Manager.Options
 {
     /// <summary>
     /// The options used to configure the appsettings.json file, used by <see cref="SettingsCommand"/>.

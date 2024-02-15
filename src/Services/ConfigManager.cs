@@ -2,10 +2,10 @@
 
 using Newtonsoft.Json;
 
-using Xperience.Xman.Configuration;
-using Xperience.Xman.Options;
+using Xperience.Manager.Configuration;
+using Xperience.Manager.Options;
 
-namespace Xperience.Xman.Services
+namespace Xperience.Manager.Services
 {
     public class ConfigManager : IConfigManager
     {

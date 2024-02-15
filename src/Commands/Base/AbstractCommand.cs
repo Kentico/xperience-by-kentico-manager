@@ -2,9 +2,9 @@ using System.Diagnostics;
 
 using Spectre.Console;
 
-using Xperience.Xman.Configuration;
+using Xperience.Manager.Configuration;
 
-namespace Xperience.Xman.Commands
+namespace Xperience.Manager.Commands
 {
     /// <summary>
     /// Describes an executable command from the CLI.

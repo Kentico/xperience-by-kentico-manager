@@ -1,6 +1,6 @@
-﻿using Xperience.Xman.Options;
+﻿using Xperience.Manager.Options;
 
-namespace Xperience.Xman.Configuration
+namespace Xperience.Manager.Configuration
 {
     /// <summary>
     /// Represents the configuration of the dotnet tool.

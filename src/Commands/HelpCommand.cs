@@ -2,10 +2,10 @@ using Spectre.Console;
 
 using System.Reflection;
 
-using Xperience.Xman.Configuration;
-using Xperience.Xman.Helpers;
+using Xperience.Manager.Configuration;
+using Xperience.Manager.Helpers;
 
-namespace Xperience.Xman.Commands
+namespace Xperience.Manager.Commands
 {
     /// <summary>
     /// A command which displays the current tool version, a list of commands, and their descriptions.

@@ -1,7 +1,7 @@
-﻿using Xperience.Xman.Options;
-using Xperience.Xman.Steps;
+﻿using Xperience.Manager.Options;
+using Xperience.Manager.Steps;
 
-namespace Xperience.Xman.Wizards
+namespace Xperience.Manager.Wizards
 {
     /// <summary>
     /// A configuration wizard which displays steps for user input and populates an <see cref="IWizardOptions"/>

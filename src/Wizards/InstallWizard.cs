@@ -1,10 +1,10 @@
 using Spectre.Console;
 
-using Xperience.Xman.Helpers;
-using Xperience.Xman.Options;
-using Xperience.Xman.Steps;
+using Xperience.Manager.Helpers;
+using Xperience.Manager.Options;
+using Xperience.Manager.Steps;
 
-namespace Xperience.Xman.Wizards
+namespace Xperience.Manager.Wizards
 {
     /// <summary>
     /// A wizard which generates an <see cref="InstallOptions"/> for installing Xperience by Kentico.

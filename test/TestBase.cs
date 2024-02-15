@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 using NUnit.Framework;
 
-namespace Xperience.Xman.Tests
+namespace Xperience.Manager.Tests
 {
     public class TestBase
     {

@@ -1,7 +1,7 @@
-﻿using Xperience.Xman.Configuration;
-using Xperience.Xman.Options;
+﻿using Xperience.Manager.Configuration;
+using Xperience.Manager.Options;
 
-namespace Xperience.Xman.Services
+namespace Xperience.Manager.Services
 {
     /// <summary>
     /// Contains methods for managing <see cref="ToolConfiguration"/>.

@@ -1,4 +1,4 @@
-﻿namespace Xperience.Xman.Steps
+﻿namespace Xperience.Manager.Steps
 {
     /// <summary>
     /// A collection of <see cref="IStep"/>s which can be navigated forward and back.

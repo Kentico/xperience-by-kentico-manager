@@ -1,4 +1,4 @@
-﻿namespace Xperience.Xman.Steps
+﻿namespace Xperience.Manager.Steps
 {
     /// <summary>
     /// Represents a step used to display a prompt for user interaction.

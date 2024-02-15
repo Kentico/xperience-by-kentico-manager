@@ -1,4 +1,4 @@
-namespace Xperience.Xman.Services
+namespace Xperience.Manager.Services
 {
     public interface IService
     {

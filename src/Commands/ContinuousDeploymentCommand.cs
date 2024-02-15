@@ -2,12 +2,12 @@
 
 using Spectre.Console;
 
-using Xperience.Xman.Configuration;
-using Xperience.Xman.Options;
-using Xperience.Xman.Services;
-using Xperience.Xman.Wizards;
+using Xperience.Manager.Configuration;
+using Xperience.Manager.Options;
+using Xperience.Manager.Services;
+using Xperience.Manager.Wizards;
 
-namespace Xperience.Xman.Commands
+namespace Xperience.Manager.Commands
 {
     /// <summary>
     /// A command which manages Continuous Deployment profiles and stores/restores data.

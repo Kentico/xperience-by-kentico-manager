@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Xperience.Xman.Services
+namespace Xperience.Manager.Services
 {
     /// <summary>
     /// Contains methods for executing shell scripts.

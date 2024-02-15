@@ -1,6 +1,6 @@
-using Xperience.Xman.Commands;
+using Xperience.Manager.Commands;
 
-namespace Xperience.Xman.Options
+namespace Xperience.Manager.Options
 {
     /// <summary>
     /// The options used to update Xperience by Kentico project files and databases, used by <see cref="UpdateCommand"/>.

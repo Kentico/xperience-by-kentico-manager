@@ -1,6 +1,6 @@
-﻿using Xperience.Xman.Commands;
+﻿using Xperience.Manager.Commands;
 
-namespace Xperience.Xman.Options
+namespace Xperience.Manager.Options
 {
     /// <summary>
     /// The options used to re-sign macros in <see cref="MacroCommand"/>. 

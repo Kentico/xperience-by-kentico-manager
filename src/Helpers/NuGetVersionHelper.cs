@@ -3,7 +3,7 @@ using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
 using NuGet.Versioning;
 
-namespace Xperience.Xman.Helpers
+namespace Xperience.Manager.Helpers
 {
     public static class NuGetVersionHelper
     {

@@ -1,8 +1,8 @@
 ﻿using System.Xml.Serialization;
 
-using Xperience.Xman.Options;
+using Xperience.Manager.Options;
 
-namespace Xperience.Xman.Services
+namespace Xperience.Manager.Services
 {
     public class CDXmlManager : ICDXmlManager
     {

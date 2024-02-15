@@ -1,4 +1,4 @@
-namespace Xperience.Xman.Services
+namespace Xperience.Manager.Services
 {
     /// <summary>
     /// Contains methods for generating scripts to execute with <see cref="IShellRunner"/>.

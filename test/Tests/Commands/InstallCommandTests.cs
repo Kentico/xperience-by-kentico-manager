@@ -2,12 +2,12 @@
 
 using NUnit.Framework;
 
-using Xperience.Xman.Commands;
-using Xperience.Xman.Options;
-using Xperience.Xman.Services;
-using Xperience.Xman.Wizards;
+using Xperience.Manager.Commands;
+using Xperience.Manager.Options;
+using Xperience.Manager.Services;
+using Xperience.Manager.Wizards;
 
-namespace Xperience.Xman.Tests.Tests.Commands
+namespace Xperience.Manager.Tests.Commands
 {
     /// <summary>
     /// Tests for <see cref="InstallCommand"/>.

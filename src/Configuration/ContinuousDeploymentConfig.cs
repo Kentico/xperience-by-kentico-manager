@@ -1,6 +1,6 @@
-﻿using Xperience.Xman.Commands;
+﻿using Xperience.Manager.Commands;
 
-namespace Xperience.Xman.Configuration
+namespace Xperience.Manager.Configuration
 {
     /// <summary>
     /// Settings used when running <see cref="ContinuousDeploymentCommand"/> scripts.

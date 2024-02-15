@@ -1,4 +1,4 @@
-﻿namespace Xperience.Xman.Options
+﻿namespace Xperience.Manager.Options
 {
     public interface IWizardOptions
     {

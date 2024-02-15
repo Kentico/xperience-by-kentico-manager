@@ -1,6 +1,6 @@
 ﻿using Spectre.Console;
 
-namespace Xperience.Xman.Steps
+namespace Xperience.Manager.Steps
 {
     /// <summary>
     /// The configuration of a <see cref="Step{T}"/>.

@@ -1,9 +1,9 @@
 ﻿using Spectre.Console;
 
-using Xperience.Xman.Configuration;
-using Xperience.Xman.Services;
+using Xperience.Manager.Configuration;
+using Xperience.Manager.Services;
 
-namespace Xperience.Xman.Commands
+namespace Xperience.Manager.Commands
 {
     /// <summary>
     /// A command which builds an Xperience by Kentico project.

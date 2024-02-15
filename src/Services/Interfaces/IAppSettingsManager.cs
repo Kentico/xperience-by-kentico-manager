@@ -1,6 +1,6 @@
-﻿using Xperience.Xman.Configuration;
+﻿using Xperience.Manager.Configuration;
 
-namespace Xperience.Xman.Services
+namespace Xperience.Manager.Services
 {
     /// <summary>
     /// Contains methods for interfacing with the appsettings.json of a project.

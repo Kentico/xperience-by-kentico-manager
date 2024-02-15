@@ -2,10 +2,10 @@
 
 using NUnit.Framework;
 
-using Xperience.Xman.Commands;
-using Xperience.Xman.Services;
+using Xperience.Manager.Commands;
+using Xperience.Manager.Services;
 
-namespace Xperience.Xman.Tests.Tests.Commands
+namespace Xperience.Manager.Tests.Commands
 {
     /// <summary>
     /// Tests for <see cref="ContinuousIntegrationCommand"/>.

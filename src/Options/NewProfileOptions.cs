@@ -1,6 +1,6 @@
-﻿using Xperience.Xman.Commands;
+﻿using Xperience.Manager.Commands;
 
-namespace Xperience.Xman.Options
+namespace Xperience.Manager.Options
 {
     /// <summary>
     /// The options used to create a new profile in <see cref="ProfileCommand"/>. 

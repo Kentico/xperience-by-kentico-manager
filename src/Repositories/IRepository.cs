@@ -1,4 +1,4 @@
-namespace Xperience.Xman.Repositories
+namespace Xperience.Manager.Repositories
 {
     public interface IRepository
     {

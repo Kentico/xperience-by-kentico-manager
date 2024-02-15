@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-using Xperience.Xman.Commands;
+using Xperience.Manager.Commands;
 
-namespace Xperience.Xman.Options
+namespace Xperience.Manager.Options
 {
     /// <summary>
     /// The options used to install Xperience by Kentico project files and databases, used by <see cref="InstallCommand"/>.

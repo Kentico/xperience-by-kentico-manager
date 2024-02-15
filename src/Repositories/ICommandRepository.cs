@@ -1,6 +1,6 @@
-using Xperience.Xman.Commands;
+using Xperience.Manager.Commands;
 
-namespace Xperience.Xman.Repositories
+namespace Xperience.Manager.Repositories
 {
     /// <summary>
     /// Represents a collection of <see cref="ICommand"/>s.

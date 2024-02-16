@@ -19,6 +19,7 @@ namespace Xperience.Manager.Commands
         [
             new ProfileCommand(),
             new InstallCommand(),
+            new DeleteCommand(),
             new UpdateCommand(),
             new ContinuousIntegrationCommand(),
             new ContinuousDeploymentCommand(),

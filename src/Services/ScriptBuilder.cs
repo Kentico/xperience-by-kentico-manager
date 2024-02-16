@@ -23,6 +23,8 @@ namespace Xperience.Manager.Services
         private const string CD_RESTORE_SCRIPT = $"dotnet run -- --kxp-cd-restore --repository-path \"{nameof(ContinuousDeploymentConfig.RepositoryPath)}\"";
         private const string MACRO_SCRIPT = "dotnet run --no-build -- --kxp-resign-macros";
         private const string CODEGEN_SCRIPT = $"dotnet run -- --kxp-codegen --skip-confirmation --type \"{nameof(CodeGenerateOptions.Type)}\" --location \"{nameof(CodeGenerateOptions.Location)}\" --include \"{nameof(CodeGenerateOptions.Include)}\" --exclude \"{nameof(CodeGenerateOptions.Exclude)}\" --with-provider-class {nameof(CodeGenerateOptions.WithProviderClass)}";
+        private const string DELETE_FOLDER_SCRIPT = $"rm \"{nameof(ToolProfile.WorkingDirectory)}\" -r -Force";
+        private const string RUN_SQL_QUERY = $"Invoke-Sqlcmd -ConnectionString \"{nameof(RunSqlOptions.ConnString)}\" -Query \"{nameof(RunSqlOptions.SqlQuery)}\"";
 
 
         public IScriptBuilder AppendCloud(bool useCloud)
@@ -115,8 +117,13 @@ namespace Xperience.Manager.Services
         }
 
 
-        public IScriptBuilder WithPlaceholders(object dataObject)
+        public IScriptBuilder WithPlaceholders(object? dataObject)
         {
+            if (dataObject is null)
+            {
+                return this;
+            }
+
             // Replace all placeholders in script with object values if non-null or empty
             foreach (var prop in dataObject.GetType().GetProperties())
             {
@@ -156,6 +163,8 @@ namespace Xperience.Manager.Services
                 ScriptType.ContinuousDeploymentRestore => CD_RESTORE_SCRIPT,
                 ScriptType.ResignMacros => MACRO_SCRIPT,
                 ScriptType.GenerateCode => CODEGEN_SCRIPT,
+                ScriptType.DeleteDirectory => DELETE_FOLDER_SCRIPT,
+                ScriptType.ExecuteSql => RUN_SQL_QUERY,
                 ScriptType.None => string.Empty,
                 _ => string.Empty,
             };
@@ -268,5 +277,16 @@ namespace Xperience.Manager.Services
         /// The script which generates code files for Xperience objects.
         /// </summary>
         GenerateCode,
+
+        /// <summary>
+        /// The script which deletes a local folder and its contents.
+        /// </summary>
+        DeleteDirectory,
+
+
+        /// <summary>
+        /// The script which executes a SQL query against a database.
+        /// </summary>
+        ExecuteSql,
     }
 }

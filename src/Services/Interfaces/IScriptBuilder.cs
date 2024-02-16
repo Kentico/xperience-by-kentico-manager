@@ -64,6 +64,6 @@ namespace Xperience.Manager.Services
         /// Replaces script placeholders with the values of the object properties. If a property is <c>null</c> or emtpy,
         /// the placeholder remains in the script.
         /// </summary>
-        public IScriptBuilder WithPlaceholders(object dataObject);
+        public IScriptBuilder WithPlaceholders(object? dataObject);
     }
 }

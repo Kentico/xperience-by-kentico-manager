@@ -92,8 +92,13 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task RemoveProfile(ToolProfile profile)
+        public async Task RemoveProfile(ToolProfile? profile)
         {
+            if (profile is null)
+            {
+                throw new ArgumentNullException(nameof(profile));
+            }
+
             var config = await GetConfig();
 
             // For some reason Profiles.Remove() didn't work, make a new list

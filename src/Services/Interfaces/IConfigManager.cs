@@ -43,7 +43,7 @@ namespace Xperience.Manager.Services
         /// <summary>
         /// Removes a profile to the <see cref="ToolConfiguration.Profiles"/>.
         /// </summary>
-        public Task RemoveProfile(ToolProfile profile);
+        public Task RemoveProfile(ToolProfile? profile);
 
 
         /// <summary>

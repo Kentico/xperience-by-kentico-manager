@@ -11,7 +11,7 @@ namespace Xperience.Manager.Commands
     /// </summary>
     public class DeleteCommand : AbstractCommand
     {
-        private bool uninstallConfirmed;
+        private bool deleteConfirmed;
         private readonly IShellRunner shellRunner;
         private readonly IScriptBuilder scriptBuilder;
         private readonly IConfigManager configManager;
@@ -52,8 +52,8 @@ namespace Xperience.Manager.Commands
 
         public override async Task Execute(ToolProfile? profile, string? action)
         {
-            uninstallConfirmed = AnsiConsole.Confirm($"This will [{Constants.ERROR_COLOR}]delete[/] the current profile's physical folder and database!\nDo you want to continue?", false);
-            if (!uninstallConfirmed)
+            deleteConfirmed = AnsiConsole.Confirm($"This will [{Constants.ERROR_COLOR}]delete[/] the current profile's physical folder and database!\nDo you want to continue?", false);
+            if (!deleteConfirmed)
             {
                 return;
             }
@@ -70,13 +70,13 @@ namespace Xperience.Manager.Commands
 
         public override async Task PostExecute(ToolProfile? profile, string? action)
         {
-            if (!uninstallConfirmed)
+            if (!deleteConfirmed)
             {
-                AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Uninstall cancelled[/]\n");
+                AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Delete cancelled[/]\n");
             }
             else if (!Errors.Any())
             {
-                AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Uninstall complete![/]\n");
+                AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Delete complete![/]\n");
             }
 
             await base.PostExecute(profile, action);

@@ -57,12 +57,6 @@ namespace Xperience.Manager.Commands
                 return;
             }
 
-            if (profile is null)
-            {
-                LogError("No active profile.");
-                return;
-            }
-
             var options = await wizard.Run();
             switch (options.SettingToChange)
             {
@@ -90,7 +84,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task ConfigureHeadlessOptions(ToolProfile profile)
+        private async Task ConfigureHeadlessOptions(ToolProfile? profile)
         {
             if (StopProcessing)
             {
@@ -136,7 +130,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task ConfigureConnectionString(ToolProfile profile)
+        private async Task ConfigureConnectionString(ToolProfile? profile)
         {
             if (StopProcessing)
             {
@@ -160,7 +154,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task ConfigureKeys(ToolProfile profile)
+        private async Task ConfigureKeys(ToolProfile? profile)
         {
             if (StopProcessing)
             {
@@ -222,7 +216,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task<bool> TryUpdateHeadlessOption(CmsHeadlessConfiguration headlessConfiguration, PropertyInfo propToUpdate, ToolProfile profile)
+        private async Task<bool> TryUpdateHeadlessOption(CmsHeadlessConfiguration headlessConfiguration, PropertyInfo propToUpdate, ToolProfile? profile)
         {
             bool isCachingKey = headlessConfiguration.Caching.GetType().GetProperties().Contains(propToUpdate);
             object? value = isCachingKey ? propToUpdate.GetValue(headlessConfiguration.Caching) : propToUpdate.GetValue(headlessConfiguration);

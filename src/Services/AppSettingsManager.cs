@@ -81,13 +81,19 @@ namespace Xperience.Manager.Services
         private string GetAppSettingsPath(ToolProfile profile) => $"{profile.WorkingDirectory}/appsettings.json";
 
 
-        private async Task<JObject> LoadSettings(ToolProfile? profile)
+        private Task<JObject> LoadSettings(ToolProfile? profile)
         {
             if (profile is null)
             {
                 throw new ArgumentNullException(nameof(profile));
             }
 
+            return LoadSettingsInternal(profile);
+        }
+
+
+        private async Task<JObject> LoadSettingsInternal(ToolProfile profile)
+        {
             string settingsPath = GetAppSettingsPath(profile);
             if (!File.Exists(settingsPath))
             {
@@ -100,13 +106,19 @@ namespace Xperience.Manager.Services
         }
 
 
-        private async Task WriteAppSettings(ToolProfile? profile, JObject appSettings)
+        private Task WriteAppSettings(ToolProfile? profile, JObject appSettings)
         {
             if (profile is null)
             {
                 throw new ArgumentNullException(nameof(profile));
             }
 
+            return WriteAppSettingsInternal(profile, appSettings);
+        }
+
+
+        private async Task WriteAppSettingsInternal(ToolProfile profile, JObject appSettings)
+        {
             string settingsPath = GetAppSettingsPath(profile);
 
             await File.WriteAllTextAsync(settingsPath, JsonConvert.SerializeObject(appSettings, Formatting.Indented));

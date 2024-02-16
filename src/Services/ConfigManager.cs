@@ -9,25 +9,25 @@ namespace Xperience.Manager.Services
 {
     public class ConfigManager : IConfigManager
     {
-        public async Task AddProfile(ToolProfile profile)
+        public Task AddProfile(ToolProfile? profile)
         {
-            var config = await GetConfig();
-            if (config.Profiles.Any(p => p.ProjectName?.Equals(profile.ProjectName, StringComparison.OrdinalIgnoreCase) ?? false))
+            if (profile is null)
             {
-                throw new InvalidOperationException($"There is already a profile named '{profile.ProjectName}.'");
+                throw new ArgumentNullException(nameof(profile));
             }
 
-            config.Profiles.Add(profile);
-
-            await WriteConfig(config);
+            return AddProfileInternal(profile);
         }
 
 
-        public async Task SetCurrentProfile(ToolProfile profile)
+        public Task SetCurrentProfile(ToolProfile? profile)
         {
-            var config = await GetConfig();
-            config.CurrentProfile = profile.ProjectName;
-            await WriteConfig(config);
+            if (profile is null)
+            {
+                throw new ArgumentNullException(nameof(profile));
+            }
+
+            return SetCurrentProfileInternal(profile);
         }
 
 
@@ -92,20 +92,26 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task RemoveProfile(ToolProfile? profile)
+        public Task RemoveProfile(ToolProfile? profile)
         {
             if (profile is null)
             {
                 throw new ArgumentNullException(nameof(profile));
             }
 
+            return RemoveProfileInternal(profile);
+        }
+
+
+        private async Task AddProfileInternal(ToolProfile profile)
+        {
             var config = await GetConfig();
+            if (config.Profiles.Any(p => p.ProjectName?.Equals(profile.ProjectName, StringComparison.OrdinalIgnoreCase) ?? false))
+            {
+                throw new InvalidOperationException($"There is already a profile named '{profile.ProjectName}.'");
+            }
 
-            // For some reason Profiles.Remove() didn't work, make a new list
-            var newProfiles = new List<ToolProfile>();
-            newProfiles.AddRange(config.Profiles.Where(p => !p.ProjectName?.Equals(profile.ProjectName, StringComparison.OrdinalIgnoreCase) ?? true));
-
-            config.Profiles = newProfiles;
+            config.Profiles.Add(profile);
 
             await WriteConfig(config);
         }
@@ -122,6 +128,28 @@ namespace Xperience.Manager.Services
             // Perform any migrations from old config version to new version here
             config.Version = toolVersion;
 
+            await WriteConfig(config);
+        }
+
+
+        private async Task RemoveProfileInternal(ToolProfile profile)
+        {
+            var config = await GetConfig();
+
+            // For some reason Profiles.Remove() didn't work, make a new list
+            var newProfiles = new List<ToolProfile>();
+            newProfiles.AddRange(config.Profiles.Where(p => !p.ProjectName?.Equals(profile.ProjectName, StringComparison.OrdinalIgnoreCase) ?? true));
+
+            config.Profiles = newProfiles;
+
+            await WriteConfig(config);
+        }
+
+
+        private async Task SetCurrentProfileInternal(ToolProfile profile)
+        {
+            var config = await GetConfig();
+            config.CurrentProfile = profile.ProjectName;
             await WriteConfig(config);
         }
 

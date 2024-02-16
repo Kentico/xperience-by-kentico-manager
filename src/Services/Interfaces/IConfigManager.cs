@@ -17,7 +17,7 @@ namespace Xperience.Manager.Services
         /// <summary>
         /// Adds a profile to the <see cref="ToolConfiguration.Profiles"/>.
         /// </summary>
-        public Task AddProfile(ToolProfile profile);
+        public Task AddProfile(ToolProfile? profile);
 
 
         /// <summary>
@@ -49,6 +49,6 @@ namespace Xperience.Manager.Services
         /// <summary>
         /// Sets the currently active profile.
         /// </summary>
-        public Task SetCurrentProfile(ToolProfile profile);
+        public Task SetCurrentProfile(ToolProfile? profile);
     }
 }

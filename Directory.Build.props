@@ -5,4 +5,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
+  <PropertyGroup>
+    <TimestampServerUrl>http://timestamp.digicert.com</TimestampServerUrl>
+  </PropertyGroup>
 </Project>

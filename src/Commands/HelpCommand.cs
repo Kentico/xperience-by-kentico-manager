@@ -52,7 +52,7 @@ namespace Xperience.Manager.Commands
                 AnsiConsole.WriteLine($" v{v.Major}.{v.Minor}.{v.Build}");
             }
 
-            AnsiConsole.MarkupInterpolated($" [{Constants.EMPHASIS_COLOR}]https://github.com/kentico/xperience-manager[/]\n");
+            AnsiConsole.MarkupInterpolated($" [{Constants.EMPHASIS_COLOR}]https://github.com/Kentico/xperience-by-kentico-manager[/]\n");
 
             var table = new Table()
                 .AddColumn("Command")

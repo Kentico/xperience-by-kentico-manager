@@ -91,6 +91,17 @@ namespace Xperience.Manager.Wizards
                 SkipChecker = IsAdminTemplate
             }));
 
+            var useExistingPrompt = new ConfirmationPrompt($"Use [{Constants.PROMPT_COLOR}]existing[/] database?")
+            {
+                DefaultValue = Options.UseExistingDatabase
+            };
+            Steps.Add(new Step<bool>(new()
+            {
+                Prompt = useExistingPrompt,
+                ValueReceiver = (v) => Options.UseExistingDatabase = v,
+                SkipChecker = IsAdminTemplate
+            }));
+
             Steps.Add(new Step<string>(new()
             {
                 Prompt = new TextPrompt<string>($"Enter the admin [{Constants.PROMPT_COLOR}]password[/]:")

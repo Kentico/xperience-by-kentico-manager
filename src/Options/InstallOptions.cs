@@ -47,6 +47,12 @@ namespace Xperience.Manager.Options
 
 
         /// <summary>
+        /// If <c>true</c>, a new database will not be installed and the <see cref="DatabaseName"/> will be used.
+        /// </summary>
+        public bool UseExistingDatabase { get; set; } = false;
+
+
+        /// <summary>
         /// The name of the SQL server to use.
         /// </summary>
         public string? ServerName { get; set; }

@@ -74,7 +74,7 @@ namespace Xperience.Manager.Tests.Services
         public void DatabaseInstallScript_WithValidOptions_ReturnsValidScript()
         {
             string script = scriptBuilder.SetScript(ScriptType.DatabaseInstall).WithPlaceholders(validInstallOptions).Build();
-            string expected = $"dotnet kentico-xperience-dbmanager -- -s \"{validInstallOptions.ServerName}\" -d \"{validInstallOptions.DatabaseName}\" -a \"{validInstallOptions.AdminPassword}\"";
+            string expected = $"dotnet kentico-xperience-dbmanager -- -s \"{validInstallOptions.ServerName}\" -d \"{validInstallOptions.DatabaseName}\" -a \"{validInstallOptions.AdminPassword}\" --use-existing-database {validInstallOptions.UseExistingDatabase}";
 
             Assert.That(script, Is.EqualTo(expected));
         }

@@ -92,10 +92,9 @@ namespace Xperience.Manager.Commands
             }
 
             string originalDescription = task.Description;
-            string? salt = string.IsNullOrEmpty(options.OldSalt) ? options.NewSalt : options.OldSalt;
             string macroScript = scriptBuilder.SetScript(ScriptType.ResignMacros)
                 .AppendSignAll(options.SignAll, options.UserName)
-                .AppendSalt(salt, !string.IsNullOrEmpty(options.OldSalt))
+                .AppendSalts(options.OldSalt, options.NewSalt)
                 .Build();
             await shellRunner.Execute(new(macroScript)
             {

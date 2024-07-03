@@ -26,11 +26,11 @@ namespace Xperience.Manager.Services
 
 
         /// <summary>
-        /// Appends "--old-salt" or "--new-salt" to the script if the script is <see cref="ScriptType.ResignMacros"/>.
+        /// Appends "--old-salt" and/or "--new-salt" to the script if the script is <see cref="ScriptType.ResignMacros"/>.
         /// </summary>
-        /// <param name="salt">The salt value appended to the script. If not provided, the salt from appsettings is used.</param>
-        /// <param name="isOld">If <c>true</c>, "--old-salt" is appended.</param>
-        public IScriptBuilder AppendSalt(string? salt, bool isOld);
+        /// <param name="oldSalt">The old salt value appended to the script.</param>
+        /// <param name="newSalt">The new salt value appended to the script. If not provided, the salt from appsettings is used.</param>
+        public IScriptBuilder AppendSalts(string? oldSalt, string? newSalt);
 
 
         /// <summary>

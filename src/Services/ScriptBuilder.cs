@@ -60,14 +60,22 @@ namespace Xperience.Manager.Services
         }
 
 
-        public IScriptBuilder AppendSalt(string? salt, bool isOld)
+        public IScriptBuilder AppendSalts(string? oldSalt, string? newSalt)
         {
-            if (string.IsNullOrEmpty(salt) || !currentScriptType.Equals(ScriptType.ResignMacros))
+            if (!currentScriptType.Equals(ScriptType.ResignMacros))
             {
                 return this;
             }
 
-            currentScript += $" {(isOld ? "--old-salt" : "--new-salt")} \"{salt}\"";
+            if (!string.IsNullOrEmpty(oldSalt))
+            {
+                currentScript += $" --old-salt \"{oldSalt}\"";
+            }
+
+            if (!string.IsNullOrEmpty(newSalt))
+            {
+                currentScript += $" --new-salt \"{newSalt}\"";
+            }
 
             return this;
         }

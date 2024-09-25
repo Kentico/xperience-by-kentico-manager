@@ -104,6 +104,8 @@ The installation wizard will automatically generate an administrator password fo
    xman install
    ```
 
+Installing a new project automatically includes a database as well. If you want to _only_ install a database and not the project files, use the __db__ parameter: `xman install db`.
+
 ### Updating a project version
 
 1. (optional) Select a profile with the [`profile`](#managing-profiles) command

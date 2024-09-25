@@ -30,7 +30,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Parameters => [DATABASE];
 
 
-        public override string Description => "Installs a new XbK instance";
+        public override string Description => "Installs a new XbK instance. The 'db' parameter installs only a database";
 
 
         /// <summary>

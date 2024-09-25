@@ -1,13 +1,16 @@
 ﻿{
-  "Version": "3.4.1.0",
+  "Version": "4.1.0.0",
   "CurrentProfile": null,
-  "DefaultInstallOptions": {
-    "DatabaseName": "mydb",
+  "DefaultInstallProjectOptions": {
     "ProjectName": "myproject",
-    "ServerName": "myserver",
     "Template": "kentico-xperience-sample-mvc",
     "UseCloud": true,
     "Version": null
+  },
+  "DefaultInstallDatabaseOptions": {
+    "DatabaseName": "mydb",
+    "UseExistingDatabase": false,
+    "ServerName": "myserver"
   },
   "Profiles": [],
   "CDRootPath": "c:\\ContinuousDeployment"

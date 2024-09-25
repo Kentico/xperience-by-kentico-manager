@@ -22,20 +22,24 @@ namespace Xperience.Manager.Tests.Commands
         private const bool USE_EXISTING = false;
         private readonly Version version = new(1, 0, 0);
         private readonly IShellRunner shellRunner = Substitute.For<IShellRunner>();
-        private readonly IWizard<InstallOptions> installWizard = Substitute.For<IWizard<InstallOptions>>();
+        private readonly IWizard<InstallProjectOptions> projectWizard = Substitute.For<IWizard<InstallProjectOptions>>();
+        private readonly IWizard<InstallDatabaseOptions> dbWizard = Substitute.For<IWizard<InstallDatabaseOptions>>();
 
 
         [SetUp]
         public void InstallCommandTestsSetUp()
         {
-            installWizard.Run().Returns(new InstallOptions
+            projectWizard.Run().Returns(new InstallProjectOptions
             {
                 ProjectName = PROJECT_NAME,
+                Version = version,
+                Template = TEMPLATE
+            });
+            dbWizard.Run().Returns(new InstallDatabaseOptions
+            {
                 AdminPassword = PASSWORD,
                 DatabaseName = DB_NAME,
                 ServerName = SERVER_NAME,
-                Version = version,
-                Template = TEMPLATE,
                 UseExistingDatabase = USE_EXISTING
             });
 
@@ -46,7 +50,7 @@ namespace Xperience.Manager.Tests.Commands
         [Test]
         public async Task Execute_CallsInstallationScripts()
         {
-            var command = new InstallCommand(shellRunner, new ScriptBuilder(), installWizard, Substitute.For<IConfigManager>());
+            var command = new InstallCommand(shellRunner, new ScriptBuilder(), projectWizard, dbWizard, Substitute.For<IConfigManager>());
             await command.PreExecute(new(), string.Empty);
             await command.Execute(new(), string.Empty);
 

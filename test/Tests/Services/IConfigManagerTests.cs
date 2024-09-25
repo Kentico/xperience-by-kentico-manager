@@ -97,15 +97,16 @@ namespace Xperience.Manager.Tests.Services
         {
             File.Copy("Data/config_with_installoptions.json", Constants.CONFIG_FILENAME);
 
-            var options = await configManager.GetDefaultInstallOptions();
+            var dbOptions = await configManager.GetDefaultInstallDatabaseOptions();
+            var projectOptions = await configManager.GetDefaultInstallProjectOptions();
 
             Assert.Multiple(() =>
             {
-                Assert.That(options.UseCloud, Is.True);
-                Assert.That(options.DatabaseName, Is.EqualTo("mydb"));
-                Assert.That(options.ServerName, Is.EqualTo("myserver"));
-                Assert.That(options.ProjectName, Is.EqualTo("myproject"));
-                Assert.That(options.Template, Is.EqualTo("kentico-xperience-sample-mvc"));
+                Assert.That(dbOptions.DatabaseName, Is.EqualTo("mydb"));
+                Assert.That(dbOptions.ServerName, Is.EqualTo("myserver"));
+                Assert.That(projectOptions.UseCloud, Is.True);
+                Assert.That(projectOptions.ProjectName, Is.EqualTo("myproject"));
+                Assert.That(projectOptions.Template, Is.EqualTo("kentico-xperience-sample-mvc"));
             });
         }
     }

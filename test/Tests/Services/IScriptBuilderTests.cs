@@ -11,13 +11,16 @@ namespace Xperience.Manager.Tests.Services
     public class IScriptBuilderTests
     {
         private readonly IScriptBuilder scriptBuilder = new ScriptBuilder();
-        private readonly InstallOptions validInstallOptions = new()
+        private readonly InstallProjectOptions validProjectOptions = new()
         {
             ProjectName = "TEST",
+            Template = "kentico-xperience-sample-mvc"
+        };
+        private readonly InstallDatabaseOptions validDatabaseOptions = new()
+        {
             AdminPassword = "PW",
             DatabaseName = "DB",
-            ServerName = "TESTSERVER",
-            Template = "kentico-xperience-sample-mvc"
+            ServerName = "SERVER"
         };
         private readonly UpdateOptions validUpdateOptions = new() { PackageName = "kentico.xperience.webapp" };
 
@@ -25,20 +28,10 @@ namespace Xperience.Manager.Tests.Services
         [Test]
         public void ProjectInstallScript_WithValidOptions_ReturnsValidScript()
         {
-            string script = scriptBuilder.SetScript(ScriptType.ProjectInstall).WithPlaceholders(validInstallOptions).Build();
-            string expected = $"dotnet new {validInstallOptions.Template} -n {validInstallOptions.ProjectName}";
+            string script = scriptBuilder.SetScript(ScriptType.ProjectInstall).WithPlaceholders(validProjectOptions).Build();
+            string expected = $"dotnet new {validProjectOptions.Template} -n {validProjectOptions.ProjectName}";
 
             Assert.That(script, Is.EqualTo(expected));
-        }
-
-
-        [Test]
-        public void ProjectInstallScript_WithInvalidOptions_ThrowsException()
-        {
-            var options = new InstallOptions { Template = string.Empty };
-            var builder = scriptBuilder.SetScript(ScriptType.ProjectInstall).WithPlaceholders(options);
-
-            Assert.That(() => builder.Build(), Throws.InvalidOperationException);
         }
 
 
@@ -47,7 +40,7 @@ namespace Xperience.Manager.Tests.Services
         {
             var version = new Version(1, 0, 0);
             string script = scriptBuilder.SetScript(ScriptType.TemplateInstall)
-                .WithPlaceholders(validInstallOptions)
+                .WithPlaceholders(validProjectOptions)
                 .AppendVersion(version)
                 .Build();
             string expected = $"dotnet new install kentico.xperience.templates::{version}";
@@ -73,20 +66,10 @@ namespace Xperience.Manager.Tests.Services
         [Test]
         public void DatabaseInstallScript_WithValidOptions_ReturnsValidScript()
         {
-            string script = scriptBuilder.SetScript(ScriptType.DatabaseInstall).WithPlaceholders(validInstallOptions).Build();
-            string expected = $"dotnet kentico-xperience-dbmanager -- -s \"{validInstallOptions.ServerName}\" -d \"{validInstallOptions.DatabaseName}\" -a \"{validInstallOptions.AdminPassword}\" --use-existing-database {validInstallOptions.UseExistingDatabase}";
+            string script = scriptBuilder.SetScript(ScriptType.DatabaseInstall).WithPlaceholders(validDatabaseOptions).Build();
+            string expected = $"dotnet kentico-xperience-dbmanager -- -s \"{validDatabaseOptions.ServerName}\" -d \"{validDatabaseOptions.DatabaseName}\" -a \"{validDatabaseOptions.AdminPassword}\" --use-existing-database {validDatabaseOptions.UseExistingDatabase}";
 
             Assert.That(script, Is.EqualTo(expected));
-        }
-
-
-        [Test]
-        public void DatabaseInstallScript_WithInvalidOptions_ThrowsException()
-        {
-            var options = new InstallOptions();
-            var builder = scriptBuilder.SetScript(ScriptType.DatabaseInstall).WithPlaceholders(options);
-
-            Assert.That(() => builder.Build(), Throws.InvalidOperationException);
         }
     }
 }

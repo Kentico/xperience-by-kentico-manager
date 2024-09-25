@@ -3,6 +3,7 @@ using Spectre.Console;
 using System.Diagnostics;
 
 using Xperience.Manager.Configuration;
+using Xperience.Manager.Helpers;
 using Xperience.Manager.Options;
 using Xperience.Manager.Services;
 using Xperience.Manager.Wizards;
@@ -14,17 +15,19 @@ namespace Xperience.Manager.Commands
     /// </summary>
     public class InstallCommand : AbstractCommand
     {
+        private const string DATABASE = "db";
         private readonly ToolProfile newInstallationProfile = new();
         private readonly IShellRunner shellRunner;
         private readonly IConfigManager configManager;
         private readonly IScriptBuilder scriptBuilder;
-        private readonly IWizard<InstallOptions> wizard;
+        private readonly IWizard<InstallProjectOptions> projectWizard;
+        private readonly IWizard<InstallDatabaseOptions> dbWizard;
 
 
         public override IEnumerable<string> Keywords => ["i", "install"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [DATABASE];
 
 
         public override string Description => "Installs a new XbK instance";
@@ -41,9 +44,15 @@ namespace Xperience.Manager.Commands
         }
 
 
-        public InstallCommand(IShellRunner shellRunner, IScriptBuilder scriptBuilder, IWizard<InstallOptions> wizard, IConfigManager configManager)
+        public InstallCommand(
+            IShellRunner shellRunner,
+            IScriptBuilder scriptBuilder,
+            IWizard<InstallProjectOptions> projectWizard,
+            IWizard<InstallDatabaseOptions> dbWizard,
+            IConfigManager configManager)
         {
-            this.wizard = wizard;
+            this.dbWizard = dbWizard;
+            this.projectWizard = projectWizard;
             this.shellRunner = shellRunner;
             this.configManager = configManager;
             this.scriptBuilder = scriptBuilder;
@@ -57,22 +66,39 @@ namespace Xperience.Manager.Commands
                 return;
             }
 
-            // Override default values of InstallOptions with values from config file
-            wizard.Options = await configManager.GetDefaultInstallOptions();
-            var options = await wizard.Run();
+            // Override default values of InstallDatabaseOptions and InstallProjectOptions with values from config file
+            dbWizard.Options = await configManager.GetDefaultInstallDatabaseOptions();
+            projectWizard.Options = await configManager.GetDefaultInstallProjectOptions();
+
+            // Only install database if "db" argument is passed
+            InstallDatabaseOptions? dbOptions = null;
+            if (!string.IsNullOrEmpty(action) && action.Equals(DATABASE))
+            {
+                dbOptions = await dbWizard.Run(InstallDatabaseWizard.SKIP_EXISTINGDB_STEP);
+                await InstallDatabaseTool();
+                await CreateDatabase(dbOptions, true);
+
+                return;
+            }
+
+            var projectOptions = await projectWizard.Run();
+            if (!IsAdminTemplate(projectOptions))
+            {
+                dbOptions = await dbWizard.Run();
+            }
+
+            newInstallationProfile.ProjectName = projectOptions.ProjectName;
+            newInstallationProfile.WorkingDirectory = $"{projectOptions.InstallRootPath}\\{projectOptions.ProjectName}";
+
             AnsiConsole.WriteLine();
-
-            newInstallationProfile.ProjectName = options.ProjectName;
-            newInstallationProfile.WorkingDirectory = $"{options.InstallRootPath}\\{options.ProjectName}";
-
             await CreateWorkingDirectory();
-            await InstallTemplate(options);
-            await CreateProjectFiles(options);
+            await InstallTemplate(projectOptions);
+            await CreateProjectFiles(projectOptions);
 
             // Admin boilerplate project doesn't require database install or profile
-            if (!IsAdminTemplate(options))
+            if (!IsAdminTemplate(projectOptions) && dbOptions is not null)
             {
-                await CreateDatabase(options);
+                await CreateDatabase(dbOptions, false);
                 await configManager.AddProfile(newInstallationProfile);
 
                 // Select new profile
@@ -113,7 +139,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task CreateDatabase(InstallOptions options)
+        private async Task CreateDatabase(InstallDatabaseOptions options, bool isDatabaseOnly)
         {
             if (StopProcessing)
             {
@@ -125,6 +151,12 @@ namespace Xperience.Manager.Commands
             string databaseScript = scriptBuilder.SetScript(ScriptType.DatabaseInstall)
                 .WithPlaceholders(options)
                 .Build();
+            // Database-only install requires removal of "dotnet" from the script to run global tool
+            if (isDatabaseOnly)
+            {
+                databaseScript = databaseScript.Replace("dotnet", "");
+            }
+
             await shellRunner.Execute(new(databaseScript)
             {
                 ErrorHandler = ErrorDataReceived,
@@ -133,7 +165,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task CreateProjectFiles(InstallOptions options)
+        private async Task CreateProjectFiles(InstallProjectOptions options)
         {
             if (StopProcessing)
             {
@@ -167,8 +199,43 @@ namespace Xperience.Manager.Commands
             }).WaitForExitAsync();
         }
 
+        private async Task InstallDatabaseTool()
+        {
+            if (StopProcessing)
+            {
+                return;
+            }
 
-        private async Task InstallTemplate(InstallOptions options)
+            // Get desired database tool version
+            var versions = await NuGetVersionHelper.GetPackageVersions(Constants.DATABASE_TOOL);
+            var filtered = versions.Where(v => !v.IsPrerelease && !v.IsLegacyVersion && v.Major >= 25)
+                .Select(v => v.Version)
+                .OrderByDescending(v => v);
+            var toolVersion = AnsiConsole.Prompt(new SelectionPrompt<Version>()
+                    .Title($"Which [{Constants.PROMPT_COLOR}]version[/]?")
+                    .PageSize(10)
+                    .UseConverter(v => $"{v.Major}.{v.Minor}.{v.Build}")
+                    .MoreChoicesText("Scroll for more...")
+                    .AddChoices(filtered));
+
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Uninstalling previous database tool...[/]");
+
+            string uninstallScript = scriptBuilder.SetScript(ScriptType.UninstallDatabaseTool).Build();
+            // Don't use base error handler for uninstall script as it throws when no tool is installed
+            // Just skip uninstall step in case of error and try to continue
+            await shellRunner.Execute(new(uninstallScript)).WaitForExitAsync();
+
+            AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Installing database tool version {toolVersion}...[/]");
+
+            string installScript = scriptBuilder.SetScript(ScriptType.InstallDatabaseTool)
+                .AppendVersion(toolVersion)
+                .Build();
+            await shellRunner.Execute(new(installScript) { ErrorHandler = ErrorDataReceived }).WaitForExitAsync();
+        }
+
+
+        private async Task InstallTemplate(InstallProjectOptions options)
         {
             if (StopProcessing)
             {
@@ -180,8 +247,7 @@ namespace Xperience.Manager.Commands
             string uninstallScript = scriptBuilder.SetScript(ScriptType.TemplateUninstall).Build();
             // Don't use base error handler for uninstall script as it throws when no templates are installed
             // Just skip uninstall step in case of error and try to continue
-            var uninstallCmd = shellRunner.Execute(new(uninstallScript));
-            await uninstallCmd.WaitForExitAsync();
+            await shellRunner.Execute(new(uninstallScript)).WaitForExitAsync();
 
             AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Installing template version {options.Version}...[/]");
 
@@ -189,11 +255,11 @@ namespace Xperience.Manager.Commands
                 .WithPlaceholders(options)
                 .AppendVersion(options.Version)
                 .Build();
-            var installCmd = shellRunner.Execute(new(installScript) { ErrorHandler = ErrorDataReceived });
-            await installCmd.WaitForExitAsync();
+            await shellRunner.Execute(new(installScript) { ErrorHandler = ErrorDataReceived }).WaitForExitAsync();
         }
 
 
-        private bool IsAdminTemplate(InstallOptions options) => options?.Template.Equals(Constants.TEMPLATE_ADMIN, StringComparison.OrdinalIgnoreCase) ?? false;
+        private static bool IsAdminTemplate(InstallProjectOptions options) =>
+            options?.Template.Equals(Constants.TEMPLATE_ADMIN, StringComparison.OrdinalIgnoreCase) ?? false;
     }
 }

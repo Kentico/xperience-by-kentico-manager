@@ -33,7 +33,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Keywords => ["?", "help"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [];
 
 
         public override string Description => "Displays the help menu (this screen)";

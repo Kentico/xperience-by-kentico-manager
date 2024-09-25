@@ -10,7 +10,8 @@
             "args": ["i"],
             "cwd": "${workspaceFolder}",
             "console": "externalTerminal",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "brokeredServicePipeName": "undefined",
         }
     ]
 }

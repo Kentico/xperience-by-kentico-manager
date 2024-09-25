@@ -10,12 +10,14 @@ namespace Xperience.Manager.Services
 
         private const string BUILD_SCRIPT = "dotnet build";
         private const string MKDIR_SCRIPT = $"mkdir";
-        private const string INSTALL_PROJECT_SCRIPT = $"dotnet new {nameof(InstallOptions.Template)} -n {nameof(InstallOptions.ProjectName)}";
-        private const string INSTALL_DATABASE_SCRIPT = $"dotnet kentico-xperience-dbmanager -- -s \"{nameof(InstallOptions.ServerName)}\" -d \"{nameof(InstallOptions.DatabaseName)}\" -a \"{nameof(InstallOptions.AdminPassword)}\" --use-existing-database {nameof(InstallOptions.UseExistingDatabase)}";
-        private const string UNINSTALL_TEMPLATE_SCRIPT = "dotnet new uninstall kentico.xperience.templates";
-        private const string INSTALL_TEMPLATE_SCRIPT = "dotnet new install kentico.xperience.templates";
+        private const string INSTALL_PROJECT_SCRIPT = $"dotnet new {nameof(InstallProjectOptions.Template)} -n {nameof(InstallProjectOptions.ProjectName)}";
+        private const string INSTALL_DATABASE_SCRIPT = $"dotnet kentico-xperience-dbmanager -- -s \"{nameof(InstallDatabaseOptions.ServerName)}\" -d \"{nameof(InstallDatabaseOptions.DatabaseName)}\" -a \"{nameof(InstallDatabaseOptions.AdminPassword)}\" --use-existing-database {nameof(InstallDatabaseOptions.UseExistingDatabase)}";
+        private const string UNINSTALL_TEMPLATE_SCRIPT = $"dotnet new uninstall {Constants.TEMPLATES_PACKAGE}";
+        private const string INSTALL_TEMPLATE_SCRIPT = $"dotnet new install {Constants.TEMPLATES_PACKAGE}";
         private const string UPDATE_PACKAGE_SCRIPT = $"dotnet add package {nameof(UpdateOptions.PackageName)}";
         private const string UPDATE_DATABASE_SCRIPT = "dotnet run --no-build --kxp-update -- --skip-confirmation";
+        private const string INSTALL_DBTOOL_SCRIPT = $"dotnet tool install {Constants.DATABASE_TOOL} -g";
+        private const string UNINSTALL_DBTOOL_SCRIPT = $"dotnet tool uninstall {Constants.DATABASE_TOOL} -g";
         private const string CI_STORE_SCRIPT = "dotnet run --no-build --kxp-ci-store";
         private const string CI_RESTORE_SCRIPT = "dotnet run --no-build --kxp-ci-restore";
         private const string CD_NEW_CONFIG_SCRIPT = $"dotnet run --no-build -- --kxp-cd-config --path \"{nameof(ContinuousDeploymentConfig.ConfigPath)}\"";
@@ -105,7 +107,7 @@ namespace Xperience.Manager.Services
             {
                 currentScript += $"::{version}";
             }
-            else if (currentScriptType.Equals(ScriptType.PackageUpdate))
+            else if (currentScriptType.Equals(ScriptType.PackageUpdate) || currentScriptType.Equals(ScriptType.InstallDatabaseTool))
             {
                 currentScript += $" --version {version}";
             }
@@ -116,9 +118,9 @@ namespace Xperience.Manager.Services
 
         public string Build()
         {
-            if (!ValidateScript())
+            if (string.IsNullOrEmpty(currentScript))
             {
-                throw new InvalidOperationException("The script is empty or contains placeholder values.");
+                throw new InvalidOperationException("The script is empty.");
             }
 
             return currentScript;
@@ -173,19 +175,13 @@ namespace Xperience.Manager.Services
                 ScriptType.GenerateCode => CODEGEN_SCRIPT,
                 ScriptType.DeleteDirectory => DELETE_FOLDER_SCRIPT,
                 ScriptType.ExecuteSql => RUN_SQL_QUERY,
+                ScriptType.UninstallDatabaseTool => UNINSTALL_DBTOOL_SCRIPT,
+                ScriptType.InstallDatabaseTool => INSTALL_DBTOOL_SCRIPT,
                 ScriptType.None => string.Empty,
                 _ => string.Empty,
             };
 
             return this;
-        }
-
-
-        private bool ValidateScript()
-        {
-            var propertyNames = typeof(InstallOptions).GetProperties().Select(p => p.Name);
-
-            return !string.IsNullOrEmpty(currentScript) && !propertyNames.Any(currentScript.Contains);
         }
     }
 
@@ -296,5 +292,15 @@ namespace Xperience.Manager.Services
         /// The script which executes a SQL query against a database.
         /// </summary>
         ExecuteSql,
+
+        /// <summary>
+        /// The script which uninstalls the Kentico.Xperience.DbManager global tool.
+        /// </summary>
+        UninstallDatabaseTool,
+
+        /// <summary>
+        /// The script which installs the Kentico.Xperience.DbManager global tool.
+        /// </summary>
+        InstallDatabaseTool,
     }
 }

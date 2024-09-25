@@ -17,17 +17,18 @@ namespace Xperience.Manager.Wizards
         public TOptions Options { get; set; }
 
 
-
         /// <summary>
         /// Initializes the <see cref="Steps"/> with the <see cref="Step{T}"/>s required to
         /// populate the <see cref="Options"/>.
         /// </summary>
-        public Task InitSteps();
+        /// <param name="args">Optional arguments to pass to the step initialization.
+        public Task InitSteps(params string[] args);
 
 
         /// <summary>
         /// Requests user input to generate the <see cref="Options"/>.
         /// </summary>
-        public Task<TOptions> Run();
+        /// <param name="args">Optional arguments to pass to the wizard.
+        public Task<TOptions> Run(params string[] args);
     }
 }

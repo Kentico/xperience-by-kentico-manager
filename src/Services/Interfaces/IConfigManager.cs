@@ -34,10 +34,17 @@ namespace Xperience.Manager.Services
 
 
         /// <summary>
-        /// Gets the <see cref="InstallOptions"/> specified by the tool configuration file, or a new instance if
+        /// Gets the <see cref="InstallProjectOptions"/> specified by the tool configuration file, or a new instance if
         /// the configuration can't be read.
         /// </summary>
-        public Task<InstallOptions> GetDefaultInstallOptions();
+        public Task<InstallProjectOptions> GetDefaultInstallProjectOptions();
+
+
+        /// <summary>
+        /// Gets the <see cref="InstallDatabaseOptions"/> specified by the tool configuration file, or a new instance if
+        /// the configuration can't be read.
+        /// </summary>
+        public Task<InstallDatabaseOptions> GetDefaultInstallDatabaseOptions();
 
 
         /// <summary>

@@ -23,7 +23,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Keywords => ["s", "settings"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [];
 
 
         public override string Description => "Configures the appsettings.json of a project";

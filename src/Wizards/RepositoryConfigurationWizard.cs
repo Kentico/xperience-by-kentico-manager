@@ -20,7 +20,7 @@ namespace Xperience.Manager.Wizards
         ];
 
 
-        public override Task InitSteps()
+        public override Task InitSteps(params string[] args)
         {
             Steps.Add(new Step<string>(new()
             {

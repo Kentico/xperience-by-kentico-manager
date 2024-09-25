@@ -21,7 +21,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Keywords => ["d", "delete"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [];
 
 
         public override string Description => "Deletes a project and its database";

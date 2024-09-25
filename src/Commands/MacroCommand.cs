@@ -20,7 +20,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Keywords => ["m", "macros"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [];
 
 
         public override string Description => "Re-signs macro signatures";

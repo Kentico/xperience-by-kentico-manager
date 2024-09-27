@@ -258,7 +258,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private string? Truncate(string? value, int maxLength, string truncationSuffix = "...") => value?.Length > maxLength
+        private static string? Truncate(string? value, int maxLength, string truncationSuffix = "...") => value?.Length > maxLength
                 ? value[..maxLength] + truncationSuffix
                 : value;
     }

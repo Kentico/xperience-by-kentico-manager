@@ -54,7 +54,7 @@ namespace Xperience.Manager.Commands
 
 
         /// <summary>
-        /// A handler which can be assigned to <see cref="Process.ErrorDataReceived"/> to handler errors. 
+        /// A handler which can be assigned to <see cref="Process.ErrorDataReceived"/> to handle errors. 
         /// </summary>
         protected void ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
@@ -80,7 +80,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        protected void PrintCurrentProfile(ToolProfile? profile)
+        protected static void PrintCurrentProfile(ToolProfile? profile)
         {
             AnsiConsole.Write(new Rule("Current profile:") { Justification = Justify.Left });
             AnsiConsole.MarkupLineInterpolated($"Name: [{Constants.EMPHASIS_COLOR}]{profile?.ProjectName ?? "None"}[/]");

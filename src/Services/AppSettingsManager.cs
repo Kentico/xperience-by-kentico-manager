@@ -78,10 +78,10 @@ namespace Xperience.Manager.Services
         }
 
 
-        private string GetAppSettingsPath(ToolProfile profile) => $"{profile.WorkingDirectory}/appsettings.json";
+        private static string GetAppSettingsPath(ToolProfile profile) => $"{profile.WorkingDirectory}/appsettings.json";
 
 
-        private Task<JObject> LoadSettings(ToolProfile? profile)
+        private static Task<JObject> LoadSettings(ToolProfile? profile)
         {
             if (profile is null)
             {
@@ -92,7 +92,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        private async Task<JObject> LoadSettingsInternal(ToolProfile profile)
+        private static async Task<JObject> LoadSettingsInternal(ToolProfile profile)
         {
             string settingsPath = GetAppSettingsPath(profile);
             if (!File.Exists(settingsPath))
@@ -106,7 +106,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        private Task WriteAppSettings(ToolProfile? profile, JObject appSettings)
+        private static Task WriteAppSettings(ToolProfile? profile, JObject appSettings)
         {
             if (profile is null)
             {
@@ -117,7 +117,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        private async Task WriteAppSettingsInternal(ToolProfile profile, JObject appSettings)
+        private static async Task WriteAppSettingsInternal(ToolProfile profile, JObject appSettings)
         {
             string settingsPath = GetAppSettingsPath(profile);
 

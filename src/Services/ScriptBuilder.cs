@@ -277,10 +277,12 @@ namespace Xperience.Manager.Services
         /// </summary>
         ResignMacros,
 
+
         /// <summary>
         /// The script which generates code files for Xperience objects.
         /// </summary>
         GenerateCode,
+
 
         /// <summary>
         /// The script which deletes a local folder and its contents.
@@ -293,10 +295,12 @@ namespace Xperience.Manager.Services
         /// </summary>
         ExecuteSql,
 
+
         /// <summary>
         /// The script which uninstalls the Kentico.Xperience.DbManager global tool.
         /// </summary>
         UninstallDatabaseTool,
+
 
         /// <summary>
         /// The script which installs the Kentico.Xperience.DbManager global tool.

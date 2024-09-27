@@ -2,6 +2,7 @@
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 using Xperience.Manager.Configuration;
 using Xperience.Manager.Options;
 
@@ -139,9 +140,9 @@ namespace Xperience.Manager.Services
             string text = await File.ReadAllTextAsync(Constants.CONFIG_FILENAME);
             var json = JsonConvert.DeserializeObject<JObject>(text) ??
                 throw new InvalidOperationException("Unable to read configuration file for migration.");
-            if ((config.Version?.ToString().Equals("4.0.0.0") ?? false) && toolVersion.ToString().Equals("4.1.0.0"))
+            if ((config.Version?.ToString().Equals("4.0.0.0") ?? false) && toolVersion.ToString().Equals("5.0.0.0"))
             {
-                Migrate40To41(json, config);
+                Migrate40To50(json, config);
             }
 
             config.Version = toolVersion;
@@ -176,7 +177,7 @@ namespace Xperience.Manager.Services
             File.WriteAllTextAsync(Constants.CONFIG_FILENAME, JsonConvert.SerializeObject(config, Formatting.Indented));
 
 
-        private static void Migrate40To41(JObject oldConfig, ToolConfiguration newConfig)
+        private static void Migrate40To50(JObject oldConfig, ToolConfiguration newConfig)
         {
             var oldInstallOptions = oldConfig["DefaultInstallOptions"];
 

@@ -1,14 +1,8 @@
 ﻿{
-  "Version": "3.4.1.0",
+  "Version": "4.1.0.0",
   "CurrentProfile": null,
-  "DefaultInstallOptions": {
-    "DatabaseName": null,
-    "ProjectName": null,
-    "ServerName": null,
-    "Template": null,
-    "UseCloud": false,
-    "Version": null
-  },
+  "DefaultInstallProjectOptions": null,
+  "DefaultInstallDatabaseOptions": null,
   "Profiles": [
     {
       "ProjectName": "1",

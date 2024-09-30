@@ -17,7 +17,7 @@ namespace Xperience.Manager.Services
         /// <summary>
         /// Adds a profile to the <see cref="ToolConfiguration.Profiles"/>.
         /// </summary>
-        public Task AddProfile(ToolProfile profile);
+        public Task AddProfile(ToolProfile? profile);
 
 
         /// <summary>
@@ -34,21 +34,28 @@ namespace Xperience.Manager.Services
 
 
         /// <summary>
-        /// Gets the <see cref="InstallOptions"/> specified by the tool configuration file, or a new instance if
+        /// Gets the <see cref="InstallProjectOptions"/> specified by the tool configuration file, or a new instance if
         /// the configuration can't be read.
         /// </summary>
-        public Task<InstallOptions> GetDefaultInstallOptions();
+        public Task<InstallProjectOptions> GetDefaultInstallProjectOptions();
+
+
+        /// <summary>
+        /// Gets the <see cref="InstallDatabaseOptions"/> specified by the tool configuration file, or a new instance if
+        /// the configuration can't be read.
+        /// </summary>
+        public Task<InstallDatabaseOptions> GetDefaultInstallDatabaseOptions();
 
 
         /// <summary>
         /// Removes a profile to the <see cref="ToolConfiguration.Profiles"/>.
         /// </summary>
-        public Task RemoveProfile(ToolProfile profile);
+        public Task RemoveProfile(ToolProfile? profile);
 
 
         /// <summary>
         /// Sets the currently active profile.
         /// </summary>
-        public Task SetCurrentProfile(ToolProfile profile);
+        public Task SetCurrentProfile(ToolProfile? profile);
     }
 }

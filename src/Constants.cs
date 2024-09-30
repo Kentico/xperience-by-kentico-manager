@@ -15,6 +15,7 @@ namespace Xperience.Manager
         public const string EMPHASIS_COLOR = "deepskyblue3_1";
         public const string PROMPT_COLOR = "lightgoldenrod2_2";
 
+        public const string DATABASE_TOOL = "Kentico.Xperience.DbManager";
         public const string TEMPLATES_PACKAGE = "kentico.xperience.templates";
         public const string TEMPLATE_SAMPLE = "kentico-xperience-sample-mvc";
         public const string TEMPLATE_BLANK = "kentico-xperience-mvc";

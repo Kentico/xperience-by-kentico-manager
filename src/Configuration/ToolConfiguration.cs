@@ -26,9 +26,15 @@ namespace Xperience.Manager.Configuration
 
 
         /// <summary>
-        /// The <see cref="InstallOptions"/> stored in the configuration file.
+        /// The <see cref="InstallProjectOptions"/> stored in the configuration file.
         /// </summary>
-        public InstallOptions? DefaultInstallOptions { get; set; }
+        public InstallProjectOptions? DefaultInstallProjectOptions { get; set; }
+
+
+        /// <summary>
+        /// The <see cref="InstallDatabaseOptions"/> stored in the configuration file.
+        /// </summary>
+        public InstallDatabaseOptions? DefaultInstallDatabaseOptions { get; set; }
 
 
         /// <summary>

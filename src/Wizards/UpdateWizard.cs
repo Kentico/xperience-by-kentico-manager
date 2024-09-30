@@ -11,7 +11,7 @@ namespace Xperience.Manager.Wizards
     /// </summary>
     public class UpdateWizard : AbstractWizard<UpdateOptions>
     {
-        public override async Task InitSteps()
+        public override async Task InitSteps(params string[] args)
         {
             var versions = await NuGetVersionHelper.GetPackageVersions(Constants.TEMPLATES_PACKAGE);
             var filtered = versions.Where(v => !v.IsPrerelease && !v.IsLegacyVersion && v.Major >= 25)

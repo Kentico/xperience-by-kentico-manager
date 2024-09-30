@@ -10,12 +10,14 @@ namespace Xperience.Manager.Services
 
         private const string BUILD_SCRIPT = "dotnet build";
         private const string MKDIR_SCRIPT = $"mkdir";
-        private const string INSTALL_PROJECT_SCRIPT = $"dotnet new {nameof(InstallOptions.Template)} -n {nameof(InstallOptions.ProjectName)}";
-        private const string INSTALL_DATABASE_SCRIPT = $"dotnet kentico-xperience-dbmanager -- -s \"{nameof(InstallOptions.ServerName)}\" -d \"{nameof(InstallOptions.DatabaseName)}\" -a \"{nameof(InstallOptions.AdminPassword)}\"";
-        private const string UNINSTALL_TEMPLATE_SCRIPT = "dotnet new uninstall kentico.xperience.templates";
-        private const string INSTALL_TEMPLATE_SCRIPT = "dotnet new install kentico.xperience.templates";
+        private const string INSTALL_PROJECT_SCRIPT = $"dotnet new {nameof(InstallProjectOptions.Template)} -n {nameof(InstallProjectOptions.ProjectName)}";
+        private const string INSTALL_DATABASE_SCRIPT = $"dotnet kentico-xperience-dbmanager -- -s \"{nameof(InstallDatabaseOptions.ServerName)}\" -d \"{nameof(InstallDatabaseOptions.DatabaseName)}\" -a \"{nameof(InstallDatabaseOptions.AdminPassword)}\" --use-existing-database {nameof(InstallDatabaseOptions.UseExistingDatabase)}";
+        private const string UNINSTALL_TEMPLATE_SCRIPT = $"dotnet new uninstall {Constants.TEMPLATES_PACKAGE}";
+        private const string INSTALL_TEMPLATE_SCRIPT = $"dotnet new install {Constants.TEMPLATES_PACKAGE}";
         private const string UPDATE_PACKAGE_SCRIPT = $"dotnet add package {nameof(UpdateOptions.PackageName)}";
         private const string UPDATE_DATABASE_SCRIPT = "dotnet run --no-build --kxp-update -- --skip-confirmation";
+        private const string INSTALL_DBTOOL_SCRIPT = $"dotnet tool install {Constants.DATABASE_TOOL} -g";
+        private const string UNINSTALL_DBTOOL_SCRIPT = $"dotnet tool uninstall {Constants.DATABASE_TOOL} -g";
         private const string CI_STORE_SCRIPT = "dotnet run --no-build --kxp-ci-store";
         private const string CI_RESTORE_SCRIPT = "dotnet run --no-build --kxp-ci-restore";
         private const string CD_NEW_CONFIG_SCRIPT = $"dotnet run --no-build -- --kxp-cd-config --path \"{nameof(ContinuousDeploymentConfig.ConfigPath)}\"";
@@ -23,6 +25,8 @@ namespace Xperience.Manager.Services
         private const string CD_RESTORE_SCRIPT = $"dotnet run -- --kxp-cd-restore --repository-path \"{nameof(ContinuousDeploymentConfig.RepositoryPath)}\"";
         private const string MACRO_SCRIPT = "dotnet run --no-build -- --kxp-resign-macros";
         private const string CODEGEN_SCRIPT = $"dotnet run -- --kxp-codegen --skip-confirmation --type \"{nameof(CodeGenerateOptions.Type)}\" --location \"{nameof(CodeGenerateOptions.Location)}\" --include \"{nameof(CodeGenerateOptions.Include)}\" --exclude \"{nameof(CodeGenerateOptions.Exclude)}\" --with-provider-class {nameof(CodeGenerateOptions.WithProviderClass)}";
+        private const string DELETE_FOLDER_SCRIPT = $"rm \"{nameof(ToolProfile.WorkingDirectory)}\" -r -Force";
+        private const string RUN_SQL_QUERY = $"Invoke-Sqlcmd -ConnectionString \"{nameof(RunSqlOptions.ConnString)}\" -Query \"{nameof(RunSqlOptions.SqlQuery)}\"";
 
 
         public IScriptBuilder AppendCloud(bool useCloud)
@@ -58,14 +62,22 @@ namespace Xperience.Manager.Services
         }
 
 
-        public IScriptBuilder AppendSalt(string? salt, bool isOld)
+        public IScriptBuilder AppendSalts(string? oldSalt, string? newSalt)
         {
-            if (string.IsNullOrEmpty(salt) || !currentScriptType.Equals(ScriptType.ResignMacros))
+            if (!currentScriptType.Equals(ScriptType.ResignMacros))
             {
                 return this;
             }
 
-            currentScript += $" {(isOld ? "--old-salt" : "--new-salt")} \"{salt}\"";
+            if (!string.IsNullOrEmpty(oldSalt))
+            {
+                currentScript += $" --old-salt \"{oldSalt}\"";
+            }
+
+            if (!string.IsNullOrEmpty(newSalt))
+            {
+                currentScript += $" --new-salt \"{newSalt}\"";
+            }
 
             return this;
         }
@@ -95,7 +107,7 @@ namespace Xperience.Manager.Services
             {
                 currentScript += $"::{version}";
             }
-            else if (currentScriptType.Equals(ScriptType.PackageUpdate))
+            else if (currentScriptType.Equals(ScriptType.PackageUpdate) || currentScriptType.Equals(ScriptType.InstallDatabaseTool))
             {
                 currentScript += $" --version {version}";
             }
@@ -106,17 +118,22 @@ namespace Xperience.Manager.Services
 
         public string Build()
         {
-            if (!ValidateScript())
+            if (string.IsNullOrEmpty(currentScript))
             {
-                throw new InvalidOperationException("The script is empty or contains placeholder values.");
+                throw new InvalidOperationException("The script is empty.");
             }
 
             return currentScript;
         }
 
 
-        public IScriptBuilder WithPlaceholders(object dataObject)
+        public IScriptBuilder WithPlaceholders(object? dataObject)
         {
+            if (dataObject is null)
+            {
+                return this;
+            }
+
             // Replace all placeholders in script with object values if non-null or empty
             foreach (var prop in dataObject.GetType().GetProperties())
             {
@@ -156,19 +173,15 @@ namespace Xperience.Manager.Services
                 ScriptType.ContinuousDeploymentRestore => CD_RESTORE_SCRIPT,
                 ScriptType.ResignMacros => MACRO_SCRIPT,
                 ScriptType.GenerateCode => CODEGEN_SCRIPT,
+                ScriptType.DeleteDirectory => DELETE_FOLDER_SCRIPT,
+                ScriptType.ExecuteSql => RUN_SQL_QUERY,
+                ScriptType.UninstallDatabaseTool => UNINSTALL_DBTOOL_SCRIPT,
+                ScriptType.InstallDatabaseTool => INSTALL_DBTOOL_SCRIPT,
                 ScriptType.None => string.Empty,
                 _ => string.Empty,
             };
 
             return this;
-        }
-
-
-        private bool ValidateScript()
-        {
-            var propertyNames = typeof(InstallOptions).GetProperties().Select(p => p.Name);
-
-            return !string.IsNullOrEmpty(currentScript) && !propertyNames.Any(currentScript.Contains);
         }
     }
 
@@ -264,9 +277,34 @@ namespace Xperience.Manager.Services
         /// </summary>
         ResignMacros,
 
+
         /// <summary>
         /// The script which generates code files for Xperience objects.
         /// </summary>
         GenerateCode,
+
+
+        /// <summary>
+        /// The script which deletes a local folder and its contents.
+        /// </summary>
+        DeleteDirectory,
+
+
+        /// <summary>
+        /// The script which executes a SQL query against a database.
+        /// </summary>
+        ExecuteSql,
+
+
+        /// <summary>
+        /// The script which uninstalls the Kentico.Xperience.DbManager global tool.
+        /// </summary>
+        UninstallDatabaseTool,
+
+
+        /// <summary>
+        /// The script which installs the Kentico.Xperience.DbManager global tool.
+        /// </summary>
+        InstallDatabaseTool,
     }
 }

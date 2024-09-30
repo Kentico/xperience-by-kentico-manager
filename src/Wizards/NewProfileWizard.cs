@@ -10,7 +10,7 @@ namespace Xperience.Manager.Wizards
     /// </summary>
     public class NewProfileWizard : AbstractWizard<NewProfileOptions>
     {
-        public override Task InitSteps()
+        public override Task InitSteps(params string[] args)
         {
             Steps.Add(new Step<string>(new()
             {

@@ -15,12 +15,12 @@ namespace Xperience.Manager.Wizards
         public TOptions Options { get; set; } = new();
 
 
-        public abstract Task InitSteps();
+        public abstract Task InitSteps(params string[] args);
 
 
-        public async Task<TOptions> Run()
+        public async Task<TOptions> Run(params string[] args)
         {
-            await InitSteps();
+            await InitSteps(args);
             do
             {
                 await Steps.Current.Execute();

@@ -7,9 +7,9 @@ using Xperience.Manager.Steps;
 namespace Xperience.Manager.Wizards
 {
     /// <summary>
-    /// A wizard which generates an <see cref="InstallOptions"/> for installing Xperience by Kentico.
+    /// A wizard which generates an <see cref="InstallProjectOptions"/> for installing Xperience by Kentico project files.
     /// </summary>
-    public class InstallWizard : AbstractWizard<InstallOptions>
+    public class InstallProjectWizard : AbstractWizard<InstallProjectOptions>
     {
         private readonly IEnumerable<string> templates = [
             Constants.TEMPLATE_SAMPLE,
@@ -18,7 +18,7 @@ namespace Xperience.Manager.Wizards
         ];
 
 
-        public override async Task InitSteps()
+        public override async Task InitSteps(params string[] args)
         {
             var versions = await NuGetVersionHelper.GetPackageVersions(Constants.TEMPLATES_PACKAGE);
             var filtered = versions.Where(v => !v.IsPrerelease && !v.IsLegacyVersion && v.Major >= 25)
@@ -66,37 +66,6 @@ namespace Xperience.Manager.Wizards
             {
                 Prompt = cloudPrompt,
                 ValueReceiver = (v) => Options.UseCloud = v,
-                SkipChecker = IsAdminTemplate
-            }));
-
-
-            var serverPrompt = new TextPrompt<string>($"Enter the [{Constants.PROMPT_COLOR}]SQL server[/] name:");
-            if (!string.IsNullOrEmpty(Options.ServerName))
-            {
-                serverPrompt.DefaultValue(Options.ServerName);
-            }
-            Steps.Add(new Step<string>(new()
-            {
-                Prompt = serverPrompt,
-                ValueReceiver = (v) => Options.ServerName = v,
-                SkipChecker = IsAdminTemplate
-            }));
-
-            Steps.Add(new Step<string>(new()
-            {
-                Prompt = new TextPrompt<string>($"Enter the [{Constants.PROMPT_COLOR}]database[/] name:")
-                    .AllowEmpty()
-                    .DefaultValue(Options.DatabaseName),
-                ValueReceiver = (v) => Options.DatabaseName = v,
-                SkipChecker = IsAdminTemplate
-            }));
-
-            Steps.Add(new Step<string>(new()
-            {
-                Prompt = new TextPrompt<string>($"Enter the admin [{Constants.PROMPT_COLOR}]password[/]:")
-                    .AllowEmpty()
-                    .DefaultValue(Options.AdminPassword),
-                ValueReceiver = (v) => Options.AdminPassword = v,
                 SkipChecker = IsAdminTemplate
             }));
         }

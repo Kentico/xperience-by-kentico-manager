@@ -19,6 +19,7 @@ namespace Xperience.Manager.Commands
         [
             new ProfileCommand(),
             new InstallCommand(),
+            new DeleteCommand(),
             new UpdateCommand(),
             new ContinuousIntegrationCommand(),
             new ContinuousDeploymentCommand(),
@@ -32,7 +33,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Keywords => ["?", "help"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [];
 
 
         public override string Description => "Displays the help menu (this screen)";
@@ -51,7 +52,7 @@ namespace Xperience.Manager.Commands
                 AnsiConsole.WriteLine($" v{v.Major}.{v.Minor}.{v.Build}");
             }
 
-            AnsiConsole.MarkupInterpolated($" [{Constants.EMPHASIS_COLOR}]https://github.com/kentico/xperience-manager[/]\n");
+            AnsiConsole.MarkupInterpolated($" [{Constants.EMPHASIS_COLOR}]https://github.com/Kentico/xperience-by-kentico-manager[/]\n");
 
             var table = new Table()
                 .AddColumn("Command")

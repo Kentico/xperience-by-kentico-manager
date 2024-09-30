@@ -17,7 +17,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Keywords => ["b", "build"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [];
 
 
         public override string Description => "Builds a project";

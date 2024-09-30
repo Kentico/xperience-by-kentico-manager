@@ -64,6 +64,7 @@ The following commands can be executed using the `xman` tool name:
 - `?`, `help`
 - [`i`, `install`](#installing-a-new-project)
 - [`u`, `update`](#updating-a-project-version)
+- [`d`, `delete`](#deleting-a-project)
 - [`m`, `macros`](#re-signing-macros)
 - [`b`, `build`](#building-projects)
 - [`g`, `generate`](#generating-code-for-object-types)
@@ -103,6 +104,8 @@ The installation wizard will automatically generate an administrator password fo
    xman install
    ```
 
+Installing a new project automatically includes a database as well. If you want to _only_ install a database and not the project files, use the __db__ parameter: `xman install db`.
+
 ### Updating a project version
 
 1. (optional) Select a profile with the [`profile`](#managing-profiles) command
@@ -110,6 +113,17 @@ The installation wizard will automatically generate an administrator password fo
 
    ```bash
    xman update
+   ```
+
+### Deleting a project
+
+> :warning: The `delete` command will drop the database and delete the files. Use with caution!
+
+1. (optional) Select a profile with the [`profile`](#managing-profiles) command
+1. Run the `delete` command from the directory containing the [configuration file](#configuration-file):
+
+   ```bash
+   xman delete
    ```
 
 ### Modifying appsettings.json

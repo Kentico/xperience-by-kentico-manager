@@ -10,7 +10,7 @@ namespace Xperience.Manager.Services
         private readonly string cmsHeadlessSection = "CMSHeadless";
 
 
-        public async Task<string?> GetConnectionString(ToolProfile profile, string name)
+        public async Task<string?> GetConnectionString(ToolProfile? profile, string name)
         {
             var appSettings = await LoadSettings(profile);
             var connectionStrings = appSettings["ConnectionStrings"];
@@ -23,7 +23,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task<CmsHeadlessConfiguration> GetCmsHeadlessConfiguration(ToolProfile profile)
+        public async Task<CmsHeadlessConfiguration> GetCmsHeadlessConfiguration(ToolProfile? profile)
         {
             var appSettings = await LoadSettings(profile);
             var headlessConfig = appSettings.GetValue(cmsHeadlessSection)?.ToObject<CmsHeadlessConfiguration>();
@@ -36,7 +36,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task<IEnumerable<ConfigurationKey>> GetConfigurationKeys(ToolProfile profile)
+        public async Task<IEnumerable<ConfigurationKey>> GetConfigurationKeys(ToolProfile? profile)
         {
             var appSettings = await LoadSettings(profile);
             var populatedKeys = Constants.ConfigurationKeys
@@ -50,7 +50,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task SetCmsHeadlessConfiguration(ToolProfile profile, CmsHeadlessConfiguration headlessConfiguration)
+        public async Task SetCmsHeadlessConfiguration(ToolProfile? profile, CmsHeadlessConfiguration headlessConfiguration)
         {
             var appSettings = await LoadSettings(profile);
             appSettings[cmsHeadlessSection] = JToken.FromObject(headlessConfiguration);
@@ -59,7 +59,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task SetConnectionString(ToolProfile profile, string name, string connectionString)
+        public async Task SetConnectionString(ToolProfile? profile, string name, string connectionString)
         {
             var appSettings = await LoadSettings(profile);
             var connectionStrings = appSettings["ConnectionStrings"] ?? throw new InvalidOperationException("ConnectionStrings section not found.");
@@ -69,7 +69,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task SetKeyValue(ToolProfile profile, string keyName, object value)
+        public async Task SetKeyValue(ToolProfile? profile, string keyName, object value)
         {
             var appSettings = await LoadSettings(profile);
             appSettings[keyName] = JToken.FromObject(value);
@@ -78,10 +78,21 @@ namespace Xperience.Manager.Services
         }
 
 
-        private string GetAppSettingsPath(ToolProfile profile) => $"{profile.WorkingDirectory}/appsettings.json";
+        private static string GetAppSettingsPath(ToolProfile profile) => $"{profile.WorkingDirectory}/appsettings.json";
 
 
-        private async Task<JObject> LoadSettings(ToolProfile profile)
+        private static Task<JObject> LoadSettings(ToolProfile? profile)
+        {
+            if (profile is null)
+            {
+                throw new ArgumentNullException(nameof(profile));
+            }
+
+            return LoadSettingsInternal(profile);
+        }
+
+
+        private static async Task<JObject> LoadSettingsInternal(ToolProfile profile)
         {
             string settingsPath = GetAppSettingsPath(profile);
             if (!File.Exists(settingsPath))
@@ -95,7 +106,18 @@ namespace Xperience.Manager.Services
         }
 
 
-        private async Task WriteAppSettings(ToolProfile profile, JObject appSettings)
+        private static Task WriteAppSettings(ToolProfile? profile, JObject appSettings)
+        {
+            if (profile is null)
+            {
+                throw new ArgumentNullException(nameof(profile));
+            }
+
+            return WriteAppSettingsInternal(profile, appSettings);
+        }
+
+
+        private static async Task WriteAppSettingsInternal(ToolProfile profile, JObject appSettings)
         {
             string settingsPath = GetAppSettingsPath(profile);
 

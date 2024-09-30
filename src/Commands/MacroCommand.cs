@@ -20,7 +20,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Keywords => ["m", "macros"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [];
 
 
         public override string Description => "Re-signs macro signatures";
@@ -92,10 +92,9 @@ namespace Xperience.Manager.Commands
             }
 
             string originalDescription = task.Description;
-            string? salt = string.IsNullOrEmpty(options.OldSalt) ? options.NewSalt : options.OldSalt;
             string macroScript = scriptBuilder.SetScript(ScriptType.ResignMacros)
                 .AppendSignAll(options.SignAll, options.UserName)
-                .AppendSalt(salt, !string.IsNullOrEmpty(options.OldSalt))
+                .AppendSalts(options.OldSalt, options.NewSalt)
                 .Build();
             await shellRunner.Execute(new(macroScript)
             {

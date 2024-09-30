@@ -30,7 +30,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Keywords => ["u", "update"];
 
 
-        public override IEnumerable<string> Parameters => Enumerable.Empty<string>();
+        public override IEnumerable<string> Parameters => [];
 
 
         public override string Description => "Updates a project's NuGet packages and database version";

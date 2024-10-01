@@ -45,7 +45,7 @@ The `xman.json` file contains information about the tool, your default options, 
   "DefaultInstallProjectOptions": {
     "Version": null, // Version cannot have a default value
     "Template": "kentico-xperience-sample-mvc",
-    "ProjectName": "my-rpoject",
+    "ProjectName": "my-project",
     "InstallRootPath": "c:\\inetpub\\wwwroot",
     "UseCloud": false
   },

@@ -34,20 +34,23 @@ The `xman.json` file contains information about the tool, your default options, 
 
 ```json
 {
-  "Version": "3.4.1.0",
+  "Version": "5.0.0.0",
   "Profiles": [
     {
-      "ProjectName": "28dev",
-      "WorkingDirectory": "C:\\inetpub\\wwwroot\\28dev"
+      "ProjectName": "xbk29",
+      "WorkingDirectory": "c:\\inetpub\\wwwroot\\xbk29"
     }
   ],
-  "CurrentProfile": "28dev",
-  "DefaultInstallOptions": {
+  "CurrentProfile": "xbk29",
+  "DefaultInstallProjectOptions": {
     "Version": null, // Version cannot have a default value
     "Template": "kentico-xperience-sample-mvc",
-    "ProjectName": "myproject",
-    "InstallRootPath": "C:\\inetpub\\wwwroot",
-    "UseCloud": false,
+    "ProjectName": "my-rpoject",
+    "InstallRootPath": "c:\\inetpub\\wwwroot",
+    "UseCloud": false
+  },
+  "DefaultInstallDatabaseOptions": {
+    "UseExistingDatabase": false,
     "DatabaseName": "xperience",
     "ServerName": "my-server"
   },

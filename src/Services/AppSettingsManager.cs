@@ -62,7 +62,8 @@ namespace Xperience.Manager.Services
         public async Task SetConnectionString(ToolProfile? profile, string name, string connectionString)
         {
             var appSettings = await LoadSettings(profile);
-            var connectionStrings = appSettings["ConnectionStrings"] ?? throw new InvalidOperationException("ConnectionStrings section not found.");
+            var connectionStrings = appSettings["ConnectionStrings"]
+                ?? throw new InvalidOperationException("ConnectionStrings section not found.");
             connectionStrings[name] = connectionString;
 
             await WriteAppSettings(profile, appSettings);
@@ -81,15 +82,8 @@ namespace Xperience.Manager.Services
         private static string GetAppSettingsPath(ToolProfile profile) => $"{profile.WorkingDirectory}/appsettings.json";
 
 
-        private static Task<JObject> LoadSettings(ToolProfile? profile)
-        {
-            if (profile is null)
-            {
-                throw new ArgumentNullException(nameof(profile));
-            }
-
-            return LoadSettingsInternal(profile);
-        }
+        private static Task<JObject> LoadSettings(ToolProfile? profile) =>
+            profile is null ? throw new ArgumentNullException(nameof(profile)) : LoadSettingsInternal(profile);
 
 
         private static async Task<JObject> LoadSettingsInternal(ToolProfile profile)
@@ -102,19 +96,13 @@ namespace Xperience.Manager.Services
 
             string text = await File.ReadAllTextAsync(settingsPath);
 
-            return JsonConvert.DeserializeObject<JObject>(text) ?? throw new InvalidOperationException("Failed to deserialize appsettings.json");
+            return JsonConvert.DeserializeObject<JObject>(text)
+                ?? throw new InvalidOperationException("Failed to deserialize appsettings.json");
         }
 
 
-        private static Task WriteAppSettings(ToolProfile? profile, JObject appSettings)
-        {
-            if (profile is null)
-            {
-                throw new ArgumentNullException(nameof(profile));
-            }
-
-            return WriteAppSettingsInternal(profile, appSettings);
-        }
+        private static Task WriteAppSettings(ToolProfile? profile, JObject appSettings) =>
+            profile is null ? throw new ArgumentNullException(nameof(profile)) : WriteAppSettingsInternal(profile, appSettings);
 
 
         private static async Task WriteAppSettingsInternal(ToolProfile profile, JObject appSettings)

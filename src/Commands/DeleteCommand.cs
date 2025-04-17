@@ -41,7 +41,11 @@ namespace Xperience.Manager.Commands
         }
 
 
-        public DeleteCommand(IShellRunner shellRunner, IScriptBuilder scriptBuilder, IConfigManager configManager, IAppSettingsManager appSettingsManager)
+        public DeleteCommand(
+            IShellRunner shellRunner,
+            IScriptBuilder scriptBuilder,
+            IConfigManager configManager,
+            IAppSettingsManager appSettingsManager)
         {
             this.shellRunner = shellRunner;
             this.scriptBuilder = scriptBuilder;
@@ -52,7 +56,8 @@ namespace Xperience.Manager.Commands
 
         public override async Task Execute(ToolProfile? profile, string? action)
         {
-            deleteConfirmed = AnsiConsole.Confirm($"This will [{Constants.ERROR_COLOR}]delete[/] the current profile's physical folder and database!\nDo you want to continue?", false);
+            deleteConfirmed = AnsiConsole.Confirm($"This will [{Constants.ERROR_COLOR}]delete[/] the current profile's physical folder " +
+                $"and database!\nDo you want to continue?", false);
             if (!deleteConfirmed)
             {
                 return;
@@ -74,7 +79,7 @@ namespace Xperience.Manager.Commands
             {
                 AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Delete cancelled[/]\n");
             }
-            else if (!Errors.Any())
+            else if (Errors.Count == 0)
             {
                 AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Delete complete![/]\n");
             }
@@ -96,15 +101,17 @@ namespace Xperience.Manager.Commands
             if (connString is null)
             {
                 LogError("Couldn't load connection string.");
+
                 return;
             }
 
             // Find "Initial Catalog" in connection string
-            IEnumerable<string> parts = connString.Split(';').ToList();
-            string? initialCatalogPart = parts.FirstOrDefault(p => p.ToLower().StartsWith("initial catalog"));
+            IEnumerable<string> parts = [.. connString.Split(';')];
+            string? initialCatalogPart = parts.FirstOrDefault(p => p.StartsWith("initial catalog", StringComparison.CurrentCultureIgnoreCase));
             if (initialCatalogPart is null)
             {
                 LogError("Couldn't find database name.");
+
                 return;
             }
 

@@ -4,6 +4,8 @@ namespace Xperience.Manager
 {
     public static class Constants
     {
+        public const int MIN_LISTED_VERSION = 28;
+
         public const string CONFIG_FILENAME = "xman.json";
 
         public const string CD_FILES_DIR = "CDRepository";
@@ -35,7 +37,8 @@ namespace Xperience.Manager
                 typeof(string),
                 "bmp;gif;ico;png;wmf;jpg;jpeg;tiff;tif;webp"),
             new("CMSLogKeepPercent",
-                "This key determines the extra percentage of events that is retained in the log over the specified limit. This percentage of the oldest events is deleted by batch when the percentage is exceeded",
+                "This key determines the extra percentage of events that is retained in the log over the specified limit. This percentage " +
+                    "of the oldest events is deleted by batch when the percentage is exceeded",
                 typeof(int),
                 10),
             new("CMSCIEncoding",

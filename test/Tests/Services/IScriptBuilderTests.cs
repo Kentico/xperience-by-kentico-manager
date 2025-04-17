@@ -10,7 +10,7 @@ namespace Xperience.Manager.Tests.Services
     /// </summary>
     public class IScriptBuilderTests
     {
-        private readonly IScriptBuilder scriptBuilder = new ScriptBuilder();
+        private readonly ScriptBuilder scriptBuilder = new();
         private readonly InstallProjectOptions validProjectOptions = new()
         {
             ProjectName = "TEST",
@@ -67,7 +67,9 @@ namespace Xperience.Manager.Tests.Services
         public void DatabaseInstallScript_WithValidOptions_ReturnsValidScript()
         {
             string script = scriptBuilder.SetScript(ScriptType.DatabaseInstall).WithPlaceholders(validDatabaseOptions).Build();
-            string expected = $"dotnet kentico-xperience-dbmanager -- -s \"{validDatabaseOptions.ServerName}\" -d \"{validDatabaseOptions.DatabaseName}\" -a \"{validDatabaseOptions.AdminPassword}\" --use-existing-database {validDatabaseOptions.UseExistingDatabase}";
+            string expected = $"dotnet kentico-xperience-dbmanager -- -s \"{validDatabaseOptions.ServerName}\" -d \"" +
+                $"{validDatabaseOptions.DatabaseName}\" -a \"{validDatabaseOptions.AdminPassword}\" --use-existing-database " +
+                $"{validDatabaseOptions.UseExistingDatabase}";
 
             Assert.That(script, Is.EqualTo(expected));
         }

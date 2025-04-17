@@ -57,7 +57,8 @@ namespace Xperience.Manager.Tests.Commands
             string expectedProjectFileScript = $"dotnet new {TEMPLATE} -n {PROJECT_NAME}";
             string expectedUninstallScript = "dotnet new uninstall kentico.xperience.templates";
             string expectedTemplateScript = $"dotnet new install kentico.xperience.templates::{version}";
-            string expectedDatabaseScript = $"dotnet kentico-xperience-dbmanager -- -s \"{SERVER_NAME}\" -d \"{DB_NAME}\" -a \"{PASSWORD}\" --use-existing-database {USE_EXISTING}";
+            string expectedDatabaseScript = $"dotnet kentico-xperience-dbmanager -- -s \"{SERVER_NAME}\" -d \"{DB_NAME}\" -a " +
+                $"\"{PASSWORD}\" --use-existing-database {USE_EXISTING}";
 
             Assert.Multiple(() =>
             {

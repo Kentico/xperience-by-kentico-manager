@@ -142,6 +142,7 @@ namespace Xperience.Manager.Commands
             if (connString is null)
             {
                 LogError($"Unable to load connection string.");
+
                 return;
             }
 
@@ -169,6 +170,7 @@ namespace Xperience.Manager.Commands
                 if (updatedKey?.ActualValue is null)
                 {
                     LogError($"Failed to set new value for key {updatedKey?.KeyName}");
+
                     return;
                 }
 
@@ -202,11 +204,13 @@ namespace Xperience.Manager.Commands
             header.AppendLine($"\n{keyToUpdate.Description}\n");
             AnsiConsole.Write(new Markup(header.ToString()).Centered());
 
-            string newValue = AnsiConsole.Prompt(new TextPrompt<string>($"New value [{Constants.EMPHASIS_COLOR}]({keyToUpdate.ValueType.Name.ToLower()})[/]:"));
+            string newValue = AnsiConsole.Prompt(new TextPrompt<string>($"New value [{Constants.EMPHASIS_COLOR}]" +
+                $"({keyToUpdate.ValueType.Name.ToLower()})[/]:"));
             object converted = Convert.ChangeType(newValue, keyToUpdate.ValueType);
             if (converted is null)
             {
                 LogError($"The key value cannot be cast into type {keyToUpdate.ValueType.Name}");
+
                 return null;
             }
 
@@ -216,7 +220,10 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task<bool> TryUpdateHeadlessOption(CmsHeadlessConfiguration headlessConfiguration, PropertyInfo propToUpdate, ToolProfile? profile)
+        private async Task<bool> TryUpdateHeadlessOption(
+            CmsHeadlessConfiguration headlessConfiguration,
+            PropertyInfo propToUpdate,
+            ToolProfile? profile)
         {
             bool isCachingKey = headlessConfiguration.Caching.GetType().GetProperties().Contains(propToUpdate);
             object? value = isCachingKey ? propToUpdate.GetValue(headlessConfiguration.Caching) : propToUpdate.GetValue(headlessConfiguration);
@@ -234,11 +241,13 @@ namespace Xperience.Manager.Commands
 
             AnsiConsole.Write(new Markup(header.ToString()).Centered());
 
-            string newValue = AnsiConsole.Prompt(new TextPrompt<string>($"New value [{Constants.EMPHASIS_COLOR}]({propToUpdate.PropertyType.Name.ToLower()})[/]:"));
+            string newValue = AnsiConsole.Prompt(new TextPrompt<string>($"New value [{Constants.EMPHASIS_COLOR}]" +
+                $"({propToUpdate.PropertyType.Name.ToLower()})[/]:"));
             object converted = Convert.ChangeType(newValue, propToUpdate.PropertyType);
             if (converted is null)
             {
                 LogError($"The key value cannot be cast into type {propToUpdate.PropertyType.Name}");
+
                 return false;
             }
 

@@ -34,7 +34,8 @@ namespace Xperience.Manager.Wizards
 
             Steps.Add(new Step<bool>(new()
             {
-                Prompt = new ConfirmationPrompt($"[{Constants.PROMPT_COLOR}]Included[/] object types: {string.Join(";", Options.IncludedObjectTypes ?? Enumerable.Empty<string>())}\nWould you like to change them?")
+                Prompt = new ConfirmationPrompt($"[{Constants.PROMPT_COLOR}]Included[/] object types: {string.Join(";",
+                    Options.IncludedObjectTypes ?? Enumerable.Empty<string>())}\nWould you like to change them?")
                 {
                     DefaultValue = false
                 },
@@ -56,7 +57,8 @@ namespace Xperience.Manager.Wizards
 
             Steps.Add(new Step<bool>(new()
             {
-                Prompt = new ConfirmationPrompt($"[{Constants.PROMPT_COLOR}]Excluded[/] object types: {string.Join(";", Options.ExcludedObjectTypes ?? Enumerable.Empty<string>())}\nWould you like to change them?")
+                Prompt = new ConfirmationPrompt($"[{Constants.PROMPT_COLOR}]Excluded[/] object types: {string.Join(";",
+                    Options.ExcludedObjectTypes ?? Enumerable.Empty<string>())}\nWould you like to change them?")
                 {
                     DefaultValue = false
                 },

@@ -12,7 +12,7 @@ namespace Xperience.Manager.Tests.Services
     /// </summary>
     public class IShellRunnerTests
     {
-        private readonly IShellRunner shellRunner = new ShellRunner();
+        private readonly ShellRunner shellRunner = new();
 
 
         [Test]

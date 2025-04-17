@@ -58,7 +58,7 @@ namespace Xperience.Manager.Commands
 
         public override async Task PostExecute(ToolProfile? profile, string? action)
         {
-            if (!Errors.Any())
+            if (Errors.Count == 0)
             {
                 AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Code generation complete![/]\n");
             }
@@ -77,7 +77,10 @@ namespace Xperience.Manager.Commands
             // Add working directory to relative location
             options.Location = profile?.WorkingDirectory + options.Location;
 
-            string buildScript = scriptBuilder.SetScript(ScriptType.GenerateCode).WithPlaceholders(options).AppendNamespace(options.Namespace).Build();
+            string buildScript = scriptBuilder.SetScript(ScriptType.GenerateCode)
+                .WithPlaceholders(options)
+                .AppendNamespace(options.Namespace)
+                .Build();
             await shellRunner.Execute(new(buildScript)
             {
                 OutputHandler = (o, e) =>

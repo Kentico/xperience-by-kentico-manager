@@ -54,6 +54,7 @@ namespace Xperience.Manager.Commands
             if (!Parameters.Any(p => p.Equals(action, StringComparison.OrdinalIgnoreCase)))
             {
                 LogError($"Must provide one parameter from '{string.Join(", ", Parameters)}'");
+
                 return;
             }
 
@@ -72,16 +73,18 @@ namespace Xperience.Manager.Commands
             var config = await configManager.GetConfig();
 
             // Can't switch or delete if there are no profiles
-            if (!config.Profiles.Any() &&
+            if (config.Profiles.Count == 0 &&
                 (action.Equals(SWITCH, StringComparison.OrdinalIgnoreCase) || action.Equals(DELETE, StringComparison.OrdinalIgnoreCase)))
             {
                 AnsiConsole.MarkupLineInterpolated($"There are no registered profiles. Install a new instance with [{Constants.SUCCESS_COLOR}]xman i[/] to add a profile.\n");
+
                 return;
             }
 
             if (config.Profiles.Count == 1 && action.Equals(SWITCH, StringComparison.OrdinalIgnoreCase))
             {
                 AnsiConsole.WriteLine("You're currently using the only registered profile.\n");
+
                 return;
             }
 
@@ -119,6 +122,7 @@ namespace Xperience.Manager.Commands
             if (!Directory.Exists(options.WorkingDirectory))
             {
                 LogError($"The directory {options.WorkingDirectory} couldn't be found.");
+
                 return;
             }
 

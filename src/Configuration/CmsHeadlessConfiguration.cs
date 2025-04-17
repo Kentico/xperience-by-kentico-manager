@@ -15,7 +15,8 @@ namespace Xperience.Manager.Configuration
         public bool Enable { get; set; } = true;
 
 
-        [Display(Description = "Specifies whether GraphQL introspection is enabled (__schema queries and GUI tools for exploring the schema).")]
+        [Display(Description = "Specifies whether GraphQL introspection is enabled (__schema queries and GUI tools for exploring the " +
+            "schema).")]
         /// <summary>
         /// Specifies whether GraphQL introspection is enabled (__schema queries and GUI tools for exploring the schema).
         /// See <see href="https://graphql.org/learn/introspection/"/>.
@@ -38,7 +39,8 @@ namespace Xperience.Manager.Configuration
         public string? CorsAllowedOrigins { get; set; }
 
 
-        [Display(Description = "The HTTP headers that are allowed for content retrieval requests. If not set, all headers are allowed by default.")]
+        [Display(Description = "The HTTP headers that are allowed for content retrieval requests. If not set, all headers are allowed by " +
+            "default.")]
         /// <summary>
         /// The HTTP headers that are allowed for content retrieval requests. If not set, all headers are allowed by default.
         /// See <see href="https://docs.xperience.io/xp/developers-and-admins/development/content-retrieval/retrieve-headless-content"/>.
@@ -63,21 +65,24 @@ namespace Xperience.Manager.Configuration
             public bool Enable { get; set; } = true;
 
 
-            [Display(Name = "Caching::UseRequestCacheControlHeaders", Description = "Specifies whether caching respects the Cache-Control header of individual requests.")]
+            [Display(Name = "Caching::UseRequestCacheControlHeaders", Description = "Specifies whether caching respects the Cache-Control " +
+                "header of individual requests.")]
             /// <summary>
             /// Specifies whether caching respects the Cache-Control header of individual requests.
             /// </summary>
             public bool UseRequestCacheControlHeaders { get; set; } = true;
 
 
-            [Display(Name = "Caching::AddResponseCacheControlHeaders", Description = "Specifies whether caching sets the Cache-Control response header.")]
+            [Display(Name = "Caching::AddResponseCacheControlHeaders", Description = "Specifies whether caching sets the Cache-Control " +
+                "response header.")]
             /// <summary>
             /// Specifies whether caching sets the Cache-Control response header.
             /// </summary>
             public bool AddResponseCacheControlHeaders { get; set; } = true;
 
 
-            [Display(Name = "Caching::UseCacheDependencies", Description = "Specifies whether caching uses cache dependencies to flush the cache when data in a cached response changes.")]
+            [Display(Name = "Caching::UseCacheDependencies", Description = "Specifies whether caching uses cache dependencies to flush the " +
+                "cache when data in a cached response changes.")]
             /// <summary>
             /// Specifies whether caching uses cache dependencies to flush the cache when data in a cached response changes.
             /// </summary>
@@ -91,7 +96,8 @@ namespace Xperience.Manager.Configuration
             public int AbsoluteExpiration { get; set; } = 720;
 
 
-            [Display(Name = "Caching::SlidingExpiration", Description = "The sliding expiration date for cache entries in minutes. Cannot exceed the value of AbsoluteExpiration.")]
+            [Display(Name = "Caching::SlidingExpiration", Description = "The sliding expiration date for cache entries in minutes. Cannot " +
+                "exceed the value of AbsoluteExpiration.")]
             /// <summary>
             /// The sliding expiration date for cache entries in minutes. Cannot exceed the value of <see cref="AbsoluteExpiration"/>.
             /// </summary>

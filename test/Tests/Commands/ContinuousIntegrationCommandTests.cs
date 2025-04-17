@@ -16,7 +16,8 @@ namespace Xperience.Manager.Tests.Commands
 
 
         [SetUp]
-        public void ContinuousIntegrationCommandTestsSetUp() => shellRunner.Execute(Arg.Any<ShellOptions>()).Returns((x) => GetDummyProcess());
+        public void ContinuousIntegrationCommandTestsSetUp() => shellRunner.Execute(Arg.Any<ShellOptions>()).Returns((x) =>
+            GetDummyProcess());
 
 
         [Test]

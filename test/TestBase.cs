@@ -13,7 +13,7 @@ namespace Xperience.Manager.Tests
         /// <summary>
         /// Gets a <see cref="Process"/> which does nothing.
         /// </summary>
-        protected Process GetDummyProcess()
+        protected static Process GetDummyProcess()
         {
             Process cmd = new();
             cmd.StartInfo.FileName = "powershell.exe";

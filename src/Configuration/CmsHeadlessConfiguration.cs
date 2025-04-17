@@ -15,6 +15,15 @@ namespace Xperience.Manager.Configuration
         public bool Enable { get; set; } = true;
 
 
+        [Display(Description = "Specifies whether complexity analysis is enabled.")]
+        public bool EnableComplexity { get; set; } = true;
+
+
+        [Display(Description = "Specifies whether Tracking API endpoints are enabled. Allows you to disable the tracking API while keeping " +
+            "the GraphQL API enabled.")]
+        public bool EnableTracking { get; set; } = true;
+
+
         [Display(Description = "Specifies whether GraphQL introspection is enabled (__schema queries and GUI tools for exploring the " +
             "schema).")]
         /// <summary>

@@ -201,6 +201,11 @@ namespace Xperience.Manager.Commands
                 header.AppendLine($"\nValue: {keyToUpdate.ActualValue}");
             }
 
+            if (keyToUpdate.DefaultValue is not null)
+            {
+                header.AppendLine($"\nDefault: {keyToUpdate.DefaultValue}");
+            }
+
             header.AppendLine($"\n{keyToUpdate.Description}\n");
             AnsiConsole.Write(new Markup(header.ToString()).Centered());
 

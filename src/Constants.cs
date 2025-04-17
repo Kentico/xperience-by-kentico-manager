@@ -41,6 +41,10 @@ namespace Xperience.Manager
                     "of the oldest events is deleted by batch when the percentage is exceeded",
                 typeof(int),
                 10),
+            new("CMSBuilderScriptsIncludeJQuery",
+                "Determines whether the system links the jQuery 3.5.1 library to live site pages containing Page Builder content or forms",
+                typeof(bool),
+                false),
             new("CMSCIEncoding",
                 "Sets the character encoding used when the CI/CD features generate non-binary files in the repository folder",
                 typeof(string),
@@ -60,7 +64,19 @@ namespace Xperience.Manager
             new("CMSEmailUrlDefaultScheme",
                 "Sets the scheme (protocol) used when resolving relative URLs within email content",
                 typeof(string),
-                "https")
+                "https"),
+            new("CMSDeleteTemporaryUploadFilesOlderThan",
+                "Sets the interval (in hours) at which the system deletes the contents of the temporary folder that stores files uploaded " +
+                    "through the Upload file component in Form Builder.",
+                typeof(int),
+                2),
+            new("CMSPhysicalFilesCacheMinutes",
+                "Sets client cache expiration time (in minutes) for physical files served by Xperience through the GetResource handler.",
+                typeof(int),
+                10_080),
+            new("CMSStorageProviderAssembly",
+                "Configures the assembly name of a custom file system provider.",
+                typeof(string))
         ];
     }
 }

@@ -9,7 +9,8 @@ namespace Xperience.Manager.Options
     {
         public const string CmsHeadlessSetting = "CMSHeadless options";
         public const string ConnectionStringSetting = "Connection string";
-        public const string ConfigurationKeysSetting = "Configuration keys";
+        public const string UngroupedKeySetting = "Configuration keys";
+        public const string AzureStorageSetting = "Azure storage";
 
 
         /// <summary>

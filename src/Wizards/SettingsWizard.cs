@@ -20,8 +20,9 @@ namespace Xperience.Manager.Wizards
                     .MoreChoicesText("Scroll for more...")
                     .AddChoices(
                         SettingsOptions.ConnectionStringSetting,
-                        SettingsOptions.ConfigurationKeysSetting,
-                        SettingsOptions.CmsHeadlessSetting
+                        SettingsOptions.UngroupedKeySetting,
+                        SettingsOptions.CmsHeadlessSetting,
+                        SettingsOptions.AzureStorageSetting
                     ),
                 ValueReceiver = (v) => Options.SettingToChange = v
             }));

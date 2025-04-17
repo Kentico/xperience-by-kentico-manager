@@ -21,10 +21,11 @@ namespace Xperience.Manager.Services
 
 
         /// <summary>
-        /// Gets configurations keys. See
+        /// Gets configurations keys with their <see cref="ConfigurationKey.ActualValue"/> set if available. See
         /// <see href="https://docs.xperience.io/xp/developers-and-admins/configuration/reference-configuration-keys"/>.
         /// </summary>
-        public Task<IEnumerable<ConfigurationKey>> GetConfigurationKeys(ToolProfile? profile);
+        /// <param name="keys">The keys to retrieve.</param>
+        public Task<IEnumerable<ConfigurationKey>> GetConfigurationKeys(ToolProfile? profile, IEnumerable<ConfigurationKey> keys);
 
 
         /// <summary>

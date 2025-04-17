@@ -36,15 +36,15 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task<IEnumerable<ConfigurationKey>> GetConfigurationKeys(ToolProfile? profile)
+        public async Task<IEnumerable<ConfigurationKey>> GetConfigurationKeys(ToolProfile? profile, IEnumerable<ConfigurationKey> keys)
         {
             var appSettings = await LoadSettings(profile);
-            var populatedKeys = Constants.ConfigurationKeys
+            var populatedKeys = keys
                 .Where(key => appSettings.Properties().Select(p => p.Name).Contains(key.KeyName, StringComparer.OrdinalIgnoreCase))
                 .Select(key => { key.ActualValue = appSettings.GetValue(key.KeyName)?.Value<object>(); return key; });
             var allKeys = new List<ConfigurationKey>(populatedKeys);
 
-            allKeys.AddRange(Constants.ConfigurationKeys.Where(key => !populatedKeys.Select(k => k.KeyName).Contains(key.KeyName)));
+            allKeys.AddRange(keys.Where(key => !populatedKeys.Select(k => k.KeyName).Contains(key.KeyName)));
 
             return allKeys;
         }

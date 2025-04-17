@@ -63,11 +63,14 @@ namespace Xperience.Manager.Commands
                 case SettingsOptions.ConnectionStringSetting:
                     await ConfigureConnectionString(profile);
                     break;
-                case SettingsOptions.ConfigurationKeysSetting:
-                    await ConfigureKeys(profile);
+                case SettingsOptions.UngroupedKeySetting:
+                    await ConfigureKeys(profile, Constants.UngroupedKeys);
                     break;
                 case SettingsOptions.CmsHeadlessSetting:
                     await ConfigureHeadlessOptions(profile);
+                    break;
+                case SettingsOptions.AzureStorageSetting:
+                    await ConfigureKeys(profile, Constants.AzureStorageKeys);
                     break;
                 default:
                     LogError("Invalid selection.");
@@ -155,7 +158,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task ConfigureKeys(ToolProfile? profile)
+        private async Task ConfigureKeys(ToolProfile? profile, IEnumerable<ConfigurationKey> keysToList)
         {
             if (StopProcessing)
             {
@@ -163,7 +166,7 @@ namespace Xperience.Manager.Commands
             }
 
             bool updateSettings = true;
-            var keys = await appSettingsManager.GetConfigurationKeys(profile);
+            var keys = await appSettingsManager.GetConfigurationKeys(profile, keysToList);
             while (updateSettings)
             {
                 var updatedKey = GetNewSettingsKey(keys);

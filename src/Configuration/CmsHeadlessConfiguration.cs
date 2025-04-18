@@ -3,7 +3,7 @@
 namespace Xperience.Manager.Configuration
 {
     /// <summary>
-    /// Represents the headless options specified in the appsettings.json. See
+    /// Represents the headless options specified in the application settings. See
     /// <see href="https://docs.xperience.io/xp/developers-and-admins/configuration/headless-channel-management#Headlesschannelmanagement-ConfiguretheheadlessAPI"/>.
     /// </summary>
     public class CmsHeadlessConfiguration

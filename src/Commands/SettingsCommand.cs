@@ -12,7 +12,7 @@ using Xperience.Manager.Wizards;
 namespace Xperience.Manager.Commands
 {
     /// <summary>
-    /// A command which configures the appsettings.json of a project.
+    /// A command which configures the application settings of a project.
     /// </summary>
     public class SettingsCommand : AbstractCommand
     {
@@ -27,7 +27,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Parameters => [];
 
 
-        public override string Description => "Configures the appsettings.json of a project";
+        public override string Description => "Configures the application settings of a project";
 
 
         public override bool RequiresProfile => true;
@@ -58,20 +58,30 @@ namespace Xperience.Manager.Commands
                 return;
             }
 
-            var options = await wizard.Run();
+            if (string.IsNullOrEmpty(profile?.WorkingDirectory))
+            {
+                LogError("Working directory not set.");
+
+                return;
+            }
+
+            string[] appSettingsFiles = Directory.EnumerateFiles(profile.WorkingDirectory, "appsettings*.json")
+                .Select(path => Path.GetFileName(path))
+                .ToArray();
+            var options = await wizard.Run(appSettingsFiles);
             switch (options.SettingToChange)
             {
                 case SettingsOptions.ConnectionStringSetting:
-                    await ConfigureConnectionString(profile);
+                    await ConfigureConnectionString(profile, options.AppSettingsFileName);
                     break;
                 case SettingsOptions.UngroupedKeySetting:
-                    await ConfigureKeys(profile, Constants.UngroupedKeys);
+                    await ConfigureKeys(profile, Constants.UngroupedKeys, options.AppSettingsFileName);
                     break;
                 case SettingsOptions.CmsHeadlessSetting:
-                    await ConfigureHeadlessOptions(profile);
+                    await ConfigureHeadlessOptions(profile, options.AppSettingsFileName);
                     break;
                 case SettingsOptions.AzureStorageSetting:
-                    await ConfigureKeys(profile, Constants.AzureStorageKeys);
+                    await ConfigureKeys(profile, Constants.AzureStorageKeys, options.AppSettingsFileName);
                     break;
                 default:
                     LogError("Invalid selection.");
@@ -88,7 +98,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task ConfigureHeadlessOptions(ToolProfile? profile)
+        private async Task ConfigureHeadlessOptions(ToolProfile? profile, string? fileName)
         {
             if (StopProcessing)
             {
@@ -96,7 +106,7 @@ namespace Xperience.Manager.Commands
             }
 
             bool updateHeadless = true;
-            var headlessConfig = await appSettingsManager.GetCmsHeadlessConfiguration(profile);
+            var headlessConfig = await appSettingsManager.GetCmsHeadlessConfiguration(profile, fileName);
             var configKeys = headlessConfig.GetType().GetProperties().Where(p => !p.Name.Equals(nameof(CmsHeadlessConfiguration.Caching)));
             var cachingKeys = headlessConfig.Caching.GetType().GetProperties();
             while (updateHeadless)
@@ -124,7 +134,7 @@ namespace Xperience.Manager.Commands
                 .MoreChoicesText("Scroll for more...")
                 .AddChoices(configKeys.Union(cachingKeys)));
 
-                bool success = await TryUpdateHeadlessOption(headlessConfig, propToUpdate, profile);
+                bool success = await TryUpdateHeadlessOption(headlessConfig, propToUpdate, profile, fileName);
                 updateHeadless = success &&
                     AnsiConsole.Prompt(new ConfirmationPrompt($"Update another [{Constants.PROMPT_COLOR}]headless key[/]?")
                     {
@@ -134,7 +144,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task ConfigureConnectionString(ToolProfile? profile)
+        private async Task ConfigureConnectionString(ToolProfile? profile, string? fileName)
         {
             if (StopProcessing)
             {
@@ -142,7 +152,7 @@ namespace Xperience.Manager.Commands
             }
 
             string connStringName = "CMSConnectionString";
-            string? connString = await appSettingsManager.GetConnectionString(profile, connStringName);
+            string? connString = await appSettingsManager.GetConnectionString(profile, connStringName, fileName);
             if (connString is null)
             {
                 LogError($"Unable to load connection string.");
@@ -153,13 +163,13 @@ namespace Xperience.Manager.Commands
             AnsiConsole.Write(new Markup($"[{Constants.PROMPT_COLOR} underline]{connStringName}[/]\n{connString}\n\n").Centered());
 
             string newConnString = AnsiConsole.Prompt(new TextPrompt<string>($"Enter new [{Constants.PROMPT_COLOR}]connection string[/]:"));
-            await appSettingsManager.SetConnectionString(profile, connStringName, newConnString);
+            await appSettingsManager.SetConnectionString(profile, connStringName, newConnString, fileName);
 
             AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Connection string updated![/]\n");
         }
 
 
-        private async Task ConfigureKeys(ToolProfile? profile, IEnumerable<ConfigurationKey> keysToList)
+        private async Task ConfigureKeys(ToolProfile? profile, IEnumerable<ConfigurationKey> keysToList, string? fileName)
         {
             if (StopProcessing)
             {
@@ -167,7 +177,7 @@ namespace Xperience.Manager.Commands
             }
 
             bool updateSettings = true;
-            var keys = await appSettingsManager.GetConfigurationKeys(profile, keysToList);
+            var keys = await appSettingsManager.GetConfigurationKeys(profile, keysToList, fileName);
             while (updateSettings)
             {
                 var updatedKey = GetNewSettingsKey(keys);
@@ -178,7 +188,7 @@ namespace Xperience.Manager.Commands
                     return;
                 }
 
-                await appSettingsManager.SetKeyValue(profile, updatedKey.KeyName, updatedKey.ActualValue);
+                await appSettingsManager.SetKeyValue(profile, updatedKey.KeyName, updatedKey.ActualValue, fileName);
                 AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Updated the {updatedKey.KeyName} key![/]\n");
 
                 updateSettings = AnsiConsole.Prompt(new ConfirmationPrompt($"Update another [{Constants.PROMPT_COLOR}]configuration key[/]?")
@@ -237,7 +247,8 @@ namespace Xperience.Manager.Commands
         private async Task<bool> TryUpdateHeadlessOption(
             CmsHeadlessConfiguration headlessConfiguration,
             PropertyInfo propToUpdate,
-            ToolProfile? profile)
+            ToolProfile? profile,
+            string? fileName)
         {
             bool isCachingKey = headlessConfiguration.Caching.GetType().GetProperties().Contains(propToUpdate);
             object? value = isCachingKey ? propToUpdate.GetValue(headlessConfiguration.Caching) : propToUpdate.GetValue(headlessConfiguration);
@@ -274,7 +285,7 @@ namespace Xperience.Manager.Commands
                 propToUpdate.SetValue(headlessConfiguration, converted);
             }
 
-            await appSettingsManager.SetCmsHeadlessConfiguration(profile, headlessConfiguration);
+            await appSettingsManager.SetCmsHeadlessConfiguration(profile, headlessConfiguration, fileName);
             AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Updated the {displayAttr?.Name ?? propToUpdate.Name} key![/]\n");
 
             return true;

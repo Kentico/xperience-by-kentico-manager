@@ -28,7 +28,7 @@ namespace Xperience.Manager
 
 
         /// <summary>
-        /// Configuration keys saved on the root of the appsettings.json file and are all associated with Azure storage.
+        /// Configuration keys saved on the root of the application settings file and are all associated with Azure storage.
         /// </summary>
         public static IEnumerable<ConfigurationKey> AzureStorageKeys =>
         [
@@ -64,7 +64,7 @@ namespace Xperience.Manager
 
 
         /// <summary>
-        /// Configuration keys saved on the root of the appsettings.json file, but are not associated with common features.
+        /// Configuration keys saved on the root of the application settings file, but are not associated with common features.
         /// </summary>
         public static IEnumerable<ConfigurationKey> UngroupedKeys =>
         [

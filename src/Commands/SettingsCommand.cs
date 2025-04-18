@@ -16,6 +16,7 @@ namespace Xperience.Manager.Commands
     /// </summary>
     public class SettingsCommand : AbstractCommand
     {
+        private const int MAX_HINT_LENGTH = 16;
         private readonly IWizard<SettingsOptions> wizard;
         private readonly IAppSettingsManager appSettingsManager;
 
@@ -118,7 +119,7 @@ namespace Xperience.Manager.Commands
                         name = displayAttr.Name;
                     }
 
-                    return $"{name} {(value is not null ? $"[{Constants.SUCCESS_COLOR}]({value})[/]" : "")}";
+                    return $"{name} {(value is not null ? $"[{Constants.SUCCESS_COLOR}]({Truncate(value).EscapeMarkup()})[/]" : "")}";
                 })
                 .MoreChoicesText("Scroll for more...")
                 .AddChoices(configKeys.Union(cachingKeys)));
@@ -193,20 +194,25 @@ namespace Xperience.Manager.Commands
             var keyToUpdate = AnsiConsole.Prompt(new SelectionPrompt<ConfigurationKey>()
                 .Title($"Set which [{Constants.PROMPT_COLOR}]key[/]?")
                 .PageSize(10)
-                .UseConverter(v => $"{v.KeyName}{(v.ActualValue is not null ?
-                    $" [{Constants.SUCCESS_COLOR}]({Truncate(v.ActualValue.ToString(), 12)})[/]" : string.Empty)}")
+                .UseConverter(v =>
+                {
+                    object? value = v.ActualValue is not null ? v.ActualValue : v.DefaultValue;
+
+                    return $"{v.KeyName}{(value is not null ?
+                        $" [{Constants.SUCCESS_COLOR}]({Truncate(value).EscapeMarkup()})[/]" : string.Empty)}";
+                })
                 .MoreChoicesText("Scroll for more...")
                 .AddChoices(keys));
 
             var header = new StringBuilder($"\n[{Constants.PROMPT_COLOR} underline]{keyToUpdate.KeyName}[/]");
             if (keyToUpdate.ActualValue is not null)
             {
-                header.AppendLine($"\nValue: {keyToUpdate.ActualValue}");
+                header.AppendLine($"\nValue: {Markup.Escape(keyToUpdate.ActualValue.ToString()!)}");
             }
 
             if (keyToUpdate.DefaultValue is not null)
             {
-                header.AppendLine($"\nDefault: {keyToUpdate.DefaultValue}");
+                header.AppendLine($"\nDefault: {Markup.Escape(keyToUpdate.DefaultValue.ToString()!)}");
             }
 
             header.AppendLine($"\n{keyToUpdate.Description}\n");
@@ -239,7 +245,7 @@ namespace Xperience.Manager.Commands
             var header = new StringBuilder($"\n[{Constants.PROMPT_COLOR} underline]{displayAttr?.Name ?? propToUpdate.Name}[/]");
             if (value is not null)
             {
-                header.AppendLine($"\nValue: {value}");
+                header.AppendLine($"\nValue: {Markup.Escape(value.ToString()!)}");
             }
 
             if (displayAttr?.Description is not null)
@@ -275,8 +281,18 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private static string? Truncate(string? value, int maxLength, string truncationSuffix = "...") => value?.Length > maxLength
-                ? value[..maxLength] + truncationSuffix
-                : value;
+        private static string Truncate(object? value, string truncationSuffix = "...")
+        {
+            if (value is null)
+            {
+                return string.Empty;
+            }
+
+            string stringRepresentation = value.ToString()!;
+
+            return stringRepresentation.Length > MAX_HINT_LENGTH
+                ? stringRepresentation[..MAX_HINT_LENGTH] + truncationSuffix
+                : stringRepresentation;
+        }
     }
 }

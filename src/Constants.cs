@@ -4,6 +4,9 @@ namespace Xperience.Manager
 {
     public static class Constants
     {
+        /// <summary>
+        /// The lowest major version listed for installation or updating.
+        /// </summary>
         public const int MIN_LISTED_VERSION = 28;
 
         public const string CONFIG_FILENAME = "xman.json";
@@ -68,7 +71,7 @@ namespace Xperience.Manager
             new("CMSForbiddenURLValues",
                 "Specifies characters that are forbidden in page URLs",
                 typeof(string),
-                "\\/:*?\"<>|&%.'#[]+ \t=„“"),
+                "\\/:*?\"<>|&%.'#[]+ =„“"),
             new("CMSHashStringSalt",
                 "Sets the salt value the system uses in hash functions, for example when creating macro signatures",
                 typeof(string)),

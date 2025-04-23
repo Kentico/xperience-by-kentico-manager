@@ -46,7 +46,8 @@ namespace Xperience.Manager.Options
 
 
         /// <summary>
-        /// The custom namespace added to the code of the generated classes. If not provided, a default system namespace is used based on the generated object type.
+        /// The custom namespace added to the code of the generated classes. If not provided, a default system namespace is used based on 
+        /// the generated object type.
         /// </summary>
         public string? Namespace { get; set; }
     }

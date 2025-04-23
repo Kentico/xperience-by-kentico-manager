@@ -10,7 +10,7 @@ namespace Xperience.Manager.Tests.Services
     /// </summary>
     public class IConfigManagerTests : TestBase
     {
-        private readonly IConfigManager configManager = new ConfigManager();
+        private readonly ConfigManager configManager = new();
 
 
         [Test]
@@ -57,7 +57,7 @@ namespace Xperience.Manager.Tests.Services
             await configManager.AddProfile(p2);
             var config = await configManager.GetConfig();
 
-            Assert.That(config.Profiles.Count, Is.EqualTo(2));
+            Assert.That(config.Profiles, Has.Count.EqualTo(2));
         }
 
 
@@ -88,7 +88,7 @@ namespace Xperience.Manager.Tests.Services
             await configManager.RemoveProfile(profile);
             var config = await configManager.GetConfig();
 
-            Assert.That(config.Profiles.Count, Is.EqualTo(1));
+            Assert.That(config.Profiles, Has.Count.EqualTo(1));
         }
 
 

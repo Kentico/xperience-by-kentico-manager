@@ -48,7 +48,8 @@ namespace Xperience.Manager.Tests.Commands
             await command.PreExecute(new(), string.Empty);
             await command.Execute(new(), string.Empty);
 
-            string expectedCodeGenScript = $"dotnet run -- --kxp-codegen --skip-confirmation --type \"{TYPE}\" --location \"{LOCATION}\" --include \"{INCLUDE}\" --exclude \"{EXCLUDE}\" --with-provider-class {WITH_PROVIDER} --namespace \"{NAMESPACE}\"";
+            string expectedCodeGenScript = $"dotnet run -- --kxp-codegen --skip-confirmation --type \"{TYPE}\" --location \"{LOCATION}\" " +
+                $"--include \"{INCLUDE}\" --exclude \"{EXCLUDE}\" --with-provider-class {WITH_PROVIDER} --namespace \"{NAMESPACE}\"";
 
             shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(expectedCodeGenScript)));
         }

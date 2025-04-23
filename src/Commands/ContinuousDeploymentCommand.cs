@@ -47,7 +47,12 @@ namespace Xperience.Manager.Commands
         }
 
 
-        public ContinuousDeploymentCommand(IWizard<RepositoryConfiguration> wizard, ICDXmlManager cdXmlManager, IShellRunner shellRunner, IScriptBuilder scriptBuilder, IConfigManager configManager)
+        public ContinuousDeploymentCommand(
+            IWizard<RepositoryConfiguration> wizard,
+            ICDXmlManager cdXmlManager,
+            IShellRunner shellRunner,
+            IScriptBuilder scriptBuilder,
+            IConfigManager configManager)
         {
             this.wizard = wizard;
             this.shellRunner = shellRunner;
@@ -143,6 +148,7 @@ namespace Xperience.Manager.Commands
             if (string.IsNullOrEmpty(profile?.ProjectName))
             {
                 LogError("Unable to load profile name.");
+
                 return;
             }
 
@@ -156,6 +162,7 @@ namespace Xperience.Manager.Commands
             if (repoConfig is null)
             {
                 LogError("Unable to read repository configuration.");
+
                 return;
             }
 
@@ -172,10 +179,13 @@ namespace Xperience.Manager.Commands
                 return null;
             }
 
-            var profiles = config.Profiles.Where(p => !p.ProjectName?.Equals(profile?.ProjectName, StringComparison.OrdinalIgnoreCase) ?? false);
+            var profiles = config.Profiles.Where(p =>
+                !p.ProjectName?.Equals(profile?.ProjectName, StringComparison.OrdinalIgnoreCase) ?? false);
             if (!profiles.Any())
             {
-                LogError("There are no profiles to restore CD data from. Use the 'install' or 'profile add' commands to register a new profile.");
+                LogError("There are no profiles to restore CD data from. Use the 'install' or 'profile add' commands to register a new " +
+                    "profile.");
+
                 return null;
             }
 
@@ -200,6 +210,7 @@ namespace Xperience.Manager.Commands
             if (string.IsNullOrEmpty(profile?.ProjectName))
             {
                 LogError("Unable to load profile name.");
+
                 return;
             }
 
@@ -235,6 +246,7 @@ namespace Xperience.Manager.Commands
             if (string.IsNullOrEmpty(sourceProfile.ProjectName))
             {
                 LogError("Unable to load profile name.");
+
                 return;
             }
 

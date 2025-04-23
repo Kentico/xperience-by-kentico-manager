@@ -49,7 +49,7 @@ namespace Xperience.Manager.Commands
 
         public override async Task PostExecute(ToolProfile? profile, string? action)
         {
-            if (!Errors.Any())
+            if (Errors.Count == 0)
             {
                 AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Build complete![/]\n");
             }

@@ -23,6 +23,7 @@
             if (currentIndex < Count - 1)
             {
                 Step(1);
+
                 return true;
             }
 
@@ -39,6 +40,7 @@
             if (currentIndex > 0)
             {
                 Step(-1);
+
                 return true;
             }
 

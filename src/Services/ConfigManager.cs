@@ -10,32 +10,19 @@ namespace Xperience.Manager.Services
 {
     public class ConfigManager : IConfigManager
     {
-        public Task AddProfile(ToolProfile? profile)
-        {
-            if (profile is null)
-            {
-                throw new ArgumentNullException(nameof(profile));
-            }
-
-            return AddProfileInternal(profile);
-        }
+        public Task AddProfile(ToolProfile? profile) =>
+            profile is null ? throw new ArgumentNullException(nameof(profile)) : AddProfileInternal(profile);
 
 
-        public Task SetCurrentProfile(ToolProfile? profile)
-        {
-            if (profile is null)
-            {
-                throw new ArgumentNullException(nameof(profile));
-            }
-
-            return SetCurrentProfileInternal(profile);
-        }
+        public Task SetCurrentProfile(ToolProfile? profile) =>
+            profile is null ? throw new ArgumentNullException(nameof(profile)) : SetCurrentProfileInternal(profile);
 
 
         public async Task<ToolProfile?> GetCurrentProfile()
         {
             var config = await GetConfig();
-            var match = config.Profiles.FirstOrDefault(p => p.ProjectName?.Equals(config.CurrentProfile, StringComparison.OrdinalIgnoreCase) ?? false);
+            var match = config.Profiles.FirstOrDefault(p =>
+                p.ProjectName?.Equals(config.CurrentProfile, StringComparison.OrdinalIgnoreCase) ?? false);
             if (config.Profiles.Count == 1 &&
                 (string.IsNullOrEmpty(config.CurrentProfile) || match is null))
             {
@@ -62,7 +49,8 @@ namespace Xperience.Manager.Services
             }
 
             string text = await File.ReadAllTextAsync(Constants.CONFIG_FILENAME);
-            var config = JsonConvert.DeserializeObject<ToolConfiguration>(text) ?? throw new JsonReaderException($"The configuration file {Constants.CONFIG_FILENAME} cannot be deserialized.");
+            var config = JsonConvert.DeserializeObject<ToolConfiguration>(text) ?? throw new JsonReaderException($"The configuration " +
+                $"file {Constants.CONFIG_FILENAME} cannot be deserialized.");
 
             return config;
         }
@@ -75,6 +63,7 @@ namespace Xperience.Manager.Services
             if (File.Exists(Constants.CONFIG_FILENAME))
             {
                 await MigrateConfig(toolVersion);
+
                 return;
             }
 
@@ -103,15 +92,8 @@ namespace Xperience.Manager.Services
         }
 
 
-        public Task RemoveProfile(ToolProfile? profile)
-        {
-            if (profile is null)
-            {
-                throw new ArgumentNullException(nameof(profile));
-            }
-
-            return RemoveProfileInternal(profile);
-        }
+        public Task RemoveProfile(ToolProfile? profile) =>
+            profile is null ? throw new ArgumentNullException(nameof(profile)) : RemoveProfileInternal(profile);
 
 
         private async Task AddProfileInternal(ToolProfile profile)
@@ -157,7 +139,8 @@ namespace Xperience.Manager.Services
 
             // For some reason Profiles.Remove() didn't work, make a new list
             var newProfiles = new List<ToolProfile>();
-            newProfiles.AddRange(config.Profiles.Where(p => !p.ProjectName?.Equals(profile.ProjectName, StringComparison.OrdinalIgnoreCase) ?? true));
+            newProfiles.AddRange(config.Profiles.Where(p =>
+                !p.ProjectName?.Equals(profile.ProjectName, StringComparison.OrdinalIgnoreCase) ?? true));
 
             config.Profiles = newProfiles;
 

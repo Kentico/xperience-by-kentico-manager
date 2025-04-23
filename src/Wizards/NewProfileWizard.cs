@@ -20,7 +20,8 @@ namespace Xperience.Manager.Wizards
 
             Steps.Add(new Step<string>(new()
             {
-                Prompt = new TextPrompt<string>($"Enter the [{Constants.PROMPT_COLOR}]full path[/] of the folder containing your Xperience project:"),
+                Prompt = new TextPrompt<string>($"Enter the [{Constants.PROMPT_COLOR}]full path[/] of the folder containing your Xperience " +
+                    "project:"),
                 ValueReceiver = (v) => Options.WorkingDirectory = v,
             }));
 

@@ -53,6 +53,7 @@ namespace Xperience.Manager.Commands
             if (string.IsNullOrEmpty(action) || !Parameters.Any(p => p.Equals(action, StringComparison.OrdinalIgnoreCase)))
             {
                 LogError($"Must provide one parameter from '{string.Join(", ", Parameters)}'");
+
                 return;
             }
 
@@ -104,7 +105,7 @@ namespace Xperience.Manager.Commands
 
         public override async Task PostExecute(ToolProfile? profile, string? action)
         {
-            if (!Errors.Any())
+            if (Errors.Count == 0)
             {
                 AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]CI {action ?? "process"} complete![/]\n");
             }
@@ -168,7 +169,9 @@ namespace Xperience.Manager.Commands
                 ErrorHandler = ErrorDataReceived,
                 OutputHandler = (o, e) =>
                 {
-                    if (e.Data?.Contains("The Continuous Integration repository is either not initialized or in an incorrect location on the file system.", StringComparison.OrdinalIgnoreCase) ?? false)
+                    string notFoundString = "The Continuous Integration repository is either not initialized or in an incorrect location on " +
+                        "the file system.";
+                    if (e.Data?.Contains(notFoundString, StringComparison.OrdinalIgnoreCase) ?? false)
                     {
                         // Restore process couldn't find repository directory
                         LogError("The restore process wasn't started because the Continuous Integration repository wasn't found.", o as Process);

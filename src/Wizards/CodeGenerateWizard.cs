@@ -51,20 +51,22 @@ namespace Xperience.Manager.Wizards
             {
                 Prompt = new TextPrompt<string>($"Enter the relative [{Constants.PROMPT_COLOR}]location[/] to generate files:")
                     .DefaultValue(Options.Location)
-                    .Validate((v) => v.StartsWith("/"))
+                    .Validate((v) => v.StartsWith('/'))
                     .ValidationErrorMessage("Location must start with '/'"),
                 ValueReceiver = (v) => Options.Location = v
             }));
 
             Steps.Add(new Step<string>(new()
             {
-                Prompt = new TextPrompt<string>($"[{Constants.PROMPT_COLOR}]Include[/] which object types (semicolon separated list)?").DefaultValue(Options.Include),
+                Prompt = new TextPrompt<string>($"[{Constants.PROMPT_COLOR}]Include[/] which object types (semicolon separated list)?")
+                    .DefaultValue(Options.Include),
                 ValueReceiver = (v) => Options.Include = v
             }));
 
             Steps.Add(new Step<string>(new()
             {
-                Prompt = new TextPrompt<string>($"[{Constants.PROMPT_COLOR}]Exclude[/] which object types (semicolon separated list)?").DefaultValue(Options.Exclude),
+                Prompt = new TextPrompt<string>($"[{Constants.PROMPT_COLOR}]Exclude[/] which object types (semicolon separated list)?")
+                    .DefaultValue(Options.Exclude),
                 ValueReceiver = (v) => Options.Exclude = v
             }));
 

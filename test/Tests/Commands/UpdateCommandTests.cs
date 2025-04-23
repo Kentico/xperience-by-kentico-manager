@@ -38,15 +38,15 @@ namespace Xperience.Manager.Tests.Commands
             await command.PreExecute(new(), string.Empty);
             await command.Execute(new(), string.Empty);
 
-            string[] packageNames = new string[]
-            {
+            string[] packageNames =
+            [
                 "kentico.xperience.admin",
                 "kentico.xperience.azurestorage",
                 "kentico.xperience.cloud",
                 "kentico.xperience.graphql",
                 "kentico.xperience.imageprocessing",
                 "kentico.xperience.webapp"
-            };
+            ];
 
             foreach (string p in packageNames)
             {

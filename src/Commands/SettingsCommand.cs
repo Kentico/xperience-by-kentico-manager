@@ -12,10 +12,11 @@ using Xperience.Manager.Wizards;
 namespace Xperience.Manager.Commands
 {
     /// <summary>
-    /// A command which configures the appsettings.json of a project.
+    /// A command which configures the application settings of a project.
     /// </summary>
     public class SettingsCommand : AbstractCommand
     {
+        private const int MAX_HINT_LENGTH = 16;
         private readonly IWizard<SettingsOptions> wizard;
         private readonly IAppSettingsManager appSettingsManager;
 
@@ -26,7 +27,7 @@ namespace Xperience.Manager.Commands
         public override IEnumerable<string> Parameters => [];
 
 
-        public override string Description => "Configures the appsettings.json of a project";
+        public override string Description => "Configures the application settings of a project";
 
 
         public override bool RequiresProfile => true;
@@ -57,17 +58,30 @@ namespace Xperience.Manager.Commands
                 return;
             }
 
-            var options = await wizard.Run();
+            if (string.IsNullOrEmpty(profile?.WorkingDirectory))
+            {
+                LogError("Working directory not set.");
+
+                return;
+            }
+
+            string[] appSettingsFiles = Directory.EnumerateFiles(profile.WorkingDirectory, "appsettings*.json")
+                .Select(path => Path.GetFileName(path))
+                .ToArray();
+            var options = await wizard.Run(appSettingsFiles);
             switch (options.SettingToChange)
             {
                 case SettingsOptions.ConnectionStringSetting:
-                    await ConfigureConnectionString(profile);
+                    await ConfigureConnectionString(profile, options.AppSettingsFileName);
                     break;
-                case SettingsOptions.ConfigurationKeysSetting:
-                    await ConfigureKeys(profile);
+                case SettingsOptions.UngroupedKeySetting:
+                    await ConfigureKeys(profile, Constants.UngroupedKeys, options.AppSettingsFileName);
                     break;
                 case SettingsOptions.CmsHeadlessSetting:
-                    await ConfigureHeadlessOptions(profile);
+                    await ConfigureHeadlessOptions(profile, options.AppSettingsFileName);
+                    break;
+                case SettingsOptions.AzureStorageSetting:
+                    await ConfigureKeys(profile, Constants.AzureStorageKeys, options.AppSettingsFileName);
                     break;
                 default:
                     LogError("Invalid selection.");
@@ -84,7 +98,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task ConfigureHeadlessOptions(ToolProfile? profile)
+        private async Task ConfigureHeadlessOptions(ToolProfile? profile, string? fileName)
         {
             if (StopProcessing)
             {
@@ -92,7 +106,7 @@ namespace Xperience.Manager.Commands
             }
 
             bool updateHeadless = true;
-            var headlessConfig = await appSettingsManager.GetCmsHeadlessConfiguration(profile);
+            var headlessConfig = await appSettingsManager.GetCmsHeadlessConfiguration(profile, fileName);
             var configKeys = headlessConfig.GetType().GetProperties().Where(p => !p.Name.Equals(nameof(CmsHeadlessConfiguration.Caching)));
             var cachingKeys = headlessConfig.Caching.GetType().GetProperties();
             while (updateHeadless)
@@ -115,12 +129,12 @@ namespace Xperience.Manager.Commands
                         name = displayAttr.Name;
                     }
 
-                    return $"{name} {(value is not null ? $"[{Constants.SUCCESS_COLOR}]({value})[/]" : "")}";
+                    return $"{name} {(value is not null ? $"[{Constants.SUCCESS_COLOR}]({Truncate(value).EscapeMarkup()})[/]" : "")}";
                 })
                 .MoreChoicesText("Scroll for more...")
                 .AddChoices(configKeys.Union(cachingKeys)));
 
-                bool success = await TryUpdateHeadlessOption(headlessConfig, propToUpdate, profile);
+                bool success = await TryUpdateHeadlessOption(headlessConfig, propToUpdate, profile, fileName);
                 updateHeadless = success &&
                     AnsiConsole.Prompt(new ConfirmationPrompt($"Update another [{Constants.PROMPT_COLOR}]headless key[/]?")
                     {
@@ -130,7 +144,7 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task ConfigureConnectionString(ToolProfile? profile)
+        private async Task ConfigureConnectionString(ToolProfile? profile, string? fileName)
         {
             if (StopProcessing)
             {
@@ -138,23 +152,24 @@ namespace Xperience.Manager.Commands
             }
 
             string connStringName = "CMSConnectionString";
-            string? connString = await appSettingsManager.GetConnectionString(profile, connStringName);
+            string? connString = await appSettingsManager.GetConnectionString(profile, connStringName, fileName);
             if (connString is null)
             {
                 LogError($"Unable to load connection string.");
+
                 return;
             }
 
             AnsiConsole.Write(new Markup($"[{Constants.PROMPT_COLOR} underline]{connStringName}[/]\n{connString}\n\n").Centered());
 
             string newConnString = AnsiConsole.Prompt(new TextPrompt<string>($"Enter new [{Constants.PROMPT_COLOR}]connection string[/]:"));
-            await appSettingsManager.SetConnectionString(profile, connStringName, newConnString);
+            await appSettingsManager.SetConnectionString(profile, connStringName, newConnString, fileName);
 
             AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Connection string updated![/]\n");
         }
 
 
-        private async Task ConfigureKeys(ToolProfile? profile)
+        private async Task ConfigureKeys(ToolProfile? profile, IEnumerable<ConfigurationKey> keysToList, string? fileName)
         {
             if (StopProcessing)
             {
@@ -162,17 +177,18 @@ namespace Xperience.Manager.Commands
             }
 
             bool updateSettings = true;
-            var keys = await appSettingsManager.GetConfigurationKeys(profile);
+            var keys = await appSettingsManager.GetConfigurationKeys(profile, keysToList, fileName);
             while (updateSettings)
             {
                 var updatedKey = GetNewSettingsKey(keys);
                 if (updatedKey?.ActualValue is null)
                 {
                     LogError($"Failed to set new value for key {updatedKey?.KeyName}");
+
                     return;
                 }
 
-                await appSettingsManager.SetKeyValue(profile, updatedKey.KeyName, updatedKey.ActualValue);
+                await appSettingsManager.SetKeyValue(profile, updatedKey.KeyName, updatedKey.ActualValue, fileName);
                 AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Updated the {updatedKey.KeyName} key![/]\n");
 
                 updateSettings = AnsiConsole.Prompt(new ConfirmationPrompt($"Update another [{Constants.PROMPT_COLOR}]configuration key[/]?")
@@ -188,25 +204,37 @@ namespace Xperience.Manager.Commands
             var keyToUpdate = AnsiConsole.Prompt(new SelectionPrompt<ConfigurationKey>()
                 .Title($"Set which [{Constants.PROMPT_COLOR}]key[/]?")
                 .PageSize(10)
-                .UseConverter(v => $"{v.KeyName}{(v.ActualValue is not null ?
-                    $" [{Constants.SUCCESS_COLOR}]({Truncate(v.ActualValue.ToString(), 12)})[/]" : string.Empty)}")
+                .UseConverter(v =>
+                {
+                    object? value = v.ActualValue is not null ? v.ActualValue : v.DefaultValue;
+
+                    return $"{v.KeyName}{(value is not null ?
+                        $" [{Constants.SUCCESS_COLOR}]({Truncate(value).EscapeMarkup()})[/]" : string.Empty)}";
+                })
                 .MoreChoicesText("Scroll for more...")
                 .AddChoices(keys));
 
             var header = new StringBuilder($"\n[{Constants.PROMPT_COLOR} underline]{keyToUpdate.KeyName}[/]");
             if (keyToUpdate.ActualValue is not null)
             {
-                header.AppendLine($"\nValue: {keyToUpdate.ActualValue}");
+                header.AppendLine($"\nValue: {Markup.Escape(keyToUpdate.ActualValue.ToString()!)}");
+            }
+
+            if (keyToUpdate.DefaultValue is not null)
+            {
+                header.AppendLine($"\nDefault: {Markup.Escape(keyToUpdate.DefaultValue.ToString()!)}");
             }
 
             header.AppendLine($"\n{keyToUpdate.Description}\n");
             AnsiConsole.Write(new Markup(header.ToString()).Centered());
 
-            string newValue = AnsiConsole.Prompt(new TextPrompt<string>($"New value [{Constants.EMPHASIS_COLOR}]({keyToUpdate.ValueType.Name.ToLower()})[/]:"));
+            string newValue = AnsiConsole.Prompt(new TextPrompt<string>($"New value [{Constants.EMPHASIS_COLOR}]" +
+                $"({keyToUpdate.ValueType.Name.ToLower()})[/]:"));
             object converted = Convert.ChangeType(newValue, keyToUpdate.ValueType);
             if (converted is null)
             {
                 LogError($"The key value cannot be cast into type {keyToUpdate.ValueType.Name}");
+
                 return null;
             }
 
@@ -216,7 +244,11 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private async Task<bool> TryUpdateHeadlessOption(CmsHeadlessConfiguration headlessConfiguration, PropertyInfo propToUpdate, ToolProfile? profile)
+        private async Task<bool> TryUpdateHeadlessOption(
+            CmsHeadlessConfiguration headlessConfiguration,
+            PropertyInfo propToUpdate,
+            ToolProfile? profile,
+            string? fileName)
         {
             bool isCachingKey = headlessConfiguration.Caching.GetType().GetProperties().Contains(propToUpdate);
             object? value = isCachingKey ? propToUpdate.GetValue(headlessConfiguration.Caching) : propToUpdate.GetValue(headlessConfiguration);
@@ -224,7 +256,7 @@ namespace Xperience.Manager.Commands
             var header = new StringBuilder($"\n[{Constants.PROMPT_COLOR} underline]{displayAttr?.Name ?? propToUpdate.Name}[/]");
             if (value is not null)
             {
-                header.AppendLine($"\nValue: {value}");
+                header.AppendLine($"\nValue: {Markup.Escape(value.ToString()!)}");
             }
 
             if (displayAttr?.Description is not null)
@@ -234,11 +266,13 @@ namespace Xperience.Manager.Commands
 
             AnsiConsole.Write(new Markup(header.ToString()).Centered());
 
-            string newValue = AnsiConsole.Prompt(new TextPrompt<string>($"New value [{Constants.EMPHASIS_COLOR}]({propToUpdate.PropertyType.Name.ToLower()})[/]:"));
+            string newValue = AnsiConsole.Prompt(new TextPrompt<string>($"New value [{Constants.EMPHASIS_COLOR}]" +
+                $"({propToUpdate.PropertyType.Name.ToLower()})[/]:"));
             object converted = Convert.ChangeType(newValue, propToUpdate.PropertyType);
             if (converted is null)
             {
                 LogError($"The key value cannot be cast into type {propToUpdate.PropertyType.Name}");
+
                 return false;
             }
 
@@ -251,15 +285,25 @@ namespace Xperience.Manager.Commands
                 propToUpdate.SetValue(headlessConfiguration, converted);
             }
 
-            await appSettingsManager.SetCmsHeadlessConfiguration(profile, headlessConfiguration);
+            await appSettingsManager.SetCmsHeadlessConfiguration(profile, headlessConfiguration, fileName);
             AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Updated the {displayAttr?.Name ?? propToUpdate.Name} key![/]\n");
 
             return true;
         }
 
 
-        private static string? Truncate(string? value, int maxLength, string truncationSuffix = "...") => value?.Length > maxLength
-                ? value[..maxLength] + truncationSuffix
-                : value;
+        private static string Truncate(object? value, string truncationSuffix = "...")
+        {
+            if (value is null)
+            {
+                return string.Empty;
+            }
+
+            string stringRepresentation = value.ToString()!;
+
+            return stringRepresentation.Length > MAX_HINT_LENGTH
+                ? stringRepresentation[..MAX_HINT_LENGTH] + truncationSuffix
+                : stringRepresentation;
+        }
     }
 }

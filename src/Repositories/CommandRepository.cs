@@ -13,7 +13,8 @@ namespace Xperience.Manager.Repositories
         public CommandRepository(IEnumerable<ICommand> commands) => this.commands = commands;
 
 
-        public ICommand? Get(string keyword) => commands.FirstOrDefault(c => c?.Keywords.Contains(keyword, StringComparer.OrdinalIgnoreCase) ?? false);
+        public ICommand? Get(string keyword) => commands.FirstOrDefault(c => c?.Keywords.Contains(keyword, StringComparer.OrdinalIgnoreCase)
+            ?? false);
 
 
         public IEnumerable<ICommand> GetAll() => commands;

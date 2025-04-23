@@ -21,7 +21,7 @@ namespace Xperience.Manager.Wizards
         public override async Task InitSteps(params string[] args)
         {
             var versions = await NuGetVersionHelper.GetPackageVersions(Constants.TEMPLATES_PACKAGE);
-            var filtered = versions.Where(v => !v.IsPrerelease && !v.IsLegacyVersion && v.Major >= 25)
+            var filtered = versions.Where(v => !v.IsPrerelease && !v.IsLegacyVersion && v.Major >= Constants.MIN_LISTED_VERSION)
                 .Select(v => v.Version)
                 .OrderByDescending(v => v);
 

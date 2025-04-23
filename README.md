@@ -71,7 +71,7 @@ The following commands can be executed using the `xman` tool name:
 - [`m`, `macros`](#re-signing-macros)
 - [`b`, `build`](#building-projects)
 - [`g`, `generate`](#generating-code-for-object-types)
-- [`s`, `settings`](#modifying-appsettingsjson)
+- [`s`, `settings`](#modifying-application-settings)
 - [`ci <store> <restore>`](#running-continuous-integration)
 - [`cd <store> <restore> <config>`](#running-continuous-deployment)
 - [`p`, `profile <add> <delete> <switch>`](#managing-profiles)
@@ -129,9 +129,9 @@ Installing a new project automatically includes a database as well. If you want 
    xman delete
    ```
 
-### Modifying appsettings.json
+### Modifying application settings
 
-This tool can assist with changing the _CMSConnectionString_, supported [configuration keys](https://docs.xperience.io/xp/developers-and-admins/configuration/reference-configuration-keys), and the [headless API](https://docs.xperience.io/xp/developers-and-admins/configuration/headless-channel-management#Headlesschannelmanagement-ConfiguretheheadlessAPI).
+This tool can assist with changing the _CMSConnectionString_, supported [configuration keys](https://docs.xperience.io/xp/developers-and-admins/configuration/reference-configuration-keys), and the [headless API](https://docs.xperience.io/xp/developers-and-admins/configuration/headless-channel-management#Headlesschannelmanagement-ConfiguretheheadlessAPI). If your project has multiple application settings files (e.g. appsettings.Development.json), you will be prompted which file to modify.
 
 1. (optional) Select a profile with the [`profile`](#managing-profiles) command
 1. Run the `settings` command from the directory containing the [configuration file](#configuration-file), which will begin the settings wizard:

@@ -10,8 +10,11 @@ namespace Xperience.Manager.Services
 
         private const string BUILD_SCRIPT = "dotnet build";
         private const string MKDIR_SCRIPT = $"mkdir";
-        private const string INSTALL_PROJECT_SCRIPT = $"dotnet new {nameof(InstallProjectOptions.Template)} -n {nameof(InstallProjectOptions.ProjectName)}";
-        private const string INSTALL_DATABASE_SCRIPT = $"dotnet kentico-xperience-dbmanager -- -s \"{nameof(InstallDatabaseOptions.ServerName)}\" -d \"{nameof(InstallDatabaseOptions.DatabaseName)}\" -a \"{nameof(InstallDatabaseOptions.AdminPassword)}\" --use-existing-database {nameof(InstallDatabaseOptions.UseExistingDatabase)}";
+        private const string INSTALL_PROJECT_SCRIPT = $"dotnet new {nameof(InstallProjectOptions.Template)} -n " +
+            $"{nameof(InstallProjectOptions.ProjectName)}";
+        private const string INSTALL_DATABASE_SCRIPT = $"dotnet kentico-xperience-dbmanager -- -s \"" +
+            $"{nameof(InstallDatabaseOptions.ServerName)}\" -d \"{nameof(InstallDatabaseOptions.DatabaseName)}\" -a \"" +
+            $"{nameof(InstallDatabaseOptions.AdminPassword)}\" --use-existing-database {nameof(InstallDatabaseOptions.UseExistingDatabase)}";
         private const string UNINSTALL_TEMPLATE_SCRIPT = $"dotnet new uninstall {Constants.TEMPLATES_PACKAGE}";
         private const string INSTALL_TEMPLATE_SCRIPT = $"dotnet new install {Constants.TEMPLATES_PACKAGE}";
         private const string UPDATE_PACKAGE_SCRIPT = $"dotnet add package {nameof(UpdateOptions.PackageName)}";
@@ -20,13 +23,19 @@ namespace Xperience.Manager.Services
         private const string UNINSTALL_DBTOOL_SCRIPT = $"dotnet tool uninstall {Constants.DATABASE_TOOL} -g";
         private const string CI_STORE_SCRIPT = "dotnet run --no-build --kxp-ci-store";
         private const string CI_RESTORE_SCRIPT = "dotnet run --no-build --kxp-ci-restore";
-        private const string CD_NEW_CONFIG_SCRIPT = $"dotnet run --no-build -- --kxp-cd-config --path \"{nameof(ContinuousDeploymentConfig.ConfigPath)}\"";
-        private const string CD_STORE_SCRIPT = $"dotnet run --no-build -- --kxp-cd-store --repository-path \"{nameof(ContinuousDeploymentConfig.RepositoryPath)}\" --config-path \"{nameof(ContinuousDeploymentConfig.ConfigPath)}\"";
-        private const string CD_RESTORE_SCRIPT = $"dotnet run -- --kxp-cd-restore --repository-path \"{nameof(ContinuousDeploymentConfig.RepositoryPath)}\"";
+        private const string CD_NEW_CONFIG_SCRIPT = $"dotnet run --no-build -- --kxp-cd-config --path \"" +
+            $"{nameof(ContinuousDeploymentConfig.ConfigPath)}\"";
+        private const string CD_STORE_SCRIPT = $"dotnet run --no-build -- --kxp-cd-store --repository-path \"" +
+            $"{nameof(ContinuousDeploymentConfig.RepositoryPath)}\" --config-path \"{nameof(ContinuousDeploymentConfig.ConfigPath)}\"";
+        private const string CD_RESTORE_SCRIPT = $"dotnet run -- --kxp-cd-restore --repository-path \"" +
+            $"{nameof(ContinuousDeploymentConfig.RepositoryPath)}\"";
         private const string MACRO_SCRIPT = "dotnet run --no-build -- --kxp-resign-macros";
-        private const string CODEGEN_SCRIPT = $"dotnet run -- --kxp-codegen --skip-confirmation --type \"{nameof(CodeGenerateOptions.Type)}\" --location \"{nameof(CodeGenerateOptions.Location)}\" --include \"{nameof(CodeGenerateOptions.Include)}\" --exclude \"{nameof(CodeGenerateOptions.Exclude)}\" --with-provider-class {nameof(CodeGenerateOptions.WithProviderClass)}";
+        private const string CODEGEN_SCRIPT = $"dotnet run -- --kxp-codegen --skip-confirmation --type \"{nameof(CodeGenerateOptions.Type)}" +
+            $"\" --location \"{nameof(CodeGenerateOptions.Location)}\" --include \"{nameof(CodeGenerateOptions.Include)}\" --exclude \"" +
+            $"{nameof(CodeGenerateOptions.Exclude)}\" --with-provider-class {nameof(CodeGenerateOptions.WithProviderClass)}";
         private const string DELETE_FOLDER_SCRIPT = $"rm \"{nameof(ToolProfile.WorkingDirectory)}\" -r -Force";
-        private const string RUN_SQL_QUERY = $"Invoke-Sqlcmd -ConnectionString \"{nameof(RunSqlOptions.ConnString)}\" -Query \"{nameof(RunSqlOptions.SqlQuery)}\"";
+        private const string RUN_SQL_QUERY = $"Invoke-Sqlcmd -ConnectionString \"{nameof(RunSqlOptions.ConnString)}\" -Query \"" +
+            $"{nameof(RunSqlOptions.SqlQuery)}\"";
 
 
         public IScriptBuilder AppendCloud(bool useCloud)

@@ -38,7 +38,8 @@ namespace Xperience.Manager.Tests.Commands
             await command.PreExecute(new(), string.Empty);
             await command.Execute(new(), string.Empty);
 
-            string expectedMacroScript = $"dotnet run --no-build -- --kxp-resign-macros --sign-all --username \"{USER}\" --new-salt \"{NEW_SALT}\"";
+            string expectedMacroScript = $"dotnet run --no-build -- --kxp-resign-macros --sign-all --username \"{USER}\" --new-salt " +
+                $"\"{NEW_SALT}\"";
 
             shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(expectedMacroScript)));
         }
@@ -56,7 +57,8 @@ namespace Xperience.Manager.Tests.Commands
             await command.PreExecute(new(), string.Empty);
             await command.Execute(new(), string.Empty);
 
-            string expectedMacroScript = $"dotnet run --no-build -- --kxp-resign-macros --old-salt \"{OLD_SALT}\" --new-salt \"{NEW_SALT}\"";
+            string expectedMacroScript = $"dotnet run --no-build -- --kxp-resign-macros --old-salt \"{OLD_SALT}\" --new-salt " +
+                $"\"{NEW_SALT}\"";
 
             shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(expectedMacroScript)));
         }

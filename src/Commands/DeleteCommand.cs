@@ -1,7 +1,6 @@
 using Spectre.Console;
 
 using Xperience.Manager.Configuration;
-using Xperience.Manager.Options;
 using Xperience.Manager.Services;
 
 namespace Xperience.Manager.Commands
@@ -13,6 +12,7 @@ namespace Xperience.Manager.Commands
     {
         private bool deleteConfirmed;
         private readonly IShellRunner shellRunner;
+        private readonly ISqlExecutor sqlExecutor;
         private readonly IScriptBuilder scriptBuilder;
         private readonly IConfigManager configManager;
         private readonly IAppSettingsManager appSettingsManager;
@@ -43,11 +43,13 @@ namespace Xperience.Manager.Commands
 
         public DeleteCommand(
             IShellRunner shellRunner,
+            ISqlExecutor sqlExecutor,
             IScriptBuilder scriptBuilder,
             IConfigManager configManager,
             IAppSettingsManager appSettingsManager)
         {
             this.shellRunner = shellRunner;
+            this.sqlExecutor = sqlExecutor;
             this.scriptBuilder = scriptBuilder;
             this.configManager = configManager;
             this.appSettingsManager = appSettingsManager;
@@ -119,17 +121,7 @@ namespace Xperience.Manager.Commands
             parts = parts.Where(p => !p.Equals(initialCatalogPart, StringComparison.OrdinalIgnoreCase));
             connString = string.Join(';', parts);
             string databaseName = initialCatalogPart.Split('=')[1].Trim();
-
-            var options = new RunSqlOptions()
-            {
-                SqlQuery = $"DROP DATABASE {databaseName}",
-                ConnString = connString
-            };
-            string dbScript = scriptBuilder.SetScript(ScriptType.ExecuteSql).WithPlaceholders(options).Build();
-            await shellRunner.Execute(new(dbScript)
-            {
-                ErrorHandler = ErrorDataReceived
-            }).WaitForExitAsync();
+            await sqlExecutor.ExecuteNonQuery(connString, $"DROP DATABASE {databaseName}");
         }
 
 

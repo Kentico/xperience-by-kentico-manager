@@ -10,12 +10,21 @@ namespace Xperience.Manager.Services
 {
     public class SqlExecutor : ISqlExecutor
     {
-        public async Task<IEnumerable<JObject>> ExecuteQuery(string connectionString, string queryText)
+        private const int MAX_COLUMN_CHARS = 200;
+
+
+        public async Task<IEnumerable<JObject>> ExecuteQuery(string connectionString, string queryName)
         {
-            using var connection = new SqlConnection(connectionString);
-            var command = new SqlCommand(queryText, connection);
-            connection.Open();
             var result = new List<JObject>();
+            string? query = await GetSqlQueryText(queryName);
+            if (string.IsNullOrEmpty(query))
+            {
+                return result;
+            }
+
+            using var connection = new SqlConnection(connectionString);
+            var command = new SqlCommand(query, connection);
+            connection.Open();
             var reader = await command.ExecuteReaderAsync();
             var columns = await reader.GetColumnSchemaAsync();
             try
@@ -64,14 +73,8 @@ namespace Xperience.Manager.Services
 
         public async Task<Table> GetTable(string connectionString, string queryName)
         {
-            var table = new Table();
-            string? query = await GetSqlQueryText(queryName);
-            if (string.IsNullOrEmpty(query))
-            {
-                return table;
-            }
-
-            var result = await ExecuteQuery(connectionString, query);
+            var table = new Table() { Border = TableBorder.Minimal };
+            var result = await ExecuteQuery(connectionString, queryName);
             if (!result.Any())
             {
                 return table;
@@ -83,14 +86,25 @@ namespace Xperience.Manager.Services
                 return table;
             }
 
-            table.AddColumns(firstRow.Properties().Select(p => p.Name).ToArray());
+            table.AddColumns(firstRow.Properties().Select(p => $"[{Constants.PROMPT_COLOR}]{p.Name}[/]").ToArray());
             foreach (var row in result)
             {
-                var rowValues = row.Values().Select(v => v.Value<string>() ?? string.Empty);
+                var rowValues = row.Values().Select(GetFormattedValue);
                 table.AddRow(rowValues.ToArray());
             }
 
             return table;
+        }
+
+
+        private string GetFormattedValue(JToken token)
+        {
+            string stringValue = token.Value<string>() ?? string.Empty;
+            stringValue = stringValue.Length > MAX_COLUMN_CHARS
+                ? stringValue[..MAX_COLUMN_CHARS]
+                : stringValue;
+
+            return Markup.Escape(stringValue);
         }
 
 

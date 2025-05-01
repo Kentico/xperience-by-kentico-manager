@@ -90,7 +90,9 @@ namespace Xperience.Manager.Services
             foreach (var row in result)
             {
                 var rowValues = row.Values().Select(GetFormattedValue);
-                table.AddRow(rowValues.ToArray());
+                table
+                    .AddEmptyRow() // Add an empty row to simulate padding
+                    .AddRow(rowValues.ToArray());
             }
 
             return table;
@@ -108,13 +110,13 @@ namespace Xperience.Manager.Services
         }
 
 
-        private static async Task<string> GetSqlQueryText(string queryName)
+        private static Task<string> GetSqlQueryText(string queryName)
         {
             string assemblyPath = Assembly.GetExecutingAssembly().Location;
             string? executingDirectory = Path.GetDirectoryName(assemblyPath);
             string fullPathToScript = $"{executingDirectory}/Scripts/{queryName}.sql";
 
-            return await File.ReadAllTextAsync(fullPathToScript);
+            return File.ReadAllTextAsync(fullPathToScript);
         }
     }
 }

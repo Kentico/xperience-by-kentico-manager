@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 
 using Spectre.Console;
-
+using Spectre.Console.Rendering;
 using Xperience.Manager.Configuration;
 using Xperience.Manager.Services;
 
@@ -69,39 +69,43 @@ namespace Xperience.Manager.Commands
         {
             try
             {
+                ctx.Status = "Checking class consistency...";
+                var classResults = new Table[]
+                {
+                    await sqlExecutor.GetTable(connectionString, "TablesWithoutClasses"),
+                    await sqlExecutor.GetTable(connectionString, "ClassesWithoutTables")
+                };
+                string header = "Class consistency";
+                if (classResults.All(t => t.Rows.Count == 0))
+                {
+                    RenderSection(header, new Markup($"[{Constants.SUCCESS_COLOR}]All classes and tables accounted for![/]"));
+                }
+                else
+                {
+                    RenderSection(header, classResults.Where(t => t.Rows.Count > 0).ToArray());
+                }
+
                 ctx.Status = "Getting channel statistics...";
                 var channelStatistics = await sqlExecutor.ExecuteQuery(connectionString, "GetChannelStatistics");
                 var channelBarItems = channelStatistics.Select(GetChannelStatisticsBarItem);
-                WriteTableHeader("Channel stats (pages, headless items, emails)");
-                AnsiConsole.WriteLine();
-                AnsiConsole.Write(new BarChart() { Width = 100 }.AddItems(channelBarItems));
-                AnsiConsole.WriteLine();
+                RenderSection("Channel stats (pages, headless items, emails)", new BarChart() { Width = 100 }.AddItems(channelBarItems));
 
                 ctx.Status = "Getting Workspace statistics...";
                 var workspaceStatistics = await sqlExecutor.ExecuteQuery(connectionString, "GetWorkspaceStatistics");
                 var workspaceBarItems = workspaceStatistics.Select(GetWorkspaceStatisticsBarItem);
-                WriteTableHeader("Workspace stats (content item count)");
-                AnsiConsole.WriteLine();
-                AnsiConsole.Write(new BarChart() { Width = 100 }.AddItems(workspaceBarItems));
-                AnsiConsole.WriteLine();
+                RenderSection("Workspace stats (content item count)", new BarChart() { Width = 100 }.AddItems(workspaceBarItems));
 
                 ctx.Status = "Getting admin users...";
                 var enabledAdminUsers = await sqlExecutor.GetTable(connectionString, "EnabledUsersWithAdminAccess");
-                WriteTableHeader("Enabled users with admin access");
-                AnsiConsole.Write(enabledAdminUsers);
-                AnsiConsole.WriteLine();
+                RenderSection("Enabled users with admin access", enabledAdminUsers);
 
                 ctx.Status = "Getting large tables...";
                 var largestTables = await sqlExecutor.GetTable(connectionString, "GetLargestTables");
-                WriteTableHeader("Largest tables");
-                AnsiConsole.Write(largestTables);
-                AnsiConsole.WriteLine();
+                RenderSection("Largest tables", largestTables);
 
-                ctx.Status = "Getting recent errors...";
-                var eventLogErrors = await sqlExecutor.GetTable(connectionString, "RecentEventLogErrors");
-                WriteTableHeader("Latest Event Log errors");
-                AnsiConsole.Write(eventLogErrors);
-                AnsiConsole.WriteLine();
+                ctx.Status = "Getting Event log errors...";
+                var eventLogErrors = await sqlExecutor.GetTable(connectionString, "CommonEventLogErrors");
+                RenderSection("Common Event log errors", eventLogErrors);
             }
             catch (Exception ex)
             {
@@ -111,12 +115,19 @@ namespace Xperience.Manager.Commands
         }
 
 
-        private static void WriteTableHeader(string header) =>
+        private static void RenderSection(string header, params IRenderable[] renderables)
+        {
             AnsiConsole.Write(new Rule(header)
             {
                 Justification = Justify.Left,
                 Style = Style.Parse(Constants.EMPHASIS_COLOR)
             });
+            foreach (var renderable in renderables)
+            {
+                var padder = new Padder(renderable, new Padding(5, 1, 0, 1));
+                AnsiConsole.Write(padder);
+            }
+        }
 
 
         private static BarChartItem GetChannelStatisticsBarItem(JObject row)

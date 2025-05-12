@@ -2,7 +2,9 @@
 
 using Spectre.Console;
 using Spectre.Console.Rendering;
+
 using Xperience.Manager.Configuration;
+using Xperience.Manager.Helpers;
 using Xperience.Manager.Services;
 
 namespace Xperience.Manager.Commands
@@ -61,11 +63,19 @@ namespace Xperience.Manager.Commands
                 return;
             }
 
-            await AnsiConsole.Status().StartAsync("Running reports...", (ctx) => RunReportInternal(ctx, connectionString));
+            string? workingDirectory = profile?.WorkingDirectory;
+            if (string.IsNullOrEmpty(workingDirectory))
+            {
+                LogError("Couldn't load working directory.");
+
+                return;
+            }
+
+            await AnsiConsole.Status().StartAsync("Running reports...", (ctx) => RunReportInternal(ctx, connectionString, workingDirectory));
         }
 
 
-        private async Task RunReportInternal(StatusContext ctx, string connectionString)
+        private async Task RunReportInternal(StatusContext ctx, string connectionString, string workingDirectory)
         {
             try
             {
@@ -83,6 +93,14 @@ namespace Xperience.Manager.Commands
                 else
                 {
                     RenderSection(header, classResults.Where(t => t.Rows.Count > 0).ToArray());
+                }
+
+                ctx.Status = "Checking assets...";
+                var assetStatistics = AssetHelper.GetAssetStatistics(workingDirectory);
+                var assetTable = MakeAssetTable(assetStatistics);
+                if (assetTable is not null)
+                {
+                    RenderSection("Assets", assetTable);
                 }
 
                 ctx.Status = "Getting channel statistics...";
@@ -112,6 +130,33 @@ namespace Xperience.Manager.Commands
                 AnsiConsole.WriteException(ex);
                 AnsiConsole.WriteLine();
             }
+        }
+
+
+        private static Table? MakeAssetTable(AssetStatistics? statistics)
+        {
+            if (statistics is null)
+            {
+                return null;
+            }
+
+            if (statistics.ContentItemCount == 0 && statistics.MediaFileCount == 0)
+            {
+                return null;
+            }
+
+            var result = new Table().AddColumns("Asset type", "Count", "Size (MB)");
+            if (statistics.ContentItemCount > 0)
+            {
+                result.AddRow("Content items", statistics.ContentItemCount.ToString(), statistics.ContentItemSizeMB.ToString("##.##"));
+            }
+
+            if (statistics.MediaFileCount > 0)
+            {
+                result.AddRow("Media files", statistics.MediaFileCount.ToString(), statistics.MediaFileSizeMB.ToString("##.##"));
+            }
+
+            return result;
         }
 
 

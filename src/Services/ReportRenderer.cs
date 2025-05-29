@@ -10,7 +10,11 @@ namespace Xperience.Manager.Services
     public class ReportRenderer : IReportRenderer
     {
         private const int BAR_CHART_WIDTH = 100;
+        private const int MAX_COLUMN_CHARS = 200;
         private readonly ISqlExecutor sqlExecutor;
+
+
+        private static TableBorder BorderStyle => TableBorder.Minimal;
 
 
         public ReportRenderer(ISqlExecutor sqlExecutor) =>
@@ -21,8 +25,9 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var enabledAdminUsers = await sqlExecutor.GetTable(connectionString, "EnabledUsersWithAdminAccess");
-                RenderSection("Enabled users with admin access", enabledAdminUsers);
+                var enabledAdminUsers = await sqlExecutor.ExecuteQuery(connectionString, "EnabledUsersWithAdminAccess");
+                var table = GetTable(enabledAdminUsers);
+                RenderSection("Enabled users with admin access", table);
             }
             catch (Exception ex)
             {
@@ -35,19 +40,20 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var classResults = new Table[]
+                var classResults = new IEnumerable<JObject>[]
                 {
-                    await sqlExecutor.GetTable(connectionString, "TablesWithoutClasses"),
-                    await sqlExecutor.GetTable(connectionString, "ClassesWithoutTables")
+                    await sqlExecutor.ExecuteQuery(connectionString, "TablesWithoutClasses"),
+                    await sqlExecutor.ExecuteQuery(connectionString, "ClassesWithoutTables")
                 };
                 string header = "Class consistency";
-                if (classResults.All(t => t.Rows.Count == 0))
+                if (classResults.All(t => !t.Any()))
                 {
                     RenderSection(header, new Markup($"[{Constants.SUCCESS_COLOR}]All classes and tables accounted for![/]"));
                 }
                 else
                 {
-                    RenderSection(header, classResults.Where(t => t.Rows.Count > 0).ToArray());
+                    var tablesToRender = classResults.Where(t => t.Any()).Select(GetTable);
+                    RenderSection(header, tablesToRender.ToArray());
                 }
             }
             catch (Exception ex)
@@ -61,8 +67,9 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var eventLogErrors = await sqlExecutor.GetTable(connectionString, "CommonEventLogErrors");
-                RenderSection("Common Event log errors", eventLogErrors);
+                var eventLogErrors = await sqlExecutor.ExecuteQuery(connectionString, "CommonEventLogErrors");
+                var table = GetTable(eventLogErrors);
+                RenderSection("Common Event log errors", table);
             }
             catch (Exception ex)
             {
@@ -75,8 +82,9 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var largestTables = await sqlExecutor.GetTable(connectionString, "GetLargestTables");
-                RenderSection("Largest tables", largestTables);
+                var largestTables = await sqlExecutor.ExecuteQuery(connectionString, "GetLargestTables");
+                var table = GetTable(largestTables);
+                RenderSection("Largest tables", table);
             }
             catch (Exception ex)
             {
@@ -137,6 +145,44 @@ namespace Xperience.Manager.Services
         }
 
 
+        private Table GetTable(IEnumerable<JObject> objects)
+        {
+            var table = new Table() { Border = BorderStyle };
+            if (!objects.Any())
+            {
+                return table;
+            }
+
+            var firstRow = objects.FirstOrDefault();
+            if (firstRow is null)
+            {
+                return table;
+            }
+
+            table.AddColumns(firstRow.Properties().Select(p => $"[{Constants.PROMPT_COLOR}]{p.Name}[/]").ToArray());
+            foreach (var row in objects)
+            {
+                var rowValues = row.Values().Select(GetFormattedValue);
+                table
+                    .AddEmptyRow() // Add an empty row to simulate padding
+                    .AddRow(rowValues.ToArray());
+            }
+
+            return table;
+        }
+
+
+        private string GetFormattedValue(JToken token)
+        {
+            string stringValue = token.Value<string>() ?? string.Empty;
+            stringValue = stringValue.Length > MAX_COLUMN_CHARS
+                ? stringValue[..MAX_COLUMN_CHARS]
+                : stringValue;
+
+            return Markup.Escape(stringValue);
+        }
+
+
         private static BarChartItem GetWorkspaceStatisticsBarItem(JObject row) => new(
             row.Value<string>("WorkspaceDisplayName") ?? string.Empty,
             row.Value<double>("Content items"));
@@ -162,7 +208,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        private static Table? MakeAssetTable(AssetStatistics? statistics)
+        private Table? MakeAssetTable(AssetStatistics? statistics)
         {
             if (statistics is null)
             {
@@ -174,18 +220,24 @@ namespace Xperience.Manager.Services
                 return null;
             }
 
-            var result = new Table().AddColumns("Asset type", "Count", "Size (MB)");
+            string[] headers = ["Asset type", "Count", "Size (MB)"];
+            var table = new Table() { Border = BorderStyle }
+                .AddColumns(headers.Select(h => $"[{Constants.PROMPT_COLOR}]{h}[/]").ToArray());
             if (statistics.ContentItemCount > 0)
             {
-                result.AddRow("Content items", statistics.ContentItemCount.ToString(), statistics.ContentItemSizeMB.ToString("##.##"));
+                table
+                    .AddEmptyRow() // Add an empty row to simulate padding
+                    .AddRow("Content items", statistics.ContentItemCount.ToString(), statistics.ContentItemSizeMB.ToString("##.##"));
             }
 
             if (statistics.MediaFileCount > 0)
             {
-                result.AddRow("Media files", statistics.MediaFileCount.ToString(), statistics.MediaFileSizeMB.ToString("##.##"));
+                table
+                    .AddEmptyRow() // Add an empty row to simulate padding
+                    .AddRow("Media files", statistics.MediaFileCount.ToString(), statistics.MediaFileSizeMB.ToString("##.##"));
             }
 
-            return result;
+            return table;
         }
 
 

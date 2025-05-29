@@ -10,9 +10,6 @@ namespace Xperience.Manager.Services
 {
     public class SqlExecutor : ISqlExecutor
     {
-        private const int MAX_COLUMN_CHARS = 200;
-
-
         public async Task<IEnumerable<JObject>> ExecuteQuery(string connectionString, string queryName)
         {
             var result = new List<JObject>();
@@ -68,45 +65,6 @@ namespace Xperience.Manager.Services
             {
                 connection.Close();
             }
-        }
-
-
-        public async Task<Table> GetTable(string connectionString, string queryName)
-        {
-            var table = new Table() { Border = TableBorder.Minimal };
-            var result = await ExecuteQuery(connectionString, queryName);
-            if (!result.Any())
-            {
-                return table;
-            }
-
-            var firstRow = result.FirstOrDefault();
-            if (firstRow is null)
-            {
-                return table;
-            }
-
-            table.AddColumns(firstRow.Properties().Select(p => $"[{Constants.PROMPT_COLOR}]{p.Name}[/]").ToArray());
-            foreach (var row in result)
-            {
-                var rowValues = row.Values().Select(GetFormattedValue);
-                table
-                    .AddEmptyRow() // Add an empty row to simulate padding
-                    .AddRow(rowValues.ToArray());
-            }
-
-            return table;
-        }
-
-
-        private string GetFormattedValue(JToken token)
-        {
-            string stringValue = token.Value<string>() ?? string.Empty;
-            stringValue = stringValue.Length > MAX_COLUMN_CHARS
-                ? stringValue[..MAX_COLUMN_CHARS]
-                : stringValue;
-
-            return Markup.Escape(stringValue);
         }
 
 

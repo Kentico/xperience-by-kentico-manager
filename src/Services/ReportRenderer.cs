@@ -208,7 +208,7 @@ namespace Xperience.Manager.Services
         }
 
 
-        private Table? MakeAssetTable(AssetStatistics? statistics)
+        private static Table? MakeAssetTable(AssetStatistics? statistics)
         {
             if (statistics is null)
             {

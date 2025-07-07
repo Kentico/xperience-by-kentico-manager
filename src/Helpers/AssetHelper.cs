@@ -8,37 +8,58 @@
 
 
         /// <summary>
-        /// Gets the statistics for physical files in the <see cref="ASSET_DIRNAME"/> folder.
+        /// Gets the statistics for physical files in the provided assets folder.
         /// </summary>
         /// <param name="workingDirectory">The root directory of the Xperience by Kentico instance.</param>
-        public static AssetStatistics? GetAssetStatistics(string workingDirectory)
+        /// <param name="customDirectoryName">The name of the folder containing assets, if not using the default name.</param>
+        public static IEnumerable<AssetStatistic> GetAssetStatistics(string workingDirectory, string? customDirectoryName)
         {
-            string assetDir = Path.Combine(workingDirectory, ASSET_DIRNAME);
+            customDirectoryName ??= ASSET_DIRNAME;
+            string assetDir = Path.Combine(workingDirectory, customDirectoryName);
             if (!Directory.Exists(assetDir))
             {
-                return null;
+                return [];
             }
 
-            var result = new AssetStatistics();
-            string contentItemAssetDir = Path.Combine(assetDir, CONTENT_ITEM_DIRNAME);
-            if (Directory.Exists(contentItemAssetDir))
-            {
-                var assetDirInfo = new DirectoryInfo(contentItemAssetDir);
-                var contentItemAssets = assetDirInfo.EnumerateFiles("*", SearchOption.AllDirectories);
-                result.ContentItemCount = contentItemAssets.Count();
-                result.ContentItemSizeMB = contentItemAssets.Sum(f => f.Length) / (double)1048576;
-            }
-
-            string mediaFileDir = Path.Combine(assetDir, MEDIA_DIRNAME);
-            if (Directory.Exists(mediaFileDir))
-            {
-                var mediaDirInfo = new DirectoryInfo(mediaFileDir);
-                var mediaFiles = mediaDirInfo.EnumerateFiles("*", SearchOption.AllDirectories);
-                result.MediaFileCount = mediaFiles.Count();
-                result.MediaFileSizeMB = mediaFiles.Sum(f => f.Length) / (double)1048576;
-            }
+            var result = new List<AssetStatistic>();
+            AddStatistic(result, assetDir, MEDIA_DIRNAME);
+            AddStatistic(result, assetDir, CONTENT_ITEM_DIRNAME);
 
             return result;
+        }
+
+
+        /// <summary>
+        /// Returns <c>true</c> if the <see cref="ASSET_DIRNAME"/> folder exists in the project.
+        /// </summary>
+        /// <param name="workingDirectory">The root directory of the Xperience by Kentico instance.</param>
+        public static bool DefaultDirectoryExists(string workingDirectory)
+        {
+            string assetDir = Path.Combine(workingDirectory, ASSET_DIRNAME);
+
+            return Directory.Exists(assetDir);
+        }
+
+
+        private static void AddStatistic(List<AssetStatistic> statistics, string assetsPath, string directoryName)
+        {
+            string fullPath = Path.Combine(assetsPath, directoryName);
+            bool exists = Directory.Exists(fullPath);
+            var statistic = new AssetStatistic()
+            {
+                Exists = exists,
+                DirectoryName = directoryName
+            };
+
+            if (exists)
+            {
+                var dirInfo = new DirectoryInfo(fullPath);
+                var allFiles = dirInfo.GetFiles("*", SearchOption.AllDirectories);
+                statistic.FileCount = allFiles.Length;
+                statistic.DirectorySizeMB = allFiles.Sum(f => f.Length) / (double)1048576;
+            }
+
+            statistics.Add(statistic);
         }
     }
 
@@ -46,29 +67,29 @@
     /// <summary>
     /// Represents the count and size of Xperience by Kentico asset folders.
     /// </summary>
-    public class AssetStatistics
+    public class AssetStatistic
     {
         /// <summary>
-        /// The number of files in the content item asset folder.
+        /// If <c>false</c>, the folder is not present on the filesystem.
         /// </summary>
-        public int ContentItemCount { get; set; }
+        public bool Exists { get; set; }
 
 
         /// <summary>
-        /// The number of files in the media files folder.
+        /// The name of the directory.
         /// </summary>
-        public int MediaFileCount { get; set; }
+        public string? DirectoryName { get; set; }
 
 
         /// <summary>
-        /// The total size of the files in the content item asset folder, in megabytes.
+        /// The number of files in the folder.
         /// </summary>
-        public double ContentItemSizeMB { get; set; }
+        public int FileCount { get; set; }
 
 
         /// <summary>
-        /// The total size of the files in the media files folder, in megabytes.
+        /// The total size of the files in the folder, in megabytes.
         /// </summary>
-        public double MediaFileSizeMB { get; set; }
+        public double DirectorySizeMB { get; set; }
     }
 }

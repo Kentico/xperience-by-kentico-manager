@@ -85,7 +85,8 @@ namespace Xperience.Manager.Services
                 throw new InvalidOperationException($"Resource '{queryName}' not found.");
             }
 
-            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var stream = assembly.GetManifestResourceStream(resourceName) ??
+                throw new InvalidOperationException($"Failed to open stream to '{resourceName}'");
             using var reader = new StreamReader(stream);
 
             return reader.ReadToEndAsync();

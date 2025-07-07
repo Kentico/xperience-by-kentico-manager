@@ -1,7 +1,9 @@
 ﻿using Spectre.Console;
 
 using Xperience.Manager.Configuration;
+using Xperience.Manager.Options;
 using Xperience.Manager.Services;
+using Xperience.Manager.Wizards;
 
 namespace Xperience.Manager.Commands
 {
@@ -9,6 +11,7 @@ namespace Xperience.Manager.Commands
     {
         private readonly IReportRenderer reportRenderer;
         private readonly IAppSettingsManager appSettingsManager;
+        private readonly IWizard<ReportOptions> wizard;
 
 
         public override IEnumerable<string> Keywords => ["r", "report"];
@@ -34,14 +37,15 @@ namespace Xperience.Manager.Commands
         }
 
 
-        public ReportCommand(IReportRenderer reportRenderer, IAppSettingsManager appSettingsManager)
+        public ReportCommand(IReportRenderer reportRenderer, IAppSettingsManager appSettingsManager, IWizard<ReportOptions> wizard)
         {
             this.reportRenderer = reportRenderer;
             this.appSettingsManager = appSettingsManager;
+            this.wizard = wizard;
         }
 
 
-        public override async Task Execute(ToolProfile? profile, string? action) => await RunReport(profile);
+        public override Task Execute(ToolProfile? profile, string? action) => RunReport(profile);
 
 
         private async Task RunReport(ToolProfile? profile)
@@ -67,17 +71,20 @@ namespace Xperience.Manager.Commands
                 return;
             }
 
-            await AnsiConsole.Status().StartAsync("Running reports...", (ctx) => RunReportInternal(ctx, connectionString, workingDirectory));
+            var options = await wizard.Run(workingDirectory);
+
+            await AnsiConsole.Status().StartAsync("Running reports...", (ctx) =>
+                RunReportInternal(ctx, connectionString, workingDirectory, options));
         }
 
 
-        private async Task RunReportInternal(StatusContext ctx, string connectionString, string workingDirectory)
+        private async Task RunReportInternal(StatusContext ctx, string connectionString, string workingDirectory, ReportOptions options)
         {
             ctx.Status = "Checking class consistency...";
             await reportRenderer.RenderClassConsistencyReport(connectionString);
 
             ctx.Status = "Checking assets...";
-            await reportRenderer.RenderAssetsReport(workingDirectory);
+            await reportRenderer.RenderAssetsReport(workingDirectory, options.CustomAssetDirectoryName);
 
             ctx.Status = "Getting channel statistics...";
             await reportRenderer.RenderChannelStatisticsReport(connectionString);

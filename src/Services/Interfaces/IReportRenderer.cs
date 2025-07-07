@@ -32,7 +32,7 @@
         /// <summary>
         /// Displays a table showing the number and count of assets.
         /// </summary>
-        Task RenderAssetsReport(string workingDirectory);
+        Task RenderAssetsReport(string workingDirectory, string? customDirectoryName);
 
 
         /// <summary>

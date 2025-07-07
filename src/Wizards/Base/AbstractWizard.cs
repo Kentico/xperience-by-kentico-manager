@@ -21,10 +21,13 @@ namespace Xperience.Manager.Wizards
         public async Task<TOptions> Run(params string[] args)
         {
             await InitSteps(args);
-            do
+            if (Steps.Any())
             {
-                await Steps.Current.Execute();
-            } while (Steps.Next());
+                do
+                {
+                    await Steps.Current.Execute();
+                } while (Steps.Next());
+            }
 
             return Options;
         }

@@ -125,11 +125,11 @@ namespace Xperience.Manager.Services
         }
 
 
-        public Task RenderAssetsReport(string workingDirectory)
+        public Task RenderAssetsReport(string workingDirectory, string? customDirectoryName)
         {
             try
             {
-                var assetStatistics = AssetHelper.GetAssetStatistics(workingDirectory);
+                var assetStatistics = AssetHelper.GetAssetStatistics(workingDirectory, customDirectoryName);
                 var assetTable = MakeAssetTable(assetStatistics);
                 if (assetTable is not null)
                 {
@@ -208,33 +208,25 @@ namespace Xperience.Manager.Services
         }
 
 
-        private static Table? MakeAssetTable(AssetStatistics? statistics)
+        private static Table? MakeAssetTable(IEnumerable<AssetStatistic> statistics)
         {
-            if (statistics is null)
+            if (!statistics.Any())
             {
                 return null;
             }
 
-            if (statistics.ContentItemCount == 0 && statistics.MediaFileCount == 0)
-            {
-                return null;
-            }
-
-            string[] headers = ["Asset type", "Count", "Size (MB)"];
+            string[] headers = ["Folder", "Exists", "Count", "Size (MB)"];
             var table = new Table() { Border = BorderStyle }
                 .AddColumns(headers.Select(h => $"[{Constants.PROMPT_COLOR}]{h}[/]").ToArray());
-            if (statistics.ContentItemCount > 0)
+            foreach (var stat in statistics)
             {
                 table
                     .AddEmptyRow() // Add an empty row to simulate padding
-                    .AddRow("Content items", statistics.ContentItemCount.ToString(), statistics.ContentItemSizeMB.ToString("##.##"));
-            }
-
-            if (statistics.MediaFileCount > 0)
-            {
-                table
-                    .AddEmptyRow() // Add an empty row to simulate padding
-                    .AddRow("Media files", statistics.MediaFileCount.ToString(), statistics.MediaFileSizeMB.ToString("##.##"));
+                    .AddRow(
+                        stat.DirectoryName ?? string.Empty,
+                        stat.Exists ? "Yes" : "No",
+                        stat.Exists ? stat.FileCount.ToString() : "-",
+                        stat.Exists ? stat.DirectorySizeMB.ToString("##.##") : "-");
             }
 
             return table;

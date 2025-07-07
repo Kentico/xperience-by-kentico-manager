@@ -52,29 +52,29 @@ namespace Xperience.Manager.Services
         }
 
 
-        public async Task<int> ExecuteNonQuery(string connectionString, string queryText)
+        public Task<int> ExecuteNonQuery(string connectionString, string queryText)
         {
             using var connection = new SqlConnection(connectionString);
             var command = new SqlCommand(queryText, connection);
             connection.Open();
-            try
-            {
-                return await command.ExecuteNonQueryAsync();
-            }
-            finally
-            {
-                connection.Close();
-            }
+
+            return command.ExecuteNonQueryAsync();
         }
 
 
         private static Task<string> GetSqlQueryText(string queryName)
         {
-            string assemblyPath = Assembly.GetExecutingAssembly().Location;
-            string? executingDirectory = Path.GetDirectoryName(assemblyPath);
-            string fullPathToScript = $"{executingDirectory}/Scripts/{queryName}.sql";
+            var assembly = Assembly.GetExecutingAssembly();
+            string? resourceName = assembly.GetManifestResourceNames().FirstOrDefault(str => str.EndsWith(queryName));
+            if (string.IsNullOrEmpty(resourceName))
+            {
+                throw new InvalidOperationException($"Resource '{queryName}' not found.");
+            }
 
-            return File.ReadAllTextAsync(fullPathToScript);
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            using var reader = new StreamReader(stream);
+
+            return reader.ReadToEndAsync();
         }
     }
 }

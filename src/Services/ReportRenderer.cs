@@ -25,7 +25,7 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var enabledAdminUsers = await sqlExecutor.ExecuteQuery(connectionString, "EnabledUsersWithAdminAccess");
+                var enabledAdminUsers = await sqlExecutor.ExecuteQuery(connectionString, "EnabledUsersWithAdminAccess.sql");
                 var table = GetTable(enabledAdminUsers);
                 RenderSection("Enabled users with admin access", table);
             }
@@ -42,8 +42,8 @@ namespace Xperience.Manager.Services
             {
                 var classResults = new IEnumerable<JObject>[]
                 {
-                    await sqlExecutor.ExecuteQuery(connectionString, "TablesWithoutClasses"),
-                    await sqlExecutor.ExecuteQuery(connectionString, "ClassesWithoutTables")
+                    await sqlExecutor.ExecuteQuery(connectionString, "TablesWithoutClasses.sql"),
+                    await sqlExecutor.ExecuteQuery(connectionString, "ClassesWithoutTables.sql")
                 };
                 string header = "Class consistency";
                 if (classResults.All(t => !t.Any()))
@@ -67,7 +67,7 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var eventLogErrors = await sqlExecutor.ExecuteQuery(connectionString, "CommonEventLogErrors");
+                var eventLogErrors = await sqlExecutor.ExecuteQuery(connectionString, "CommonEventLogErrors.sql");
                 var table = GetTable(eventLogErrors);
                 RenderSection("Common Event log errors", table);
             }
@@ -82,7 +82,7 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var largestTables = await sqlExecutor.ExecuteQuery(connectionString, "GetLargestTables");
+                var largestTables = await sqlExecutor.ExecuteQuery(connectionString, "GetLargestTables.sql");
                 var table = GetTable(largestTables);
                 RenderSection("Largest tables", table);
             }
@@ -97,7 +97,7 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var workspaceStatistics = await sqlExecutor.ExecuteQuery(connectionString, "GetWorkspaceStatistics");
+                var workspaceStatistics = await sqlExecutor.ExecuteQuery(connectionString, "GetWorkspaceStatistics.sql");
                 var workspaceBarItems = workspaceStatistics.Select(GetWorkspaceStatisticsBarItem);
                 RenderSection("Workspace stats (content item count)", new BarChart() { Width = BAR_CHART_WIDTH }
                     .AddItems(workspaceBarItems));
@@ -113,7 +113,7 @@ namespace Xperience.Manager.Services
         {
             try
             {
-                var channelStatistics = await sqlExecutor.ExecuteQuery(connectionString, "GetChannelStatistics");
+                var channelStatistics = await sqlExecutor.ExecuteQuery(connectionString, "GetChannelStatistics.sql");
                 var channelBarItems = channelStatistics.Select(GetChannelStatisticsBarItem);
                 RenderSection("Channel stats (pages, headless items, emails)", new BarChart() { Width = BAR_CHART_WIDTH }
                     .AddItems(channelBarItems));

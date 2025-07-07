@@ -11,7 +11,7 @@ namespace Xperience.Manager.Services
         /// Executes a SQL query and returns the rows as objects containing properties equal to the returned column names.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
-        /// <param name="queryName">The name of the SQL file in the ~/Scripts folder, without the extension.</param>
+        /// <param name="queryName">The name of the SQL file in the ~/Scripts folder, with the extension.</param>
         Task<IEnumerable<JObject>> ExecuteQuery(string connectionString, string queryName);
 
 

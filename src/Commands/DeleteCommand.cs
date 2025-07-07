@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Spectre.Console;
 
 using Xperience.Manager.Configuration;
@@ -108,20 +109,14 @@ namespace Xperience.Manager.Commands
             }
 
             // Find "Initial Catalog" in connection string
-            IEnumerable<string> parts = [.. connString.Split(';')];
-            string? initialCatalogPart = parts.FirstOrDefault(p => p.StartsWith("initial catalog", StringComparison.CurrentCultureIgnoreCase));
-            if (initialCatalogPart is null)
-            {
-                LogError("Couldn't find database name.");
-
-                return;
-            }
-
+            var builder = new SqlConnectionStringBuilder(connString);
+            string databaseName = builder.InitialCatalog;
             // Remove "Initial Catalog" from connection string, or trying to delete will throw "in use" error
-            parts = parts.Where(p => !p.Equals(initialCatalogPart, StringComparison.OrdinalIgnoreCase));
-            connString = string.Join(';', parts);
-            string databaseName = initialCatalogPart.Split('=')[1].Trim();
-            await sqlExecutor.ExecuteNonQuery(connString, $"DROP DATABASE {databaseName}");
+            builder.InitialCatalog = "";
+            connString = builder.ToString();
+
+            Dictionary<string, object> parameters = new() { { "@DBName", databaseName } };
+            await sqlExecutor.ExecuteNonQuery(connString, "DropDatabase.sql", parameters);
         }
 
 

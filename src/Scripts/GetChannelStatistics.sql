@@ -1,43 +1,31 @@
 SELECT
-	ChannelName,
-	ChannelType,
-	COUNT(p.WebPageItemID) AS 'Statistic'
+    ChannelName,
+    ChannelType,
+    CASE
+        WHEN ChannelType = 'Website' THEN (
+			SELECT COUNT(p.WebPageItemID)
+			FROM CMS_WebPageItem p
+			INNER JOIN CMS_WebsiteChannel w ON p.WebPageItemWebsiteChannelID = w.WebsiteChannelID
+			WHERE w.WebsiteChannelChannelID = ChannelID
+		)
+        WHEN ChannelType = 'Headless' THEN (
+			SELECT COUNT(i.HeadlessItemID)
+			FROM CMS_HeadlessItem i
+			INNER JOIN CMS_HeadlessChannel h ON i.HeadlessItemHeadlessChannelID = h.HeadlessChannelID
+			WHERE h.HeadlessChannelChannelID = ChannelID
+		)
+        WHEN ChannelType = 'Email' THEN (
+			SELECT COUNT(e.EmailConfigurationID)
+			FROM EmailLibrary_EmailConfiguration e
+			WHERE e.EmailConfigurationEmailChannelID = ChannelID
+		)
+        ELSE 0
+    END AS 'Statistic'
 FROM
-	CMS_Channel c
-INNER JOIN
-	CMS_WebsiteChannel w ON c.ChannelID = w.WebsiteChannelChannelID
-INNER JOIN
-	CMS_WebPageItem p ON p.WebPageItemWebsiteChannelID = w.WebsiteChannelID
+    CMS_Channel
 WHERE
-	ChannelType = 'Website'
+    ChannelType IN ('Website', 'Headless', 'Email')
 GROUP BY
-	ChannelName, ChannelType
-UNION
-SELECT
-	ChannelName,
-	ChannelType,
-	COUNT(i.HeadlessItemID) AS 'Statistic'
-FROM
-	CMS_Channel c
-INNER JOIN
-	CMS_HeadlessChannel h ON c.ChannelID = h.HeadlessChannelChannelID
-INNER JOIN
-	CMS_HeadlessItem i ON i.HeadlessItemHeadlessChannelID = h.HeadlessChannelID
-WHERE
-	ChannelType = 'Headless'
-GROUP BY
-	ChannelName, ChannelType
-UNION
-SELECT
-	ChannelName,
-	ChannelType,
-	COUNT(e.EmailConfigurationID) AS 'Statistic'
-FROM
-	CMS_Channel c
-INNER JOIN
-	EmailLibrary_EmailConfiguration e ON c.ChannelID = e.EmailConfigurationEmailChannelID
-WHERE
-	ChannelType = 'Email'
-GROUP BY
-	ChannelName, ChannelType
-ORDER BY Statistic
+    ChannelID, ChannelName, ChannelType
+ORDER BY
+    Statistic

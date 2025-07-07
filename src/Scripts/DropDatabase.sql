@@ -1,0 +1,3 @@
+DECLARE @DropSQL AS NVARCHAR(MAX)
+SET @DropSQL = 'DROP DATABASE ' + QUOTENAME(@DBName)
+EXEC sp_executesql @DropSQL

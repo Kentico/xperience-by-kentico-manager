@@ -19,7 +19,8 @@ namespace Xperience.Manager.Services
         /// Executes a non-query and returns the number of affected rows.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
-        /// <param name="queryText">The SQL query text.</param>
-        Task<int> ExecuteNonQuery(string connectionString, string queryText);
+        /// <param name="queryName">The name of the SQL file in the ~/Scripts folder, with the extension.</param>
+        /// <param name="parameters">Optional set of SQL parameters to apply to the query.</param>
+        Task<int> ExecuteNonQuery(string connectionString, string queryName, IDictionary<string, object>? parameters = null);
     }
 }

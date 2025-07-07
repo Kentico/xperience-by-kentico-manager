@@ -33,4 +33,8 @@
 		<EmbeddedResource Include="Scripts\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="scripts\DropDatabase.sql" />
+	</ItemGroup>
+
 </Project>

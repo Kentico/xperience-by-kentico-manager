@@ -52,13 +52,27 @@ namespace Xperience.Manager.Services
         }
 
 
-        public Task<int> ExecuteNonQuery(string connectionString, string queryText)
+        public async Task<int> ExecuteNonQuery(string connectionString, string queryName, IDictionary<string, object>? parameters)
         {
+            string? query = await GetSqlQueryText(queryName);
+            if (string.IsNullOrEmpty(query))
+            {
+                return 0;
+            }
+
             using var connection = new SqlConnection(connectionString);
-            var command = new SqlCommand(queryText, connection);
+            var command = new SqlCommand(query, connection);
+            if (parameters is not null && parameters.Any())
+            {
+                foreach (var param in parameters)
+                {
+                    command.Parameters.AddWithValue(param.Key, param.Value);
+                }
+            }
+
             connection.Open();
 
-            return command.ExecuteNonQueryAsync();
+            return command.ExecuteNonQuery();
         }
 
 

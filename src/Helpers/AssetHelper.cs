@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="workingDirectory">The root directory of the Xperience by Kentico instance.</param>
         /// <param name="customDirectoryName">The name of the folder containing assets, if not using the default name.</param>
-        public static IEnumerable<AssetStatistic> GetAssetStatistics(string workingDirectory, string? customDirectoryName)
+        public static IEnumerable<AssetStatistic> GetAssetStatistics(string workingDirectory, string? customDirectoryName = null)
         {
             customDirectoryName ??= ASSET_DIRNAME;
             string assetDir = Path.Combine(workingDirectory, customDirectoryName);

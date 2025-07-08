@@ -22,21 +22,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\config_with_installoptions.json">
+    <None Update="Data\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\config_with_multiple_profiles.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\config_with_one_profile.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-	<None Update="Data\appsettings.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</None>
-	<None Update="Data\appsettings.Development.json">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\assets\media\" />
+    <Folder Include="Data\assets\contentitems\" />
   </ItemGroup>
 
 </Project>

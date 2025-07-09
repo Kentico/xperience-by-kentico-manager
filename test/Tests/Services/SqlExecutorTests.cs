@@ -9,9 +9,9 @@ using Xperience.Manager.Services;
 namespace Xperience.Manager.Tests.Services
 {
     /// <summary>
-    /// Tests for <see cref="ISqlExecutor"/>.
+    /// Tests for <see cref="SqlExecutor"/>.
     /// </summary>
-    public class ISqlExecutorTests
+    public class SqlExecutorTests
     {
         private const string COL_1 = "First";
         private const string COL_2 = "Second";

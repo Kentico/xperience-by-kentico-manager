@@ -5,17 +5,8 @@ namespace Xperience.Manager.Steps
     /// <summary>
     /// A step used to display a prompt for user interaction and optionally return the value.
     /// </summary>
-    public class Step<T> : IStep
+    public class Step<T>(StepOptions<T> options) : IStep
     {
-        private readonly StepOptions<T> options;
-
-
-        /// <summary>
-        /// Initializes a new instance of <see cref="Step{T}"/>.
-        /// </summary>
-        public Step(StepOptions<T> options) => this.options = options;
-
-
         public Task Execute()
         {
             if (options.Prompt is null)

@@ -6,9 +6,9 @@ using Xperience.Manager.Services;
 namespace Xperience.Manager.Tests.Services
 {
     /// <summary>
-    /// Tests for <see cref="IConfigManager"/>.
+    /// Tests for <see cref="ConfigManager"/>.
     /// </summary>
-    public class IConfigManagerTests : TestBase
+    public class ConfigManagerTests : TestBase
     {
         private readonly ConfigManager configManager = new();
 
@@ -37,6 +37,7 @@ namespace Xperience.Manager.Tests.Services
                 Assert.That(config.CurrentProfile, Is.EqualTo("1"));
             });
         }
+
 
         [Test]
         public async Task AddProfile_AddsProfiles()

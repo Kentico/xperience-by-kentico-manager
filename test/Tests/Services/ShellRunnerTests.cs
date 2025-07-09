@@ -8,9 +8,9 @@ using Xperience.Manager.Services;
 namespace Xperience.Manager.Tests.Services
 {
     /// <summary>
-    /// Tests for <see cref="IShellRunner"/>.
+    /// Tests for <see cref="ShellRunner"/>.
     /// </summary>
-    public class IShellRunnerTests
+    public class ShellRunnerTests
     {
         private readonly ShellRunner shellRunner = new();
 

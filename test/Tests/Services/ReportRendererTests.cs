@@ -7,9 +7,9 @@ using Xperience.Manager.Services;
 namespace Xperience.Manager.Tests.Services
 {
     /// <summary>
-    /// Tests of <see cref="IReportRenderer"/>.
+    /// Tests of <see cref="ReportRenderer"/>.
     /// </summary>
-    public class IReportRendererTests
+    public class ReportRendererTests
     {
         private ReportRenderer reportRenderer;
         private readonly ISqlExecutor sqlExecutor = Substitute.For<ISqlExecutor>();

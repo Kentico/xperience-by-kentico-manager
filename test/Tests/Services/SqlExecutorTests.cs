@@ -36,7 +36,11 @@ WHERE
 
 
         [TearDown]
-        public void TearDown() => connection.ClearReceivedCalls();
+        public void TearDown()
+        {
+            command.ClearReceivedCalls();
+            connection.ClearReceivedCalls();
+        }
 
 
         [Test]

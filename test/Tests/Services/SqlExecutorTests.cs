@@ -35,6 +35,10 @@ WHERE
         private readonly IDataParameterCollection parameterCollection = Substitute.For<IDataParameterCollection>();
 
 
+        [TearDown]
+        public void TearDown() => connection.ClearReceivedCalls();
+
+
         [Test]
         public async Task ExecuteQuery_ValidScript_ExecutesAndReturnsData()
         {
@@ -57,24 +61,18 @@ WHERE
 
 
         [Test]
-        public async Task ExecuteQuery_InvalidScript_Throws()
+        public void ExecuteQuery_InvalidScript_Throws()
         {
             var factory = GetFactory();
             var sqlExecutor = new SqlExecutor(factory);
             string queryName = "InvalidScript.sql";
 
-            try
+            Assert.Multiple(() =>
             {
-                await sqlExecutor.ExecuteQuery(CONN_STRING, queryName);
-
-                Assert.Multiple(() =>
-                {
-                    connection.DidNotReceive().Open();
-                    command.DidNotReceive().ExecuteReader();
-                    Assert.Fail($"Resource '{queryName}' not found.");
-                });
-            }
-            catch (Exception) { }
+                Assert.ThrowsAsync<InvalidOperationException>(async () => await sqlExecutor.ExecuteQuery(CONN_STRING, queryName));
+                connection.DidNotReceive().Open();
+                command.DidNotReceive().ExecuteReader();
+            });
         }
 
 
@@ -122,24 +120,18 @@ WHERE
 
 
         [Test]
-        public async Task ExecuteNonQuery_InvalidScript_Throws()
+        public void ExecuteNonQuery_InvalidScript_Throws()
         {
             var factory = GetFactory();
             var sqlExecutor = new SqlExecutor(factory);
             string queryName = "InvalidScript.sql";
 
-            try
+            Assert.Multiple(() =>
             {
-                await sqlExecutor.ExecuteNonQuery(CONN_STRING, queryName);
-
-                Assert.Multiple(() =>
-                {
-                    connection.DidNotReceive().Open();
-                    command.DidNotReceive().ExecuteReader();
-                    Assert.Fail($"Resource '{queryName}' not found.");
-                });
-            }
-            catch (Exception) { }
+                Assert.ThrowsAsync<InvalidOperationException>(async () => await sqlExecutor.ExecuteNonQuery(CONN_STRING, queryName));
+                connection.DidNotReceive().Open();
+                command.DidNotReceive().ExecuteReader();
+            });
         }
 
 

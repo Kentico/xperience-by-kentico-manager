@@ -27,9 +27,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\assets\media\" />
-    <Folder Include="Data\assets\contentitems\" />
-  </ItemGroup>
-
 </Project>

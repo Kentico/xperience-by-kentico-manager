@@ -6,9 +6,9 @@ using Xperience.Manager.Services;
 namespace Xperience.Manager.Tests.Services
 {
     /// <summary>
-    /// Tests for <see cref="IScriptBuilder"/>.
+    /// Tests for <see cref="ScriptBuilder"/>.
     /// </summary>
-    public class IScriptBuilderTests
+    public class ScriptBuilderTests
     {
         private readonly ScriptBuilder scriptBuilder = new();
         private readonly InstallProjectOptions validProjectOptions = new()

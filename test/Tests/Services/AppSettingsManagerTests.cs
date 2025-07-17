@@ -1,13 +1,14 @@
 ﻿using NUnit.Framework;
+
 using Xperience.Manager.Configuration;
 using Xperience.Manager.Services;
 
 namespace Xperience.Manager.Tests.Services
 {
     /// <summary>
-    /// Tests for <see cref="IAppSettingsManager"/>.
+    /// Tests for <see cref="AppSettingsManager"/>.
     /// </summary>
-    public class IAppSettingsManagerTests
+    public class AppSettingsManagerTests
     {
         private const string DEVELOPMENT_FILE = "appsettings.Development.json";
         private readonly AppSettingsManager appSettingsManager = new();

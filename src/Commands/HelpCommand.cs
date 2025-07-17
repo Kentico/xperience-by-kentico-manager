@@ -26,7 +26,8 @@ namespace Xperience.Manager.Commands
             new MacroCommand(),
             new BuildCommand(),
             new SettingsCommand(),
-            new CodeGenerateCommand()
+            new CodeGenerateCommand(),
+            new ReportCommand()
         ];
 
 

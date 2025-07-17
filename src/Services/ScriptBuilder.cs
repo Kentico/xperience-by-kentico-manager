@@ -34,8 +34,6 @@ namespace Xperience.Manager.Services
             $"\" --location \"{nameof(CodeGenerateOptions.Location)}\" --include \"{nameof(CodeGenerateOptions.Include)}\" --exclude \"" +
             $"{nameof(CodeGenerateOptions.Exclude)}\" --with-provider-class {nameof(CodeGenerateOptions.WithProviderClass)}";
         private const string DELETE_FOLDER_SCRIPT = $"rm \"{nameof(ToolProfile.WorkingDirectory)}\" -r -Force";
-        private const string RUN_SQL_QUERY = $"Invoke-Sqlcmd -ConnectionString \"{nameof(RunSqlOptions.ConnString)}\" -Query \"" +
-            $"{nameof(RunSqlOptions.SqlQuery)}\"";
 
 
         public IScriptBuilder AppendCloud(bool useCloud)
@@ -183,7 +181,6 @@ namespace Xperience.Manager.Services
                 ScriptType.ResignMacros => MACRO_SCRIPT,
                 ScriptType.GenerateCode => CODEGEN_SCRIPT,
                 ScriptType.DeleteDirectory => DELETE_FOLDER_SCRIPT,
-                ScriptType.ExecuteSql => RUN_SQL_QUERY,
                 ScriptType.UninstallDatabaseTool => UNINSTALL_DBTOOL_SCRIPT,
                 ScriptType.InstallDatabaseTool => INSTALL_DBTOOL_SCRIPT,
                 ScriptType.None => string.Empty,
@@ -297,12 +294,6 @@ namespace Xperience.Manager.Services
         /// The script which deletes a local folder and its contents.
         /// </summary>
         DeleteDirectory,
-
-
-        /// <summary>
-        /// The script which executes a SQL query against a database.
-        /// </summary>
-        ExecuteSql,
 
 
         /// <summary>

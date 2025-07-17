@@ -10,19 +10,8 @@ namespace Xperience.Manager
     /// <summary>
     /// The main entry point for the console application which supports Dependency Injection.
     /// </summary>
-    public class App
+    public class App(IConfigManager configManager, ICommandRepository commandRepository)
     {
-        private readonly IConfigManager configManager;
-        private readonly ICommandRepository commandRepository;
-
-
-        public App(IConfigManager configManager, ICommandRepository commandRepository)
-        {
-            this.configManager = configManager;
-            this.commandRepository = commandRepository;
-        }
-
-
         /// <summary>
         /// Runs the console application with the arguments provided by the user.
         /// </summary>

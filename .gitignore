@@ -452,3 +452,8 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# MCP server definitions
+mcp.json
+claude_desktop_config.json
+mcp_config.json

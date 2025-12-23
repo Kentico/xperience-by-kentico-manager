@@ -4,7 +4,7 @@ namespace Xperience.Manager.Configuration
 {
     /// <summary>
     /// Represents the headless options specified in the application settings. See
-    /// <see href="https://docs.xperience.io/xp/developers-and-admins/configuration/headless-channel-management#Headlesschannelmanagement-ConfiguretheheadlessAPI"/>.
+    /// <see href="https://docs.kentico.com/documentation/developers-and-admins/configuration/headless-channel-management#configure-the-headless-api"/>.
     /// </summary>
     public class CmsHeadlessConfiguration
     {
@@ -43,7 +43,7 @@ namespace Xperience.Manager.Configuration
         [Display(Description = "The domains that are allowed origins for CORS (Cross-Origin Resource Sharing).")]
         /// <summary>
         /// The domains that are allowed origins for CORS (Cross-Origin Resource Sharing). See
-        /// <see href="https://docs.xperience.io/xp/developers-and-admins/development/content-retrieval/retrieve-headless-content"/>.
+        /// <see href="https://docs.kentico.com/documentation/developers-and-admins/development/content-retrieval/retrieve-headless-content"/>.
         /// </summary>
         public string? CorsAllowedOrigins { get; set; }
 
@@ -52,7 +52,7 @@ namespace Xperience.Manager.Configuration
             "default.")]
         /// <summary>
         /// The HTTP headers that are allowed for content retrieval requests. If not set, all headers are allowed by default.
-        /// See <see href="https://docs.xperience.io/xp/developers-and-admins/development/content-retrieval/retrieve-headless-content"/>.
+        /// See <see href="https://docs.kentico.com/documentation/developers-and-admins/development/content-retrieval/retrieve-headless-content"/>.
         /// </summary>
         public string? CorsAllowedHeaders { get; set; }
 

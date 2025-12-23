@@ -18,7 +18,7 @@ namespace Xperience.Manager.Services
 
         /// <summary>
         /// Gets the headless options. See
-        /// <see href="https://docs.xperience.io/xp/developers-and-admins/configuration/headless-channel-management#Headlesschannelmanagement-ConfiguretheheadlessAPI"/>.
+        /// <see href="https://docs.kentico.com/documentation/developers-and-admins/configuration/headless-channel-management#configure-the-headless-api"/>.
         /// </summary>
         /// <param name="profile">The tool profile.</param>
         /// <param name="fileName">The application settings file to read. If not provided, the appsettings.json file is used.</param>
@@ -27,7 +27,7 @@ namespace Xperience.Manager.Services
 
         /// <summary>
         /// Gets configurations keys with their <see cref="ConfigurationKey.ActualValue"/> set if available. See
-        /// <see href="https://docs.xperience.io/xp/developers-and-admins/configuration/reference-configuration-keys"/>.
+        /// <see href="https://docs.kentico.com/documentation/developers-and-admins/configuration/reference-configuration-keys"/>.
         /// </summary>
         /// <param name="profile">The tool profile.</param>
         /// <param name="keys">The keys to retrieve.</param>

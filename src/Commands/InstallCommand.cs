@@ -96,15 +96,17 @@ namespace Xperience.Manager.Commands
             await CreateProjectFiles(projectOptions);
 
             // Admin boilerplate project doesn't require database install or profile
-            if (!IsAdminTemplate(projectOptions) && dbOptions is not null)
+            if (IsAdminTemplate(projectOptions))
+            {
+                return;
+            }
+
+            if (dbOptions is not null)
             {
                 await CreateDatabase(dbOptions, false);
-                await configManager.AddProfile(newInstallationProfile);
-
-                // Select new profile
-                AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Setting profile to '{newInstallationProfile.ProjectName}'...[/]");
-                await configManager.SetCurrentProfile(newInstallationProfile);
             }
+
+            await CreateAndSetProfile();
         }
 
 
@@ -137,6 +139,21 @@ namespace Xperience.Manager.Commands
                 .AppendDirectory(newInstallationProfile.WorkingDirectory)
                 .Build();
             await shellRunner.Execute(new(mkdirScript) { ErrorHandler = ErrorDataReceived }).WaitForExitAsync();
+        }
+
+
+        private async Task CreateAndSetProfile()
+        {
+            if (StopProcessing)
+            {
+                return;
+            }
+
+            await configManager.AddProfile(newInstallationProfile);
+
+            // Select new profile
+            AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Setting profile to '{newInstallationProfile.ProjectName}'...[/]");
+            await configManager.SetCurrentProfile(newInstallationProfile);
         }
 
 

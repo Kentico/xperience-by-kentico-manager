@@ -226,11 +226,12 @@ namespace Xperience.Manager.Commands
             {
                 string cdScript = scriptBuilder.SetScript(ScriptType.ContinuousDeploymentNewConfiguration)
                     .WithPlaceholders(cdConfig)
+                    .InsertOrAppendProject(profile?.ProjectName)
                     .Build();
                 await shellRunner.Execute(new(cdScript)
                 {
                     ErrorHandler = ErrorDataReceived,
-                    WorkingDirectory = profile.WorkingDirectory
+                    WorkingDirectory = profile?.WorkingDirectory
                 }).WaitForExitAsync();
             }
         }
@@ -259,6 +260,7 @@ namespace Xperience.Manager.Commands
             string originalDescription = task.Description;
             string cdScript = scriptBuilder.SetScript(ScriptType.ContinuousDeploymentRestore)
                 .WithPlaceholders(cdConfig)
+                .InsertOrAppendProject(profile?.ProjectName)
                 .Build();
             await shellRunner.Execute(new(cdScript)
             {
@@ -298,6 +300,7 @@ namespace Xperience.Manager.Commands
             };
             string cdScript = scriptBuilder.SetScript(ScriptType.ContinuousDeploymentStore)
                 .WithPlaceholders(cdConfig)
+                .InsertOrAppendProject(profile?.ProjectName)
                 .Build();
             await shellRunner.Execute(new(cdScript)
             {
@@ -331,7 +334,7 @@ namespace Xperience.Manager.Commands
                         task.Value = progressCurrent;
                     }
                 },
-                WorkingDirectory = profile.WorkingDirectory
+                WorkingDirectory = profile?.WorkingDirectory
             }).WaitForExitAsync();
         }
     }

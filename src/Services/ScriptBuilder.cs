@@ -30,9 +30,10 @@ namespace Xperience.Manager.Services
         private const string CD_RESTORE_SCRIPT = "dotnet run -- --kxp-cd-restore --repository-path \"" +
             $"{nameof(ContinuousDeploymentConfig.RepositoryPath)}\"";
         private const string MACRO_SCRIPT = "dotnet run --no-build -- --kxp-resign-macros";
-        private const string CODEGEN_SCRIPT = $"dotnet run -- --kxp-codegen --skip-confirmation --type \"{nameof(CodeGenerateOptions.Type)}" +
-            $"\" --location \"{nameof(CodeGenerateOptions.Location)}\" --include \"{nameof(CodeGenerateOptions.Include)}\" --exclude \"" +
-            $"{nameof(CodeGenerateOptions.Exclude)}\" --with-provider-class {nameof(CodeGenerateOptions.WithProviderClass)}";
+        private const string CODEGEN_SCRIPT = "dotnet run --no-build -- --kxp-codegen --skip-confirmation " +
+            $"--type \"{nameof(CodeGenerateOptions.Type)}\" --location \"{nameof(CodeGenerateOptions.Location)}\" " +
+            $"--include \"{nameof(CodeGenerateOptions.Include)}\" --exclude \"{nameof(CodeGenerateOptions.Exclude)}\" " +
+            $"--with-provider-class {nameof(CodeGenerateOptions.WithProviderClass)}";
         private const string DELETE_FOLDER_SCRIPT = $"rm \"{nameof(ToolProfile.WorkingDirectory)}\" -r -Force";
 
 
@@ -131,6 +132,22 @@ namespace Xperience.Manager.Services
             }
 
             return currentScript;
+        }
+
+
+        public IScriptBuilder InsertOrAppendProject(string? projectName)
+        {
+            int runIndex = currentScript.IndexOf("dotnet run");
+            if (runIndex != -1 && !string.IsNullOrEmpty(projectName))
+            {
+                currentScript = currentScript.Insert(runIndex + 10, $" --project \"{projectName}.csproj\"");
+            }
+            else if (currentScript.StartsWith("dotnet add") && !string.IsNullOrEmpty(projectName))
+            {
+                currentScript += $" --project \"{projectName}.csproj\"";
+            }
+
+            return this;
         }
 
 

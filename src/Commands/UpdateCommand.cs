@@ -117,6 +117,7 @@ namespace Xperience.Manager.Commands
                 string packageScript = scriptBuilder.SetScript(ScriptType.PackageUpdate)
                     .WithPlaceholders(options)
                     .AppendVersion(options.Version)
+                    .InsertOrAppendProject(profile?.ProjectName)
                     .Build();
                 await shellRunner.Execute(new(packageScript)
                 {
@@ -135,7 +136,9 @@ namespace Xperience.Manager.Commands
             }
 
             AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Updating database...[/]");
-            string dbScript = scriptBuilder.SetScript(ScriptType.DatabaseUpdate).Build();
+            string dbScript = scriptBuilder.SetScript(ScriptType.DatabaseUpdate)
+                .InsertOrAppendProject(profile?.ProjectName)
+                .Build();
             await shellRunner.Execute(new(dbScript)
             {
                 ErrorHandler = ErrorDataReceived,

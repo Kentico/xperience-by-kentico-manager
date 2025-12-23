@@ -80,6 +80,7 @@ namespace Xperience.Manager.Commands
             string buildScript = scriptBuilder.SetScript(ScriptType.GenerateCode)
                 .WithPlaceholders(options)
                 .AppendNamespace(options.Namespace)
+                .InsertOrAppendProject(profile?.ProjectName)
                 .Build();
             await shellRunner.Execute(new(buildScript)
             {

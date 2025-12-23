@@ -95,6 +95,7 @@ namespace Xperience.Manager.Commands
             string macroScript = scriptBuilder.SetScript(ScriptType.ResignMacros)
                 .AppendSignAll(options.SignAll, options.UserName)
                 .AppendSalts(options.OldSalt, options.NewSalt)
+                .InsertOrAppendProject(profile?.ProjectName)
                 .Build();
             await shellRunner.Execute(new(macroScript)
             {

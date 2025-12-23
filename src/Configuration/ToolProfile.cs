@@ -6,6 +6,12 @@
     public class ToolProfile
     {
         /// <summary>
+        /// The name of the new profile.
+        /// </summary>
+        public string? ProfileName { get; set; }
+
+
+        /// <summary>
         /// The Xperience by Kentico project name.
         /// </summary>
         public string? ProjectName { get; set; }

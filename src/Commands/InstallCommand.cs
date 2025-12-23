@@ -149,10 +149,14 @@ namespace Xperience.Manager.Commands
                 return;
             }
 
+            AnsiConsole.WriteLine();
+            newInstallationProfile.ProfileName = AnsiConsole.Prompt(
+                new TextPrompt<string>($"Name your new [{Constants.PROMPT_COLOR}]profile[/]:"));
+
             await configManager.AddProfile(newInstallationProfile);
 
             // Select new profile
-            AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Setting profile to '{newInstallationProfile.ProjectName}'...[/]");
+            AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Setting profile to '{newInstallationProfile.ProfileName}'...[/]");
             await configManager.SetCurrentProfile(newInstallationProfile);
         }
 

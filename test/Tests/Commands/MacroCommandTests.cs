@@ -3,6 +3,7 @@
 using NUnit.Framework;
 
 using Xperience.Manager.Commands;
+using Xperience.Manager.Configuration;
 using Xperience.Manager.Options;
 using Xperience.Manager.Services;
 using Xperience.Manager.Wizards;
@@ -17,8 +18,13 @@ namespace Xperience.Manager.Tests.Commands
         private const string USER = "admin";
         private const string OLD_SALT = "old";
         private const string NEW_SALT = "new";
+        private const string PROJECT = "myproj";
         private readonly IShellRunner shellRunner = Substitute.For<IShellRunner>();
         private readonly IWizard<MacroOptions> macroWizard = Substitute.For<IWizard<MacroOptions>>();
+        private readonly ToolProfile profile = new()
+        {
+            ProjectName = PROJECT
+        };
 
 
         [SetUp]
@@ -35,11 +41,11 @@ namespace Xperience.Manager.Tests.Commands
                 NewSalt = NEW_SALT
             });
             var command = new MacroCommand(macroWizard, shellRunner, new ScriptBuilder());
-            await command.PreExecute(new(), string.Empty);
-            await command.Execute(new(), string.Empty);
+            await command.PreExecute(profile, string.Empty);
+            await command.Execute(profile, string.Empty);
 
-            string expectedMacroScript = $"dotnet run --no-build -- --kxp-resign-macros --sign-all --username \"{USER}\" --new-salt " +
-                $"\"{NEW_SALT}\"";
+            string expectedMacroScript = $"dotnet run --project \"{PROJECT}.csproj\" --no-build -- --kxp-resign-macros --sign-all " +
+                $"--username \"{USER}\" --new-salt \"{NEW_SALT}\"";
 
             shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(expectedMacroScript)));
         }
@@ -54,11 +60,11 @@ namespace Xperience.Manager.Tests.Commands
                 NewSalt = NEW_SALT
             });
             var command = new MacroCommand(macroWizard, shellRunner, new ScriptBuilder());
-            await command.PreExecute(new(), string.Empty);
-            await command.Execute(new(), string.Empty);
+            await command.PreExecute(profile, string.Empty);
+            await command.Execute(profile, string.Empty);
 
-            string expectedMacroScript = $"dotnet run --no-build -- --kxp-resign-macros --old-salt \"{OLD_SALT}\" --new-salt " +
-                $"\"{NEW_SALT}\"";
+            string expectedMacroScript = $"dotnet run --project \"{PROJECT}.csproj\" --no-build -- --kxp-resign-macros " +
+                $"--old-salt \"{OLD_SALT}\" --new-salt \"{NEW_SALT}\"";
 
             shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(expectedMacroScript)));
         }

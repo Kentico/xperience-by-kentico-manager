@@ -3,6 +3,7 @@
 using NUnit.Framework;
 
 using Xperience.Manager.Commands;
+using Xperience.Manager.Configuration;
 using Xperience.Manager.Services;
 
 namespace Xperience.Manager.Tests.Commands
@@ -12,7 +13,12 @@ namespace Xperience.Manager.Tests.Commands
     /// </summary>
     public class ContinuousIntegrationCommandTests : TestBase
     {
+        private const string PROJECT = "myproj";
         private readonly IShellRunner shellRunner = Substitute.For<IShellRunner>();
+        private readonly ToolProfile profile = new()
+        {
+            ProjectName = PROJECT
+        };
 
 
         [SetUp]
@@ -24,10 +30,10 @@ namespace Xperience.Manager.Tests.Commands
         public async Task Execute_StoreParameter_CallsStoreScript()
         {
             var command = new ContinuousIntegrationCommand(shellRunner, new ScriptBuilder());
-            await command.PreExecute(new(), "store");
-            await command.Execute(new(), "store");
+            await command.PreExecute(profile, "store");
+            await command.Execute(profile, "store");
 
-            string expectedScript = "dotnet run --no-build --kxp-ci-store";
+            string expectedScript = $"dotnet run --project \"{PROJECT}.csproj\" --no-build --kxp-ci-store";
 
             shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(expectedScript)));
         }
@@ -37,10 +43,10 @@ namespace Xperience.Manager.Tests.Commands
         public async Task Execute_RestoreParameter_CallsRestoreScript()
         {
             var command = new ContinuousIntegrationCommand(shellRunner, new ScriptBuilder());
-            await command.PreExecute(new(), "restore");
-            await command.Execute(new(), "restore");
+            await command.PreExecute(profile, "restore");
+            await command.Execute(profile, "restore");
 
-            string expectedScript = "dotnet run --no-build --kxp-ci-restore";
+            string expectedScript = $"dotnet run --project \"{PROJECT}.csproj\" --no-build --kxp-ci-restore";
 
             shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(expectedScript)));
         }

@@ -3,6 +3,7 @@
 using NUnit.Framework;
 
 using Xperience.Manager.Commands;
+using Xperience.Manager.Configuration;
 using Xperience.Manager.Options;
 using Xperience.Manager.Services;
 using Xperience.Manager.Wizards;
@@ -18,6 +19,8 @@ namespace Xperience.Manager.Tests.Commands
         private const string INCLUDE = "*";
         private const string LOCATION = "/dir";
         private const string NAMESPACE = "ns";
+        private const string PROJECT_NAME = "myproj";
+        private const string WORKING_DIR = "c:/mysite";
         private const string TYPE = CodeGenerateOptions.TYPE_REUSABLE_CONTENT_TYPES;
         private const bool WITH_PROVIDER = false;
         private readonly IShellRunner shellRunner = Substitute.For<IShellRunner>();
@@ -44,12 +47,18 @@ namespace Xperience.Manager.Tests.Commands
         [Test]
         public async Task Execute_CallsCodeGenScript()
         {
+            ToolProfile profile = new()
+            {
+                ProjectName = PROJECT_NAME,
+                WorkingDirectory = WORKING_DIR
+            };
             var command = new CodeGenerateCommand(shellRunner, new ScriptBuilder(), generateWizard);
-            await command.PreExecute(new(), string.Empty);
-            await command.Execute(new(), string.Empty);
+            await command.PreExecute(profile, string.Empty);
+            await command.Execute(profile, string.Empty);
 
-            string expectedCodeGenScript = $"dotnet run -- --kxp-codegen --skip-confirmation --type \"{TYPE}\" --location \"{LOCATION}\" " +
-                $"--include \"{INCLUDE}\" --exclude \"{EXCLUDE}\" --with-provider-class {WITH_PROVIDER} --namespace \"{NAMESPACE}\"";
+            string expectedCodeGenScript = $"dotnet run --project \"{PROJECT_NAME}.csproj\" --no-build -- --kxp-codegen " +
+                $"--skip-confirmation --type \"{TYPE}\" --location \"{WORKING_DIR}{LOCATION}\" --include \"{INCLUDE}\" " +
+                $"--exclude \"{EXCLUDE}\" --with-provider-class {WITH_PROVIDER} --namespace \"{NAMESPACE}\"";
 
             shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(expectedCodeGenScript)));
         }

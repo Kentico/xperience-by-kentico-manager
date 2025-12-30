@@ -5,7 +5,7 @@
   "DefaultInstallDatabaseOptions": null,
   "Profiles": [
     {
-      "ProjectName": "1",
+      "ProfileName": "1",
       "WorkingDirectory": "C:\\1"
     }
   ],

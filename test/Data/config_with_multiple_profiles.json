@@ -5,11 +5,11 @@
   "DefaultInstallDatabaseOptions": null,
   "Profiles": [
     {
-      "ProjectName": "1",
+      "ProfileName": "1",
       "WorkingDirectory": "C:\\1"
     },
     {
-      "ProjectName": "2",
+      "ProfileName": "2",
       "WorkingDirectory": "C:\\2"
     }
   ],

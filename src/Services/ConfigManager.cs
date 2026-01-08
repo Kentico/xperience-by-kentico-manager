@@ -22,7 +22,7 @@ namespace Xperience.Manager.Services
         {
             var config = await GetConfig();
             var match = config.Profiles.FirstOrDefault(p =>
-                p.ProjectName?.Equals(config.CurrentProfile, StringComparison.OrdinalIgnoreCase) ?? false);
+                p.ProfileName?.Equals(config.CurrentProfile, StringComparison.OrdinalIgnoreCase) ?? false);
             if (config.Profiles.Count == 1 &&
                 (string.IsNullOrEmpty(config.CurrentProfile) || match is null))
             {
@@ -99,9 +99,9 @@ namespace Xperience.Manager.Services
         private async Task AddProfileInternal(ToolProfile profile)
         {
             var config = await GetConfig();
-            if (config.Profiles.Any(p => p.ProjectName?.Equals(profile.ProjectName, StringComparison.OrdinalIgnoreCase) ?? false))
+            if (config.Profiles.Any(p => p.ProfileName?.Equals(profile.ProfileName, StringComparison.OrdinalIgnoreCase) ?? false))
             {
-                throw new InvalidOperationException($"There is already a profile named '{profile.ProjectName}.'");
+                throw new InvalidOperationException($"There is already a profile named '{profile.ProfileName}.'");
             }
 
             config.Profiles.Add(profile);
@@ -122,9 +122,15 @@ namespace Xperience.Manager.Services
             string text = await File.ReadAllTextAsync(Constants.CONFIG_FILENAME);
             var json = JsonConvert.DeserializeObject<JObject>(text) ??
                 throw new InvalidOperationException("Unable to read configuration file for migration.");
-            if ((config.Version?.ToString().Equals("4.0.0.0") ?? false) && toolVersion.ToString().Equals("5.0.0.0"))
+            if (toolVersion.Major >= 5 && toolVersion.Minor >= 0 && toolVersion.Build >= 0
+                && config.Version?.Major < 5)
             {
-                Migrate40To50(json, config);
+                MigrateTo500(json, config);
+            }
+            if (toolVersion.Major >= 5 && toolVersion.Minor >= 3 && toolVersion.Build >= 0
+                && config.Version?.Major <= 5 && config.Version?.Minor < 3)
+            {
+                MigrateTo530(config);
             }
 
             config.Version = toolVersion;
@@ -140,7 +146,7 @@ namespace Xperience.Manager.Services
             // For some reason Profiles.Remove() didn't work, make a new list
             var newProfiles = new List<ToolProfile>();
             newProfiles.AddRange(config.Profiles.Where(p =>
-                !p.ProjectName?.Equals(profile.ProjectName, StringComparison.OrdinalIgnoreCase) ?? true));
+                !p.ProfileName?.Equals(profile.ProfileName, StringComparison.OrdinalIgnoreCase) ?? true));
 
             config.Profiles = newProfiles;
 
@@ -151,7 +157,7 @@ namespace Xperience.Manager.Services
         private async Task SetCurrentProfileInternal(ToolProfile profile)
         {
             var config = await GetConfig();
-            config.CurrentProfile = profile.ProjectName;
+            config.CurrentProfile = profile.ProfileName;
             await WriteConfig(config);
         }
 
@@ -160,7 +166,7 @@ namespace Xperience.Manager.Services
             File.WriteAllTextAsync(Constants.CONFIG_FILENAME, JsonConvert.SerializeObject(config, Formatting.Indented));
 
 
-        private static void Migrate40To50(JObject oldConfig, ToolConfiguration newConfig)
+        private static void MigrateTo500(JObject oldConfig, ToolConfiguration newConfig)
         {
             var oldInstallOptions = oldConfig["DefaultInstallOptions"];
 
@@ -182,5 +188,9 @@ namespace Xperience.Manager.Services
 
             newConfig.DefaultInstallProjectOptions = projectOptions;
         }
+
+
+        private static void MigrateTo530(ToolConfiguration newConfig) =>
+            newConfig.Profiles.ForEach(profile => profile.ProfileName = profile.ProjectName);
     }
 }

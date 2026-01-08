@@ -26,6 +26,14 @@ namespace Xperience.Manager.Services
 
 
         /// <summary>
+        /// Inserts "--project" after "dotnet run," or appends "--project" to the script if it starts with "dotnet add," and
+        /// <paramref name="projectName"/> is not empty.
+        /// </summary>
+        /// <param name="projectName">The project name, without the .csproj extension.</param>
+        public IScriptBuilder InsertOrAppendProject(string? projectName);
+
+
+        /// <summary>
         /// Appends "--old-salt" and/or "--new-salt" to the script if the script is <see cref="ScriptType.ResignMacros"/>.
         /// </summary>
         /// <param name="oldSalt">The old salt value appended to the script.</param>

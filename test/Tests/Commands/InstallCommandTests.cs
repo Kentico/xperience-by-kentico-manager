@@ -2,6 +2,8 @@
 
 using NUnit.Framework;
 
+using Spectre.Console;
+
 using Xperience.Manager.Commands;
 using Xperience.Manager.Options;
 using Xperience.Manager.Services;
@@ -21,6 +23,7 @@ namespace Xperience.Manager.Tests.Commands
         private const string PROJECT_NAME = "PROJECT";
         private const bool USE_EXISTING = false;
         private readonly Version version = new(1, 0, 0);
+        private readonly IAnsiConsole originalConsole = AnsiConsole.Console;
         private readonly IShellRunner shellRunner = Substitute.For<IShellRunner>();
         private readonly IWizard<InstallProjectOptions> projectWizard = Substitute.For<IWizard<InstallProjectOptions>>();
         private readonly IWizard<InstallDatabaseOptions> dbWizard = Substitute.For<IWizard<InstallDatabaseOptions>>();
@@ -43,8 +46,14 @@ namespace Xperience.Manager.Tests.Commands
                 UseExistingDatabase = USE_EXISTING
             });
 
+            // Use mock console to ignore new profile prompt
+            AnsiConsole.Console = Substitute.For<IAnsiConsole>();
             shellRunner.Execute(Arg.Any<ShellOptions>()).Returns((x) => GetDummyProcess());
         }
+
+
+        [TearDown]
+        public void InstallCommandTearDown() => AnsiConsole.Console = originalConsole;
 
 
         [Test]

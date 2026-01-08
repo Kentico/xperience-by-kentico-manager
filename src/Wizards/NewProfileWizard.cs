@@ -15,7 +15,13 @@ namespace Xperience.Manager.Wizards
             Steps.Add(new Step<string>(new()
             {
                 Prompt = new TextPrompt<string>($"Give your profile a [{Constants.PROMPT_COLOR}]name[/]:"),
-                ValueReceiver = (v) => Options.Name = v,
+                ValueReceiver = (v) => Options.ProfileName = v,
+            }));
+
+            Steps.Add(new Step<string>(new()
+            {
+                Prompt = new TextPrompt<string>($"Name the [{Constants.PROMPT_COLOR}]project[/] (.csproj file):"),
+                ValueReceiver = (v) => Options.ProjectName = v,
             }));
 
             Steps.Add(new Step<string>(new()

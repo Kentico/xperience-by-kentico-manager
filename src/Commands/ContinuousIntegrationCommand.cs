@@ -121,7 +121,9 @@ namespace Xperience.Manager.Commands
                 return;
             }
 
-            string ciScript = scriptBuilder.SetScript(ScriptType.StoreContinuousIntegration).Build();
+            string ciScript = scriptBuilder.SetScript(ScriptType.StoreContinuousIntegration)
+                .InsertOrAppendProject(profile?.ProjectName)
+                .Build();
             await shellRunner.Execute(new(ciScript)
             {
                 WorkingDirectory = profile?.WorkingDirectory,
@@ -162,7 +164,9 @@ namespace Xperience.Manager.Commands
             }
 
             string originalDescription = task.Description;
-            string ciScript = scriptBuilder.SetScript(ScriptType.RestoreContinuousIntegration).Build();
+            string ciScript = scriptBuilder.SetScript(ScriptType.RestoreContinuousIntegration)
+                .InsertOrAppendProject(profile?.ProjectName)
+                .Build();
             await shellRunner.Execute(new(ciScript)
             {
                 WorkingDirectory = profile?.WorkingDirectory,

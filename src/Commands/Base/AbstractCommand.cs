@@ -83,7 +83,8 @@ namespace Xperience.Manager.Commands
         protected static void PrintCurrentProfile(ToolProfile? profile)
         {
             AnsiConsole.Write(new Rule("Current profile:") { Justification = Justify.Left });
-            AnsiConsole.MarkupLineInterpolated($"Name: [{Constants.EMPHASIS_COLOR}]{profile?.ProjectName ?? "None"}[/]");
+            AnsiConsole.MarkupLineInterpolated($"Name: [{Constants.EMPHASIS_COLOR}]{profile?.ProfileName ?? "None"}[/]");
+            AnsiConsole.MarkupLineInterpolated($"Project: [{Constants.EMPHASIS_COLOR}]{profile?.ProjectName ?? "None"}[/]");
             AnsiConsole.MarkupLineInterpolated($"Path: [{Constants.EMPHASIS_COLOR}]{profile?.WorkingDirectory ?? "None"}[/]");
             AnsiConsole.Write(new Rule());
             AnsiConsole.WriteLine();

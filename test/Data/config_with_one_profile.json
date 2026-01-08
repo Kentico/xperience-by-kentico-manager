@@ -1,11 +1,12 @@
 ﻿{
-  "Version": "4.1.0.0",
+  "Version": "5.3.0.0",
   "CurrentProfile": null,
   "DefaultInstallProjectOptions": null,
   "DefaultInstallDatabaseOptions": null,
   "Profiles": [
     {
-      "ProjectName": "1",
+      "ProfileName": "1",
+      "ProjectName": "site1",
       "WorkingDirectory": "C:\\1"
     }
   ],

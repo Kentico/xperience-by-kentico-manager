@@ -128,11 +128,12 @@ namespace Xperience.Manager.Commands
 
             await configManager.AddProfile(new()
             {
-                ProjectName = options.Name,
+                ProfileName = options.ProfileName,
+                ProjectName = options.ProjectName,
                 WorkingDirectory = options.WorkingDirectory
             });
 
-            AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Profile '{options.Name}' added[/]");
+            AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Profile '{options.ProfileName}' added[/]");
         }
 
 
@@ -146,13 +147,13 @@ namespace Xperience.Manager.Commands
             var profile = AnsiConsole.Prompt(new SelectionPrompt<ToolProfile>()
                 .Title("Delete which [green]profile[/]?")
                 .PageSize(10)
-                .UseConverter(p => p.ProjectName ?? string.Empty)
+                .UseConverter(p => p.ProfileName ?? string.Empty)
                 .MoreChoicesText("Scroll for more...")
                 .AddChoices(profiles));
 
             await configManager.RemoveProfile(profile);
 
-            AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Profile '{profile.ProjectName}' deleted[/]");
+            AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Profile '{profile.ProfileName}' deleted[/]");
         }
 
 
@@ -168,14 +169,14 @@ namespace Xperience.Manager.Commands
             var prompt = new SelectionPrompt<ToolProfile>()
                 .Title("Switch to profile:")
                 .PageSize(10)
-                .UseConverter(p => p.ProjectName ?? string.Empty)
+                .UseConverter(p => p.ProfileName ?? string.Empty)
                 .MoreChoicesText("Scroll for more...")
                 .AddChoices(profiles);
 
             var newProfile = AnsiConsole.Prompt(prompt);
             await configManager.SetCurrentProfile(newProfile);
 
-            AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Switched to '{newProfile.ProjectName}'[/]");
+            AnsiConsole.MarkupLineInterpolated($"[{Constants.SUCCESS_COLOR}]Switched to '{newProfile.ProfileName}'[/]");
         }
     }
 }

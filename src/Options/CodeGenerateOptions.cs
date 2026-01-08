@@ -4,7 +4,7 @@ namespace Xperience.Manager.Options
 {
     /// <summary>
     /// The options used to generate code files in <see cref="CodeGenerateCommand"/>. See
-    /// <see href="https://docs.xperience.io/xp/developers-and-admins/api/generate-code-files-for-system-objects#Generatecodefilesforsystemobjects-Generatecodefiles"/>. 
+    /// <see href="https://docs.kentico.com/documentation/developers-and-admins/api/generate-code-files-for-system-objects#generate-code-files"/>. 
     /// </summary>
     public class CodeGenerateOptions : IWizardOptions
     {

@@ -10,7 +10,13 @@ namespace Xperience.Manager.Options
         /// <summary>
         /// The name of the new profile.
         /// </summary>
-        public string? Name { get; set; }
+        public string? ProfileName { get; set; }
+
+
+        /// <summary>
+        /// The name of the Xperience by Kentico project.
+        /// </summary>
+        public string? ProjectName { get; set; }
 
 
         /// <summary>

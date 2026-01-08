@@ -6,14 +6,15 @@ The `xman.json` file contains information about the tool, your default options, 
 
 ```json
 {
-  "Version": "5.0.0.0",
+  "Version": "5.3.0.0",
   "Profiles": [
     {
+      "ProfileName": "My site",
       "ProjectName": "xbk29",
       "WorkingDirectory": "c:\\inetpub\\wwwroot\\xbk29"
     }
   ],
-  "CurrentProfile": "xbk29",
+  "CurrentProfile": "My site",
   "DefaultInstallProjectOptions": {
     "Version": null, // Version cannot have a default value
     "Template": "kentico-xperience-sample-mvc",
@@ -52,6 +53,12 @@ The following commands can be executed using the `xman` tool name:
 ### Managing profiles
 
 Certain commands such as `update` are executed against the installation indicated by the current profile. The `profile` command shows you the current profile, and allows you to switch profiles. If you only have one profile, that is automatically selected.
+
+Profiles contain the following properties:
+
+- __ProfileName__: An arbitrary string naming the profile, which can contain spaces and special characters. E.g. "My site"
+- __ProjectName__: The name of the .NET Core project which determines the name of the .csproj, DLL, etc.. Should not contain spaces or special characters according to [Microsoft's documentation](https://learn.microsoft.com/en-us/dotnet/standard/design-guidelines/names-of-assemblies-and-dlls). E.g. "mysite"
+- __WorkingDirectory__: The full path to the project's root directory (the folder containing the .csproj file)
 
 To __switch__ profiles, run the `profile` command from the directory containing the [configuration file](#configuration-file):
 

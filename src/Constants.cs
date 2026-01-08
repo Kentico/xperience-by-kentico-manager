@@ -68,6 +68,10 @@ namespace Xperience.Manager
         /// </summary>
         public static IEnumerable<ConfigurationKey> UngroupedKeys =>
         [
+            new("CMSEnableAIRA",
+                "Enables AIRA globally. By default, AIRA is enabled",
+                typeof(bool),
+                true),
             new("CMSForbiddenURLValues",
                 "Specifies characters that are forbidden in page URLs",
                 typeof(string),

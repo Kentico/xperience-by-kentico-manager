@@ -3,6 +3,7 @@
 using NUnit.Framework;
 
 using Xperience.Manager.Commands;
+using Xperience.Manager.Configuration;
 using Xperience.Manager.Options;
 using Xperience.Manager.Services;
 using Xperience.Manager.Wizards;
@@ -14,6 +15,7 @@ namespace Xperience.Manager.Tests.Commands
     /// </summary>
     public class UpdateCommandTests : TestBase
     {
+        private const string PROJECT = "myproj";
         private readonly Version version = new(1, 0, 0);
         private readonly IShellRunner shellRunner = Substitute.For<IShellRunner>();
         private readonly IWizard<UpdateOptions> updateWizard = Substitute.For<IWizard<UpdateOptions>>();
@@ -34,9 +36,13 @@ namespace Xperience.Manager.Tests.Commands
         [Test]
         public async Task Execute_CallsUpdateScripts()
         {
+            ToolProfile profile = new()
+            {
+                ProjectName = PROJECT
+            };
             var command = new UpdateCommand(shellRunner, new ScriptBuilder(), updateWizard);
-            await command.PreExecute(new(), string.Empty);
-            await command.Execute(new(), string.Empty);
+            await command.PreExecute(profile, string.Empty);
+            await command.Execute(profile, string.Empty);
 
             string[] packageNames =
             [
@@ -50,7 +56,8 @@ namespace Xperience.Manager.Tests.Commands
 
             foreach (string p in packageNames)
             {
-                shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals($"dotnet add package {p} --version {version}")));
+                shellRunner.Received().Execute(Arg.Is<ShellOptions>(x => x.Script.Equals(
+                    $"dotnet add package {p} --version {version} --project \"{PROJECT}.csproj\"")));
             }
         }
     }

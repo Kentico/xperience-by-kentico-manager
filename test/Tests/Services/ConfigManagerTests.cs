@@ -33,7 +33,9 @@ namespace Xperience.Manager.Tests.Services
             Assert.That(profile, Is.Not.Null);
             Assert.Multiple(() =>
             {
-                Assert.That(profile.ProjectName, Is.EqualTo("1"));
+                Assert.That(profile.ProfileName, Is.EqualTo("1"));
+                Assert.That(profile.ProjectName, Is.EqualTo("site1"));
+                Assert.That(profile.WorkingDirectory, Is.EqualTo("C:\\1"));
                 Assert.That(config.CurrentProfile, Is.EqualTo("1"));
             });
         }
@@ -42,19 +44,22 @@ namespace Xperience.Manager.Tests.Services
         [Test]
         public async Task AddProfile_AddsProfiles()
         {
-            await configManager.EnsureConfigFile();
             ToolProfile p1 = new()
             {
-                ProjectName = "1",
+                ProfileName = "1",
+                ProjectName = "site1",
                 WorkingDirectory = "C:\\1"
             };
-            await configManager.AddProfile(p1);
 
             ToolProfile p2 = new()
             {
-                ProjectName = "2",
+                ProfileName = "2",
+                ProjectName = "site2",
                 WorkingDirectory = "C:\\2"
             };
+
+            await configManager.EnsureConfigFile();
+            await configManager.AddProfile(p1);
             await configManager.AddProfile(p2);
             var config = await configManager.GetConfig();
 
@@ -68,7 +73,8 @@ namespace Xperience.Manager.Tests.Services
             File.Copy("Data/config_with_one_profile.json", Constants.CONFIG_FILENAME);
             ToolProfile profile = new()
             {
-                ProjectName = "1",
+                ProfileName = "1",
+                ProjectName = "site1",
                 WorkingDirectory = "C:\\1"
             };
 
@@ -83,7 +89,8 @@ namespace Xperience.Manager.Tests.Services
 
             ToolProfile profile = new()
             {
-                ProjectName = "1",
+                ProfileName = "1",
+                ProjectName = "site1",
                 WorkingDirectory = "C:\\1"
             };
             await configManager.RemoveProfile(profile);

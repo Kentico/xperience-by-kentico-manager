@@ -1,7 +1,7 @@
 ﻿namespace Xperience.Manager.Configuration
 {
     /// <summary>
-    /// Represents a key from https://docs.xperience.io/xp/developers-and-admins/configuration/reference-configuration-keys.
+    /// Represents a key from https://docs.kentico.com/documentation/developers-and-admins/configuration/reference-configuration-keys.
     /// </summary>
     public class ConfigurationKey
     {

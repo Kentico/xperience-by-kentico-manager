@@ -59,6 +59,18 @@ namespace Xperience.Manager.Services
         }
 
 
+        public IScriptBuilder AppendDatabaseCredentials(string? databaseUserName, string? databasePassword)
+        {
+            if (currentScriptType.Equals(ScriptType.DatabaseInstall) &&
+                !string.IsNullOrEmpty(databaseUserName) && !string.IsNullOrEmpty(databasePassword))
+            {
+                currentScript += $" -u \"{databaseUserName}\" -p \"{databasePassword}\"";
+            }
+
+            return this;
+        }
+
+
         public IScriptBuilder AppendNamespace(string? nameSpace)
         {
             if (currentScriptType.Equals(ScriptType.GenerateCode) && !string.IsNullOrEmpty(nameSpace))

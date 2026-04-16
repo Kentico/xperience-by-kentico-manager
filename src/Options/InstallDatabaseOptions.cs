@@ -28,6 +28,18 @@ namespace Xperience.Manager.Options
 
 
         /// <summary>
+        /// User name for database authentication.
+        /// </summary>
+        public string? DatabaseUserName { get; set; }
+
+
+        /// <summary>
+        /// Password for database authentication.
+        /// </summary>
+        public string? DatabasePassword { get; set; }
+
+
+        /// <summary>
         /// The name of the global administrator password.
         /// </summary>
         [JsonIgnore]

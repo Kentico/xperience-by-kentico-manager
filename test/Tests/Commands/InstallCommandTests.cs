@@ -28,7 +28,6 @@ namespace Xperience.Manager.Tests.Commands
         private readonly IAnsiConsole originalConsole = AnsiConsole.Console;
         private readonly IShellRunner shellRunner = Substitute.For<IShellRunner>();
         private readonly IWizard<InstallProjectOptions> projectWizard = Substitute.For<IWizard<InstallProjectOptions>>();
-        //private readonly IWizard<InstallDatabaseOptions> dbWizard = Substitute.For<IWizard<InstallDatabaseOptions>>();
 
 
         [SetUp]

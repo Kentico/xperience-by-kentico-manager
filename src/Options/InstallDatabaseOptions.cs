@@ -9,6 +9,10 @@ namespace Xperience.Manager.Options
     /// </summary>
     public class InstallDatabaseOptions : IWizardOptions
     {
+        public const string AUTHENTICATION_USER = "User";
+        public const string AUTHENTICATION_INTEGRATED = "Integrated";
+
+
         /// <summary>
         /// The name of the new database.
         /// </summary>
@@ -25,6 +29,13 @@ namespace Xperience.Manager.Options
         /// The name of the SQL server to use.
         /// </summary>
         public string? ServerName { get; set; }
+
+
+        /// <summary>
+        /// The type of authentication to connect to the database.
+        /// </summary>
+        [JsonIgnore]
+        public string? DatabaseAuthenticationType { get; set; }
 
 
         /// <summary>

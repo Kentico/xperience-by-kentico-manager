@@ -172,7 +172,11 @@ namespace Xperience.Manager.Commands
 
             string databaseScript = scriptBuilder.SetScript(ScriptType.DatabaseInstall)
                 .WithPlaceholders(options)
-                .AppendDatabaseCredentials(options.DatabaseUserName, options.DatabasePassword)
+                .AppendDatabaseCredentials(
+                    options.DatabaseAuthenticationType?
+                        .Equals(InstallDatabaseOptions.AUTHENTICATION_INTEGRATED, StringComparison.InvariantCultureIgnoreCase) ?? true,
+                    options.DatabaseUserName,
+                    options.DatabasePassword)
                 .Build();
             // Database-only install requires removal of "dotnet" from the script to run global tool
             if (isDatabaseOnly)

@@ -59,9 +59,9 @@ namespace Xperience.Manager.Services
         }
 
 
-        public IScriptBuilder AppendDatabaseCredentials(string? databaseUserName, string? databasePassword)
+        public IScriptBuilder AppendDatabaseCredentials(bool isIntegrated, string? databaseUserName, string? databasePassword)
         {
-            if (currentScriptType.Equals(ScriptType.DatabaseInstall) &&
+            if (!isIntegrated && currentScriptType.Equals(ScriptType.DatabaseInstall) &&
                 !string.IsNullOrEmpty(databaseUserName) && !string.IsNullOrEmpty(databasePassword))
             {
                 currentScript += $" -u \"{databaseUserName}\" -p \"{databasePassword}\"";

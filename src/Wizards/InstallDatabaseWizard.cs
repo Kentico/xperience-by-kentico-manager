@@ -11,8 +11,6 @@ namespace Xperience.Manager.Wizards
     public class InstallDatabaseWizard : AbstractWizard<InstallDatabaseOptions>
     {
         public const string SKIP_EXISTINGDB_STEP = "skipexistingdbstep";
-        private const string AUTHENTICATION_USER = "User";
-        private const string AUTHENTICATION_INTEGRATED = "Integrated";
 
 
         public override Task InitSteps(params string[] args)
@@ -37,27 +35,38 @@ namespace Xperience.Manager.Wizards
             }));
 
             // Integrated or user/pass database authentication
-            string authenticationType = AUTHENTICATION_INTEGRATED;
             Steps.Add(new Step<string>(new()
             {
                 Prompt = new SelectionPrompt<string>()
                     .Title($"Database [{Constants.PROMPT_COLOR}]authentication method[/]?")
-                    .AddChoices(AUTHENTICATION_INTEGRATED, AUTHENTICATION_USER),
-                ValueReceiver = (v) => authenticationType = v
+                    .AddChoices(InstallDatabaseOptions.AUTHENTICATION_INTEGRATED, InstallDatabaseOptions.AUTHENTICATION_USER),
+                ValueReceiver = (v) => Options.DatabaseAuthenticationType = v
             }));
 
+            var databaseUserNamePrompt = new TextPrompt<string>($"Database [{Constants.PROMPT_COLOR}]user name[/]:");
+            if (!string.IsNullOrEmpty(Options.DatabaseUserName))
+            {
+                databaseUserNamePrompt.DefaultValue(Options.DatabaseUserName);
+            }
             Steps.Add(new Step<string>(new()
             {
-                Prompt = new TextPrompt<string>($"Database [{Constants.PROMPT_COLOR}]user name[/]:"),
+                Prompt = databaseUserNamePrompt,
                 ValueReceiver = (v) => Options.DatabaseUserName = v,
-                SkipChecker = () => authenticationType.Equals(AUTHENTICATION_INTEGRATED, StringComparison.InvariantCultureIgnoreCase)
+                SkipChecker = () => Options.DatabaseAuthenticationType?
+                    .Equals(InstallDatabaseOptions.AUTHENTICATION_INTEGRATED, StringComparison.InvariantCultureIgnoreCase) ?? false
             }));
 
+            var databasePasswordPrompt = new TextPrompt<string>($"Database [{Constants.PROMPT_COLOR}]password[/]:");
+            if (!string.IsNullOrEmpty(Options.DatabasePassword))
+            {
+                databasePasswordPrompt.DefaultValue(Options.DatabasePassword);
+            }
             Steps.Add(new Step<string>(new()
             {
-                Prompt = new TextPrompt<string>($"Database [{Constants.PROMPT_COLOR}]password[/]:"),
+                Prompt = databasePasswordPrompt,
                 ValueReceiver = (v) => Options.DatabasePassword = v,
-                SkipChecker = () => authenticationType.Equals(AUTHENTICATION_INTEGRATED, StringComparison.InvariantCultureIgnoreCase)
+                SkipChecker = () => Options.DatabaseAuthenticationType?
+                    .Equals(InstallDatabaseOptions.AUTHENTICATION_INTEGRATED, StringComparison.InvariantCultureIgnoreCase) ?? false
             }));
 
             var useExistingPrompt = new ConfirmationPrompt($"Use [{Constants.PROMPT_COLOR}]existing[/] database?")

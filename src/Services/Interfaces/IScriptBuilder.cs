@@ -19,10 +19,9 @@ namespace Xperience.Manager.Services
 
 
         /// <summary>
-        /// Appends the database credentials if they are not empty or null, the authentication type is not "Integrated," and the script is
-        /// <see cref="ScriptType.DatabaseInstall"/>.
+        /// Appends the database credentials if they are not empty or null, and the script is <see cref="ScriptType.DatabaseInstall"/>.
         /// </summary>
-        public IScriptBuilder AppendDatabaseCredentials(bool isIntegrated, string? databaseUserName, string? databasePassword);
+        public IScriptBuilder AppendDatabaseCredentials(string? databaseUserName, string? databasePassword);
 
 
         /// <summary>

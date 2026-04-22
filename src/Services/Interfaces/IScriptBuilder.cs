@@ -19,6 +19,12 @@ namespace Xperience.Manager.Services
 
 
         /// <summary>
+        /// Appends the database credentials if they are not empty or null, and the script is <see cref="ScriptType.DatabaseInstall"/>.
+        /// </summary>
+        public IScriptBuilder AppendDatabaseCredentials(string? databaseUserName, string? databasePassword);
+
+
+        /// <summary>
         /// Appends the namespace to use if the script is <see cref="ScriptType.GenerateCode"/> and <paramref name="nameSpace"/>
         /// is not empty.
         /// </summary>

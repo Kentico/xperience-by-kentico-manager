@@ -23,7 +23,8 @@ namespace Xperience.Manager.Commands
             "kentico.xperience.cloud",
             "kentico.xperience.graphql",
             "kentico.xperience.imageprocessing",
-            "kentico.xperience.webapp"
+            "kentico.xperience.webapp",
+            "kentico.xperience.mjml"
         ];
 
 

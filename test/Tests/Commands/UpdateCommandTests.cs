@@ -51,7 +51,8 @@ namespace Xperience.Manager.Tests.Commands
                 "kentico.xperience.cloud",
                 "kentico.xperience.graphql",
                 "kentico.xperience.imageprocessing",
-                "kentico.xperience.webapp"
+                "kentico.xperience.webapp",
+                "kentico.xperience.mjml"
             ];
 
             foreach (string p in packageNames)

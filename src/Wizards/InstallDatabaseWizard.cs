@@ -34,6 +34,41 @@ namespace Xperience.Manager.Wizards
                 ValueReceiver = (v) => Options.DatabaseName = v
             }));
 
+            // Integrated or user/pass database authentication
+            Steps.Add(new Step<string>(new()
+            {
+                Prompt = new SelectionPrompt<string>()
+                    .Title($"Database [{Constants.PROMPT_COLOR}]authentication method[/]?")
+                    .AddChoices(InstallDatabaseOptions.AUTHENTICATION_INTEGRATED, InstallDatabaseOptions.AUTHENTICATION_USER),
+                ValueReceiver = (v) => Options.DatabaseAuthenticationType = v
+            }));
+
+            var databaseUserNamePrompt = new TextPrompt<string>($"Database [{Constants.PROMPT_COLOR}]user name[/]:");
+            if (!string.IsNullOrEmpty(Options.DatabaseUserName))
+            {
+                databaseUserNamePrompt.DefaultValue(Options.DatabaseUserName);
+            }
+            Steps.Add(new Step<string>(new()
+            {
+                Prompt = databaseUserNamePrompt,
+                ValueReceiver = (v) => Options.DatabaseUserName = v,
+                SkipChecker = () => Options.DatabaseAuthenticationType?
+                    .Equals(InstallDatabaseOptions.AUTHENTICATION_INTEGRATED, StringComparison.InvariantCultureIgnoreCase) ?? false
+            }));
+
+            var databasePasswordPrompt = new TextPrompt<string>($"Database [{Constants.PROMPT_COLOR}]password[/]:");
+            if (!string.IsNullOrEmpty(Options.DatabasePassword))
+            {
+                databasePasswordPrompt.DefaultValue(Options.DatabasePassword);
+            }
+            Steps.Add(new Step<string>(new()
+            {
+                Prompt = databasePasswordPrompt,
+                ValueReceiver = (v) => Options.DatabasePassword = v,
+                SkipChecker = () => Options.DatabaseAuthenticationType?
+                    .Equals(InstallDatabaseOptions.AUTHENTICATION_INTEGRATED, StringComparison.InvariantCultureIgnoreCase) ?? false
+            }));
+
             var useExistingPrompt = new ConfirmationPrompt($"Use [{Constants.PROMPT_COLOR}]existing[/] database?")
             {
                 DefaultValue = Options.UseExistingDatabase

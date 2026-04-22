@@ -25,13 +25,15 @@ The `xman.json` file contains information about the tool, your default options, 
   "DefaultInstallDatabaseOptions": {
     "UseExistingDatabase": false,
     "DatabaseName": "xperience",
-    "ServerName": "my-server"
+    "ServerName": "my-server",
+    "DatabaseUserName": "admin-user",
+    "DatabasePassword": "dbpassword"
   },
   "CDRootPath": "C:\\inetpub\\wwwroot\\ContinuousDeployment"
 }
 ```
 
-You can edit this file to change the `DefaultInstallProjectOptions` used when [installing](#installing-a-new-project) new Xperience by Kentico projects, and the location of the [Continuous Deployment](#running-continuous-deployment) files.
+You can edit this file to change the `DefaultInstallProjectOptions` or `DefaultInstallDatabaseOptions` used when [installing](#installing-a-new-project) new Xperience by Kentico projects, and the location of the [Continuous Deployment](#running-continuous-deployment) files.
 
 ## Commands
 
@@ -87,7 +89,7 @@ The installation wizard will automatically generate an administrator password fo
    xman install
    ```
 
-Installing a new project automatically includes a database as well. If you want to _only_ install a database and not the project files, use the __db__ parameter: `xman install db`.
+Installing a new project automatically includes a database as well. If you want to _only_ install a database and not the project files, use the __db__ parameter: `xman install db`. During database installation you can choose to use __Integrated__ (Windows Authentication) or __User__ authentication. If you choose User authentication, you will be prompted to enter the credentials for a SQL Server user (or use the default values from the [configuration file](#configuration-file)).
 
 ### Updating a project version
 

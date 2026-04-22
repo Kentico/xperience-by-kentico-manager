@@ -170,9 +170,14 @@ namespace Xperience.Manager.Commands
 
             AnsiConsole.MarkupLineInterpolated($"[{Constants.EMPHASIS_COLOR}]Running database creation script...[/]");
 
-            string databaseScript = scriptBuilder.SetScript(ScriptType.DatabaseInstall)
-                .WithPlaceholders(options)
-                .Build();
+            var databaseScriptBuilder = scriptBuilder.SetScript(ScriptType.DatabaseInstall).WithPlaceholders(options);
+            if (options.DatabaseAuthenticationType?
+                .Equals(InstallDatabaseOptions.AUTHENTICATION_USER, StringComparison.InvariantCultureIgnoreCase) ?? false)
+            {
+                databaseScriptBuilder.AppendDatabaseCredentials(options.DatabaseUserName, options.DatabasePassword);
+            }
+            string databaseScript = databaseScriptBuilder.Build();
+
             // Database-only install requires removal of "dotnet" from the script to run global tool
             if (isDatabaseOnly)
             {
